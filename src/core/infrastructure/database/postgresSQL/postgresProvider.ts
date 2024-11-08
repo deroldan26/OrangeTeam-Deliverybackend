@@ -1,4 +1,5 @@
 import { DataSource, getMetadataArgsStorage } from "typeorm";
+import { ProductPostgresRepository } from "src/product/infrastructure/repositories/postgres/product.repository";
 
 export const DatabaseProvider = [
     {
@@ -28,4 +29,12 @@ export const DatabaseProvider = [
   
         return dataSource;
       },
-    }]
+    },
+    {
+      provide: 'ProductRepository',
+      useFactory: (dataSource: DataSource) => {
+        return new ProductPostgresRepository(dataSource);
+      },
+      inject: ['DataSource'],
+    }
+  ]
