@@ -1,7 +1,7 @@
 import { ValueObject } from './value.object'
 
 export abstract class Entity<T extends ValueObject<T>> {
-    protected constructor(protected _id: T) {}
+    protected constructor(private _id: T) {}
 
     get id(): T {
         return this._id
