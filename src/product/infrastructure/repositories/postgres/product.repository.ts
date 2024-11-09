@@ -23,6 +23,17 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
       return Result.fail<Product>(new Error(error.message), error.code, error.message);
     }
   }
+
+  async findPaginatedProducts(page: number, take: number): Promise<Result<Product[]>>{
+    try {
+      const skip = page * take - take;
+      const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name']).skip(skip).take(take).getMany();
+      const response = await Promise.all(products.map(product => this.productMapper.fromPersistenceToDomain(product)));
+      return Result.success<Product[]>(response,200)
+    } catch (error) {
+      return Result.fail(error, 400, error.message);
+    }
+  }
   
   async saveProductAggregate(product: Product): Promise<Result<Product>> {
     try {
