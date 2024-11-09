@@ -23,7 +23,7 @@ export class Product extends AggregateRoot<ProductID>{
     }
     
     constructor(id: ProductID, name: ProductName/*, description: ProductDescription*/){
-        const productCreated = productCreatedEvent.create(id.id, name.name)
+        const productCreated = productCreatedEvent.create(id, name)
         super(id, productCreated);
     }
 
@@ -32,10 +32,13 @@ export class Product extends AggregateRoot<ProductID>{
     // }
     
     protected when(event: DomainEvent): void {
-        //throw new Error("Method not implemented.");
+        if (event instanceof productCreatedEvent) {
+            this.name = event.name;
+            //this.description = event.description;
+          }
     }
     protected checkValidState (): void{
-        if ( !this.name || !this.description )
+        if ( !this.name /*|| !this.description*/ )
             throw new unvalidProductException(`Product not valid`)
     }
 }
