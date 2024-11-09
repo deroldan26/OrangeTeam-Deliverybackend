@@ -5,6 +5,7 @@ import { UuidGenerator } from 'src/core/infrastructure/id.generator.ts/uuid-gene
 import { ProductPostgresRepository } from '../repositories/postgres/product.repository';
 import { DataSource } from 'typeorm';
 import { createProductService } from 'src/product/application/commands/create-product.service';
+import { getProductByIdService } from 'src/product/application/queries/get-productById.service';
 
 @ApiTags('Product')
 @Controller('product')
@@ -22,14 +23,15 @@ export class ProductController {
     return await service.execute(createProductDto);
   }
 
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    const service = new getProductByIdService(this.productRepository)
+    return await service.execute({id:id})
+  }
+
   // @Get()
   // findAll() {
   //   return this.productService.findAll();
-  // }
-
-  // @Get(':id')
-  // findOne(@Param('id') id: string) {
-  //   return this.productService.findOne(+id);
   // }
 
   // @Patch(':id')

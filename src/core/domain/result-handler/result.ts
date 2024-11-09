@@ -5,13 +5,13 @@ export class Result<T>
 {
     private value?: T
     private error?: Error
-    private errorCode?: number
+    private responseCode?: number
     private message?: string
 
     private constructor ( value: T, error: Error, errorCode: number, message: string )
     {
         this.error = error
-        this.errorCode = errorCode
+        this.responseCode = errorCode
         this.value = value
         this.message = message
     }
@@ -39,7 +39,7 @@ export class Result<T>
 
     get StatusCode (): number
     {
-        return this.errorCode
+        return this.responseCode
     }
 
     get Message (): string
