@@ -13,8 +13,15 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     this.productMapper = new ProductMapper();
   }
     
-  findProductById(id: string): Promise<Result<Product>> {
-    throw new Error('Method not implemented.');
+  async findProductById(id: string): Promise<Result<Product>> {
+    try {
+      const product = await this.createQueryBuilder('Product').select(['Product.id','Product.name']).where('Product.id = :id',{id}).getOne()
+      const getProduct = await this.productMapper.fromPersistenceToDomain(product);
+      return Result.success<Product>(getProduct, 200)
+    } catch (error) {
+      console.log(error.message);
+      return Result.fail<Product>(new Error(error.message), error.code, error.message);
+    }
   }
   
   async saveProductAggregate(product: Product): Promise<Result<Product>> {
