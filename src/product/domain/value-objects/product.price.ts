@@ -6,10 +6,10 @@ export class ProductPrice implements ValueObject<ProductPrice> {
     constructor(private _price: number) {
         if (_price < 0) throw new unvalidProductPriceException(`Price '${_price}' not valid`)
     }
-    get price() {
+    get Price() {
         return this._price
     }
     equals(obj?: ProductPrice | undefined): boolean {
-        return obj?.price === this.price
+        return obj?._price === this._price
     }
 }

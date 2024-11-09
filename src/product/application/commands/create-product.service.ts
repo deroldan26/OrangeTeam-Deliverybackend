@@ -24,8 +24,8 @@ export class createProductService implements IApplicationService<CreateProductSe
             return Result.fail<CreateProductServiceResponseDto>( result.Error, result.StatusCode, result.Message )
         }
         const response: CreateProductServiceResponseDto = {
-            id: product.id.id,
-            name: product.Name.name,
+            id: product.Id.Id,
+            name: product.Name.Name,
         };
         return Result.success<CreateProductServiceResponseDto>(response, 200);
     }

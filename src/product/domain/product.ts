@@ -14,12 +14,12 @@ export class Product extends AggregateRoot<ProductID>{
 
     get Name (): ProductName
     {
-        return this.Name
+        return this.name
     }
 
     get Description (): ProductDescription
     {
-        return this.Description
+        return this.description
     }
     
     constructor(id: ProductID, name: ProductName/*, description: ProductDescription*/){

@@ -5,9 +5,8 @@ import { ProductEntity } from "../models/postgres/product.entity";
 export class ProductMapper implements IMapper<Product, ProductEntity> {
     async fromDomainToPersistence(domain: Product): Promise<ProductEntity> {
       const productORM = new ProductEntity();
-      productORM.id = domain.id.id;
-      productORM.name = domain.Name.name;
-      console.log(domain);
+      productORM.id = domain.Id.Id;
+      productORM.name = domain.Name.Name;
       return productORM;
     }
     fromPersistenceToDomain(persistence: ProductEntity): Promise<Product> {
