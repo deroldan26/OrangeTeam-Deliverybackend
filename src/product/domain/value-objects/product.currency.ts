@@ -6,10 +6,10 @@ export class ProductCurrency implements ValueObject<ProductCurrency> {
     constructor(private _currency: string) {
         if (_currency.length < 3) throw new unvalidProductCurrencyException(`Currency '${_currency}' not valid`)
     }
-    get currency() {
+    get Currency() {
         return this._currency
     }
     equals(obj?: ProductCurrency | undefined): boolean {
-        return obj?.currency === this.currency
+        return obj?._currency === this._currency
     }
 }

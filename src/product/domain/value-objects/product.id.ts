@@ -7,10 +7,10 @@ export class ProductID implements ValueObject<ProductID> {
     constructor(private _id: string) {
         if (!regExpUUID.test(_id)) throw new unvalidProductIdException(`Id '${_id}' not valid`)
     }
-    get id() {
+    get Id() {
         return this._id
     }
     equals(obj?: ProductID | undefined): boolean {
-        return obj?.id === this.id
+        return obj?._id === this._id
     }
 }

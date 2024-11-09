@@ -6,10 +6,10 @@ export class ProductWeight implements ValueObject<ProductWeight> {
     constructor(private _weight: string) {
         if (_weight.length < 3) throw new unvalidProductWeightException(`Weight '${_weight}' not valid`)
     }
-    get weight() {
+    get Weight() {
         return this._weight
     }
     equals(obj?: ProductWeight | undefined): boolean {
-        return obj?.weight === this.weight
+        return obj?._weight === this._weight
     }
 }

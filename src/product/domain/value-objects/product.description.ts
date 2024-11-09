@@ -6,10 +6,10 @@ export class ProductDescription implements ValueObject<ProductDescription> {
     constructor(private _description: string) {
         if (_description.length < 10) throw new unvalidProductDescriptionException(`Description '${_description}' not valid`)
     }
-    get description() {
+    get Description() {
         return this._description
     }
     equals(obj?: ProductDescription | undefined): boolean {
-        return obj?.description === this.description
+        return obj?._description === this._description
     }
 }
