@@ -1,7 +1,7 @@
 import { Column, Entity, PrimaryColumn } from "typeorm"
 
 @Entity('Product')
-export class Product {
+export class ProductEntity {
     @PrimaryColumn(
         'uuid',
     )
