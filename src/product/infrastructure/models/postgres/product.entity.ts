@@ -19,7 +19,7 @@ export class ProductEntity {
     })
     image: string
     @Column({
-        type: 'integer',
+        type: 'float',
     })
     price: number
     @Column({
