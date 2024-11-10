@@ -1,5 +1,5 @@
 import { unvalidCategoryNameException } from "../exceptions/unvalid.category.name"
-import { ValueObject } from "src/core/domain/value.object"
+import { ValueObject } from "../../../core/domain/value.object"
 
 
 export class CategoryName implements ValueObject<CategoryName> {

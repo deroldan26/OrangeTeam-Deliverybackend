@@ -1,5 +1,5 @@
 import { unvalidProductNameException } from "../exceptions/unvalid.product.name"
-import { ValueObject } from "src/core/domain/value.object"
+import { ValueObject } from "../../../core/domain/value.object"
 
 
 export class ProductName implements ValueObject<ProductName> {

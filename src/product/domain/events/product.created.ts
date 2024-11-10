@@ -1,4 +1,4 @@
-import { DomainEvent } from "src/core/domain/domain.event";
+import { DomainEvent } from "../../../core/domain/domain.event";
 import { ProductID } from "../value-objects/product.id";
 import { ProductName } from "../value-objects/product.name";
 import { ProductImage } from "../value-objects/product.image";

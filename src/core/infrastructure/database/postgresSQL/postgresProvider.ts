@@ -1,5 +1,5 @@
 import { DataSource, getMetadataArgsStorage } from "typeorm";
-import { ProductPostgresRepository } from "src/product/infrastructure/repositories/postgres/product.repository";
+import { ProductPostgresRepository } from "../../../../product/infrastructure/repositories/postgres/product.repository";
 
 export const DatabaseProvider = [
     {

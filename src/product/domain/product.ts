@@ -1,6 +1,5 @@
-import { AggregateRoot } from "src/core/domain/aggregate.root";
-import { ProductID } from "./value-objects/product.id";
-import { DomainEvent } from "src/core/domain/domain.event";
+import { AggregateRoot } from "../../core/domain/aggregate.root";
+import { DomainEvent } from "../../core/domain/domain.event";
 import { productCreatedEvent } from "./events/product.created";
 import { ProductName } from "./value-objects/product.name";
 import { ProductDescription } from "./value-objects/product.description";
@@ -9,7 +8,7 @@ import { ProductImage } from "./value-objects/product.image";
 import { ProductCurrency } from "./value-objects/product.currency";
 import { ProductPrice } from "./value-objects/product.price";
 import { ProductWeight } from "./value-objects/product.weight";
-
+import { ProductID } from "./value-objects/product.id";
 
 export class Product extends AggregateRoot<ProductID>{
     

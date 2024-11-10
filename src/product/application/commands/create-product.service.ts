@@ -1,17 +1,17 @@
-import { IApplicationService } from "src/core/application/service/application-service.interface";
+import { IApplicationService } from "../../../core/application/service/application-service.interface";
 import { CreateProductServiceEntryDto } from "../dtos/entry/create-product-entry.service.dto";
-import { Result } from "src/core/domain/result-handler/result";
+import { Result } from "../../../core/domain/result-handler/result";
 import { CreateProductServiceResponseDto } from "../dtos/response/create-product-response.service.dto";
-import { IProductRepository } from "src/product/domain/repositories/product-repositories.interface";
-import { IdGenerator } from "src/core/application/id.generator/id.generator";
-import { Product } from "src/product/domain/product";
-import { ProductID } from "src/product/domain/value-objects/product.id";
-import { ProductName } from "src/product/domain/value-objects/product.name";
-import { ProductDescription } from "src/product/domain/value-objects/product.description";
-import { ProductImage } from "src/product/domain/value-objects/product.image";
-import { ProductPrice } from "src/product/domain/value-objects/product.price";
-import { ProductCurrency } from "src/product/domain/value-objects/product.currency";
-import { ProductWeight } from "src/product/domain/value-objects/product.weight";
+import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
+import { IdGenerator } from "../../../core/application/id.generator/id.generator";
+import { Product } from "../../domain/product";
+import { ProductID } from "../../domain/value-objects/product.id";
+import { ProductName } from "../../domain/value-objects/product.name";
+import { ProductDescription } from "../../domain/value-objects/product.description";
+import { ProductImage } from "../../domain/value-objects/product.image";
+import { ProductPrice } from "../../domain/value-objects/product.price";
+import { ProductCurrency } from "../../domain/value-objects/product.currency";
+import { ProductWeight } from "../../domain/value-objects/product.weight";
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
 
