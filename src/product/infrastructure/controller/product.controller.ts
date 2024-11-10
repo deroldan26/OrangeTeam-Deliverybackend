@@ -1,13 +1,13 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, ValidationPipe, Query } from '@nestjs/common';
 import { CreateProductDto } from '../dto/create-product.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { UuidGenerator } from 'src/core/infrastructure/id.generator.ts/uuid-generator';
+import { UuidGenerator } from '../../../core/infrastructure/id.generator.ts/uuid-generator';
 import { ProductPostgresRepository } from '../repositories/postgres/product.repository';
 import { DataSource } from 'typeorm';
-import { createProductService } from 'src/product/application/commands/create-product.service';
-import { getProductByIdService } from 'src/product/application/queries/get-productById.service';
+import { createProductService } from '../../../product/application/commands/create-product.service';
+import { getProductByIdService } from '../../../product/application/queries/get-productById.service';
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
-import { GetPaginatedProductService } from 'src/product/application/queries/get-paginatedProduct.service';
+import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
 
 //import { cloudinary } from 'src/core/infrastructure/cloudinary/cloudinary';
 

@@ -1,4 +1,4 @@
-import { Entity } from "src/core/domain/entity";
+import { Entity } from "../../../core/domain/entity";
 import { CategoryID } from "../value-objects/category.id";
 import { CategoryName } from "../value-objects/category.name";
 import { CategoryImage } from "../value-objects/category.image";

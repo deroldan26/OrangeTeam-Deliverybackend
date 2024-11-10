@@ -1,4 +1,4 @@
-import { IdGenerator } from 'src/core/application/id.generator/id.generator'
+import { IdGenerator } from '../../application/id.generator/id.generator'
 import { v4 as uuidv4 } from 'uuid'
 
 

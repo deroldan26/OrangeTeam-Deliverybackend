@@ -1,5 +1,5 @@
 import { unvalidProductImageException } from "../exceptions/unvalid.product.image"
-import { ValueObject } from "src/core/domain/value.object"
+import { ValueObject } from "../../../core/domain/value.object"
 
 
 export class ProductImage implements ValueObject<ProductImage> {

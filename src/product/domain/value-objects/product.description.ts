@@ -1,4 +1,4 @@
-import { ValueObject } from "src/core/domain/value.object"
+import { ValueObject } from "../../../core/domain/value.object"
 import { unvalidProductDescriptionException } from "../exceptions/unvalid.product.description"
 
 

@@ -1,4 +1,4 @@
-import { Result } from 'src/core/domain/result-handler/result';
+import { Result } from '../../../core/domain/result-handler/result';
 import { Product } from '../product';
 
 export interface IProductRepository {

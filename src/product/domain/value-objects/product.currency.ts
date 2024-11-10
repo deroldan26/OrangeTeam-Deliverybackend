@@ -1,4 +1,4 @@
-import { ValueObject } from "src/core/domain/value.object"
+import { ValueObject } from "../../../core/domain/value.object"
 import { unvalidProductCurrencyException } from "../exceptions/unvalid.product.currency"
 
 
