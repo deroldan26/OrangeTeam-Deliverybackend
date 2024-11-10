@@ -20,6 +20,11 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
             products: product.Value.map(product => ({
                 id: product.Id.Id,
                 name: product.Name.Name,
+                description: product.Description.Description,
+                image: product.Image.Image,
+                price: product.Price.Price,
+                currency: product.Currency.Currency,
+                weight: product.Weight.Weight
             }))
         }
         

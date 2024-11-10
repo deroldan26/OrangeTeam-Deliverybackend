@@ -3,8 +3,8 @@ import { unvalidProductWeightException } from "../exceptions/unvalid.product.wei
 
 
 export class ProductWeight implements ValueObject<ProductWeight> {
-    constructor(private _weight: string) {
-        if (_weight.length < 3) throw new unvalidProductWeightException(`Weight '${_weight}' not valid`)
+    constructor(private _weight: number) {
+        if (_weight < 0) throw new unvalidProductWeightException(`Weight '${_weight}' not valid`)
     }
     get Weight() {
         return this._weight

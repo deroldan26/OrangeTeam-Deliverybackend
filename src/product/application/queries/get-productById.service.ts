@@ -20,6 +20,11 @@ export class getProductByIdService implements IApplicationService<GetProductById
         const response: GetProductByIdServiceResponseDto = {
             id: product.Value.Id.Id,
             name: product.Value.Name.Name,
+            description: product.Value.Description.Description,
+            image: product.Value.Image.Image,
+            price: product.Value.Price.Price,
+            currency: product.Value.Currency.Currency,
+            weight: product.Value.Weight.Weight
         };
         return Result.success(response, 200);
     }
