@@ -1,9 +1,9 @@
-import { IApplicationService } from "src/core/application/service/application-service.interface";
+import { IApplicationService } from "../../../core/application/service/application-service.interface";
 import { GetProductByIdServiceEntryDto } from "../dtos/entry/get-productById-entry.service.dto";
 import { GetProductByIdServiceResponseDto } from "../dtos/response/get-product-response.service.dto";
-import { IProductRepository } from "src/product/domain/repositories/product-repositories.interface";
-import { Result } from "src/core/domain/result-handler/result";
-import { Product } from "src/product/domain/product";
+import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
+import { Result } from "../../../core/domain/result-handler/result";
+import { Product } from "../../../product/domain/product";
 
 export class getProductByIdService implements IApplicationService<GetProductByIdServiceEntryDto, GetProductByIdServiceResponseDto>{
 

@@ -1,7 +1,7 @@
-import { Result } from 'src/core/domain/result-handler/result';
-import { Product } from 'src/product/domain/product';
-import { IProductRepository } from 'src/product/domain/repositories/product-repositories.interface';
-import { ProductEntity as ProductORM } from 'src/product/infrastructure/models/postgres/product.entity';
+import { Result } from '../../../../core/domain/result-handler/result';
+import { Product } from '../../../domain/product';
+import { IProductRepository } from '../../../domain/repositories/product-repositories.interface';
+import { ProductEntity as ProductORM } from '../../../infrastructure/models/postgres/product.entity';
 import { DataSource, Repository } from "typeorm";
 import { ProductMapper } from '../../mapper/product.mapper';
 

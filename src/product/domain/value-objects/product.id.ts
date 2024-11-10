@@ -1,5 +1,5 @@
-import { ValueObject } from "src/core/domain/value.object"
-import { regExpUUID } from "src/core/tools/regexp.uuid"
+import { ValueObject } from "../../../core/domain/value.object"
+import { regExpUUID } from "../../../core/tools/regexp.uuid"
 import { unvalidProductIdException } from "../exceptions/unvalid.product.id"
 
 
