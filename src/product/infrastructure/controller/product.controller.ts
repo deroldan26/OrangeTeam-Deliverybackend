@@ -9,6 +9,8 @@ import { getProductByIdService } from 'src/product/application/queries/get-produ
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from 'src/product/application/queries/get-paginatedProduct.service';
 
+//import { cloudinary } from 'src/core/infrastructure/cloudinary/cloudinary';
+
 const cloudinary = require('../../../../cloudinary/cloudinary');
 
 @ApiTags('Product')
@@ -30,7 +32,9 @@ export class ProductController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
-    return await service.execute({id:id})
+    var response = await service.execute({id:id})
+    response.Value.image = cloudinary.url(response.Value.image)
+    return response;
   }
 
   @Get()

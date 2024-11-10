@@ -5,6 +5,7 @@ import { ProductEntity as ProductORM } from 'src/product/infrastructure/models/p
 import { DataSource, Repository } from "typeorm";
 import { ProductMapper } from '../../mapper/product.mapper';
 
+//const cloudinary = require('../../../../cloudinary/cloudinary');
 
 export class ProductPostgresRepository extends Repository<ProductORM> implements IProductRepository{
   private readonly productMapper: ProductMapper;
@@ -16,7 +17,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     
   async findProductById(id: string): Promise<Result<Product>> {
     try {
-      const product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight']).where('Product.id = :id',{id}).getOne()
+      var product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight']).where('Product.id = :id',{id}).getOne()
       const getProduct = await this.productMapper.fromPersistenceToDomain(product);
       return Result.success<Product>(getProduct, 200)
     } catch (error) {
