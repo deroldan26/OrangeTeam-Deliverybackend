@@ -5,6 +5,7 @@ import { ProductEntity as ProductORM } from 'src/product/infrastructure/models/p
 import { DataSource, Repository } from "typeorm";
 import { ProductMapper } from '../../mapper/product.mapper';
 
+
 export class ProductPostgresRepository extends Repository<ProductORM> implements IProductRepository{
   private readonly productMapper: ProductMapper;
 
