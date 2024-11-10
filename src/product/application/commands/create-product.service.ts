@@ -7,6 +7,11 @@ import { IdGenerator } from "src/core/application/id.generator/id.generator";
 import { Product } from "src/product/domain/product";
 import { ProductID } from "src/product/domain/value-objects/product.id";
 import { ProductName } from "src/product/domain/value-objects/product.name";
+import { ProductDescription } from "src/product/domain/value-objects/product.description";
+import { ProductImage } from "src/product/domain/value-objects/product.image";
+import { ProductPrice } from "src/product/domain/value-objects/product.price";
+import { ProductCurrency } from "src/product/domain/value-objects/product.currency";
+import { ProductWeight } from "src/product/domain/value-objects/product.weight";
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
 
@@ -18,7 +23,12 @@ export class createProductService implements IApplicationService<CreateProductSe
     async execute(data: CreateProductServiceEntryDto): Promise<Result<CreateProductServiceResponseDto>> {
         const product = new Product(
             new ProductID( await this.idGenerator.generateId()), 
-            new ProductName(data.name));
+            new ProductName(data.name),
+            new ProductDescription(data.description),
+            new ProductImage(data.image),
+            new ProductPrice(data.price),
+            new ProductCurrency(data.currency),
+            new ProductWeight(data.weight));
         const result = await this.productRepository.saveProductAggregate(product);
         if ( !result.isSuccess() ){
             return Result.fail<CreateProductServiceResponseDto>( result.Error, result.StatusCode, result.Message )
@@ -26,6 +36,11 @@ export class createProductService implements IApplicationService<CreateProductSe
         const response: CreateProductServiceResponseDto = {
             id: product.Id.Id,
             name: product.Name.Name,
+            description: product.Description.Description,
+            image: product.Image.Image,
+            price: product.Price.Price,
+            currency: product.Currency.Currency,
+            weight: product.Weight.Weight
         };
         return Result.success<CreateProductServiceResponseDto>(response, 200);
     }

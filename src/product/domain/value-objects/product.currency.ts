@@ -4,7 +4,7 @@ import { unvalidProductCurrencyException } from "../exceptions/unvalid.product.c
 
 export class ProductCurrency implements ValueObject<ProductCurrency> {
     constructor(private _currency: string) {
-        if (_currency.length < 3) throw new unvalidProductCurrencyException(`Currency '${_currency}' not valid`)
+        if (_currency.length != 3 ) throw new unvalidProductCurrencyException(`Currency '${_currency}' not valid`)
     }
     get Currency() {
         return this._currency
