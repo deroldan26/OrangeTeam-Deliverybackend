@@ -1,11 +1,5 @@
-require('dotenv').config();
-const cloudinary = require('cloudinary').v2;
-
-export const CloudinaryProvider = [
-    {
-        
-    }
-]
+import 'dotenv/config';
+import { v2 as cloudinary } from 'cloudinary';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_NAME,
@@ -13,4 +7,13 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+export const CloudinaryProvider = [
+    {
+        provide: 'CLOUDINARY',
+        useFactory: () => cloudinary,
+    }
+];
+
 module.exports = cloudinary;
+
+//export { cloudinary };

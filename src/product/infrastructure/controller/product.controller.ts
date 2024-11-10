@@ -8,10 +8,8 @@ import { createProductService } from '../../../product/application/commands/crea
 import { getProductByIdService } from '../../../product/application/queries/get-productById.service';
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
-
-//import { cloudinary } from 'src/core/infrastructure/cloudinary/cloudinary';
-
-const cloudinary = require('../../../../cloudinary/cloudinary');
+import { v2 as cloudinary } from 'cloudinary';
+import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 @ApiTags('Product')
 @Controller('product')
@@ -32,8 +30,9 @@ export class ProductController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
+    const urlGenerator = new ImageUrlGenerator();
     var response = await service.execute({id:id})
-    response.Value.image = cloudinary.url(response.Value.image)
+    response.Value.image = await urlGenerator.generateUrl(response.Value.image);
     return response;
   }
 
