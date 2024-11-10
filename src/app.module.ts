@@ -1,13 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { DatabaseProvider } from './core/infrastructure/database/postgresSQL/postgresProvider';
-import { ProductController } from './product/infrastructure/controller/product.controller';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { ProductModule } from './product/product.module';
 
 @Module({
-  imports: [
-    ConfigModule.forRoot({})
-  ],
-  controllers: [ProductController],
-  providers: [...DatabaseProvider],
+  imports: [ProductModule],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}
