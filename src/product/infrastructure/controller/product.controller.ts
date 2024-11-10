@@ -9,6 +9,8 @@ import { getProductByIdService } from 'src/product/application/queries/get-produ
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from 'src/product/application/queries/get-paginatedProduct.service';
 
+const cloudinary = require('../../../../cloudinary/cloudinary');
+
 @ApiTags('Product')
 @Controller('product')
 export class ProductController {
@@ -36,6 +38,28 @@ export class ProductController {
     const {page, take} = query;
     const service = new GetPaginatedProductService(this.productRepository);
     return (await service.execute({page, take})).Value;
+  }
+
+  @Get('image/:id')
+  async GetImage(@Param('id') id: string) {
+
+    const url = cloudinary.url(id)
+
+    console.log(url);
+
+    return url;
+
+    // const uploadResult = await cloudinary.uploader
+    //    .upload(
+    //        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
+    //            public_id: 'shoes',
+    //        }
+    //    )
+    //    .catch((error) => {
+    //        console.log(error);
+    //    });
+    
+    // console.log(uploadResult);
   }
 
   // @Patch(':id')
