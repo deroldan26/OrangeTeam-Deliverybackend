@@ -29,8 +29,6 @@ export class ProductController {
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
     var response = await service.execute({id:id})
-    // const urlGenerator = new ImageUrlGenerator();
-    // response.Value.image = await urlGenerator.generateUrl(response.Value.image);
     return response;
   }
 
