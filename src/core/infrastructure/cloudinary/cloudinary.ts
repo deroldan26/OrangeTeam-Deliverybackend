@@ -14,6 +14,6 @@ export const CloudinaryProvider = [
     }
 ];
 
-module.exports = cloudinary;
+//module.exports = cloudinary;
 
-//export { cloudinary };
+export { cloudinary };

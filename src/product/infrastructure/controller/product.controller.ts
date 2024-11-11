@@ -8,8 +8,6 @@ import { createProductService } from '../../../product/application/commands/crea
 import { getProductByIdService } from '../../../product/application/queries/get-productById.service';
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
-import { v2 as cloudinary } from 'cloudinary';
-import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 @ApiTags('Product')
 @Controller('product')
@@ -30,9 +28,9 @@ export class ProductController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
-    const urlGenerator = new ImageUrlGenerator();
     var response = await service.execute({id:id})
-    response.Value.image = await urlGenerator.generateUrl(response.Value.image);
+    // const urlGenerator = new ImageUrlGenerator();
+    // response.Value.image = await urlGenerator.generateUrl(response.Value.image);
     return response;
   }
 
@@ -43,27 +41,12 @@ export class ProductController {
     return (await service.execute({page, take})).Value;
   }
 
-  @Get('image/:id')
-  async GetImage(@Param('id') id: string) {
-
-    const url = cloudinary.url(id)
-
-    console.log(url);
-
-    return url;
-
-    // const uploadResult = await cloudinary.uploader
-    //    .upload(
-    //        'https://res.cloudinary.com/demo/image/upload/getting-started/shoes.jpg', {
-    //            public_id: 'shoes',
-    //        }
-    //    )
-    //    .catch((error) => {
-    //        console.log(error);
-    //    });
-    
-    // console.log(uploadResult);
-  }
+  // @Get('image/:id')
+  // async GetImage(@Param('id') id: string) {
+  //   const urlGenerator = new ImageUrlGenerator();
+  //   const url = await urlGenerator.generateUrl(id);
+  //   return url;
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {

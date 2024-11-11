@@ -4,6 +4,7 @@ import { GetProductByIdServiceResponseDto } from "../dtos/response/get-product-r
 import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
 import { Result } from "../../../core/domain/result-handler/result";
 import { Product } from "../../../product/domain/product";
+import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 export class getProductByIdService implements IApplicationService<GetProductByIdServiceEntryDto, GetProductByIdServiceResponseDto>{
 
@@ -17,11 +18,13 @@ export class getProductByIdService implements IApplicationService<GetProductById
         if(!product.isSuccess()) {
             return Result.fail( product.Error, product.StatusCode, product.Message )
         }
+        const urlGenerator = new ImageUrlGenerator();
+        const url = await urlGenerator.generateUrl(product.Value.Image.Image);
         const response: GetProductByIdServiceResponseDto = {
             id: product.Value.Id.Id,
             name: product.Value.Name.Name,
             description: product.Value.Description.Description,
-            image: product.Value.Image.Image,
+            image: url,
             price: product.Value.Price.Price,
             currency: product.Value.Currency.Currency,
             weight: product.Value.Weight.Weight
