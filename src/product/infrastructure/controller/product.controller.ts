@@ -28,7 +28,8 @@ export class ProductController {
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
-    return await service.execute({id:id})
+    var response = await service.execute({id:id})
+    return response;
   }
 
   @Get()
@@ -37,6 +38,13 @@ export class ProductController {
     const service = new GetPaginatedProductService(this.productRepository);
     return (await service.execute({page, take})).Value;
   }
+
+  // @Get('image/:id')
+  // async GetImage(@Param('id') id: string) {
+  //   const urlGenerator = new ImageUrlGenerator();
+  //   const url = await urlGenerator.generateUrl(id);
+  //   return url;
+  // }
 
   // @Patch(':id')
   // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
