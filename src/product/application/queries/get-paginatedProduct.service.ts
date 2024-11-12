@@ -25,7 +25,9 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 image: product.Image.Image,
                 price: product.Price.Price,
                 currency: product.Currency.Currency,
-                weight: product.Weight.Weight
+                weight: product.Weight.Weight,
+                stock: product.Stock.Stock,
+                category: product.Category.Name
             }))
         }
 

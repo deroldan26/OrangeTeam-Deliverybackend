@@ -6,6 +6,8 @@ import { ProductDescription } from "../value-objects/product.description";
 import { ProductWeight } from "../value-objects/product.weight";
 import { ProductPrice } from "../value-objects/product.price";
 import { ProductCurrency } from "../value-objects/product.currency";
+import { ProductStock } from "../value-objects/product.stock";
+import { CategoryName } from "../value-objects/category.name";
 
 export class productCreatedEvent extends DomainEvent{
     protected constructor(
@@ -15,11 +17,13 @@ export class productCreatedEvent extends DomainEvent{
         public image: ProductImage,
         public price: ProductPrice,
         public currency: ProductCurrency,
-        public weight: ProductWeight
+        public weight: ProductWeight,
+        public stock: ProductStock,
+        public category: CategoryName
     ){
         super()
     }
-    static create(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight): productCreatedEvent{
-        return new productCreatedEvent(id, name, description, image, price, currency, weight);
+    static create(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category:CategoryName): productCreatedEvent{
+        return new productCreatedEvent(id, name, description, image, price, currency, weight, stock, category);
     }
 }
