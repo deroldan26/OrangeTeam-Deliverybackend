@@ -1,5 +1,4 @@
 export interface CreateProductServiceResponseDto {
-
     id: string
     name: string
     description: string
@@ -7,4 +6,6 @@ export interface CreateProductServiceResponseDto {
     price: number
     currency: string
     weight: number
+    stock: number
+    category: string
 }

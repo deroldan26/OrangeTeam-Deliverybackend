@@ -8,6 +8,8 @@ import { ProductImage } from "../../domain/value-objects/product.image";
 import { ProductPrice } from "../../domain/value-objects/product.price";
 import { ProductCurrency } from "../../domain/value-objects/product.currency";
 import { ProductWeight } from "../../domain/value-objects/product.weight";
+import { ProductStock } from "src/product/domain/value-objects/product.stock";
+import { CategoryName } from "src/product/domain/value-objects/category.name";
 
 export class ProductMapper implements IMapper<Product, ProductEntity> {
     async fromDomainToPersistence(domain: Product): Promise<ProductEntity> {
@@ -18,7 +20,9 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
       productORM.image = domain.Image.Image;
       productORM.price = domain.Price.Price;
       productORM.currency = domain.Currency.Currency;
-      productORM.weight = domain.Weight.Weight;
+      productORM.weight = domain.Weight.Weight
+      productORM.stock = domain.Stock.Stock;
+      productORM.category = domain.Category.Name
       
       return productORM;
     }
@@ -29,6 +33,8 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
              new ProductImage(persistence.image), 
              new ProductPrice(persistence.price), 
              new ProductCurrency(persistence.currency),
-             new ProductWeight(persistence.weight));
+             new ProductWeight(persistence.weight),
+             new ProductStock(persistence.stock),
+             new CategoryName(persistence.category));
     }
   }

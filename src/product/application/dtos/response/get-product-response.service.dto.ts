@@ -7,4 +7,6 @@ export interface GetProductByIdServiceResponseDto {
     price: number
     currency: string
     weight: number
+    stock: number
+    category: string
 }

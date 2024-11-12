@@ -4,6 +4,7 @@ import { GetPaginatedProductServiceResponseDto } from "../dtos/response/get-pagi
 import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
 import { Result } from "../../../core/domain/result-handler/result";
 import { Product } from "../../../product/domain/product";
+import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 export class GetPaginatedProductService implements IApplicationService<GetPaginatedProductServiceEntryDto, GetPaginatedProductServiceResponseDto>{
     constructor(private readonly productRepository: IProductRepository){}
@@ -15,6 +16,7 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
             return Result.fail(product.Error, product.StatusCode, product.Message);
         }
 
+        const urlGenerator = new ImageUrlGenerator();
         const response: GetPaginatedProductServiceResponseDto = {
             products: product.Value.map(product => ({
                 id: product.Id.Id,
@@ -23,8 +25,14 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 image: product.Image.Image,
                 price: product.Price.Price,
                 currency: product.Currency.Currency,
-                weight: product.Weight.Weight
+                weight: product.Weight.Weight,
+                stock: product.Stock.Stock,
+                category: product.Category.Name
             }))
+        }
+
+        for (let i = 0; i < response.products.length; i++) {
+            response.products[i].image = await urlGenerator.generateUrl(response.products[i].image);
         }
         
         return Result.success(response,200);
