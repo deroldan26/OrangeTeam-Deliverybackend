@@ -11,17 +11,26 @@ import { ComboDescription } from "../../domain/value-objects/combo.description";
 import { ComboImage } from "../../domain/value-objects/combo.image";
 import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice";
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
-import { ProductID } from "../../../product/domain/value-objects/product.id";
+import { ProductValidatorService } from "src/product/application/services/product-validator.services";
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
     constructor(
         private readonly comboRepository: IComboRepository,
-        private readonly idGenerator: IdGenerator<string>   
+        private readonly idGenerator: IdGenerator<string> ,
+        private readonly productValidator: ProductValidatorService  
     ) {}
 
     async execute(data: CreateComboServiceEntryDto): Promise<Result<CreateComboServiceResponseDto>> {
         
+            //!Validacion de los ID productos si exiten
+            const validationResult = await this.productValidator.validateProductIds(data.products);
+
+            if (!validationResult.isSuccess()) {
+                return Result.fail<CreateComboServiceResponseDto>(validationResult.Error, validationResult.StatusCode, validationResult.Message);
+            }
+
+
             const combo = new Combo(
                 new ComboID(await this.idGenerator.generateId()),
                 new ComboName(data.name),
@@ -29,7 +38,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 new ComboImage(data.comboImage),
                 new ComboSpecialPrice(data.specialPrice),
                 new ComboCurrency(data.currency),
-                data.products.map(productId => new ProductID(productId))
+                validationResult.Value
             );
 
             const result = await this.comboRepository.saveComboAggregate(combo);
