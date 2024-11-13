@@ -13,9 +13,27 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
         this.comboMapper = new ComboMapper();
     }
 
-//!Declare estos metodos porque lo necesitaba para implementar todos los metodos de IComboRepository, luego lo implementas bien
-    findComboById(id: string): Promise<Result<Combo>>{ return };
-    findPaginatedCombos(page: number, take: number): Promise<Result<Combo[]>>{ return };
+    async findComboById(id: string): Promise<Result<Combo>>{ 
+        try {
+            var combo = await this.createQueryBuilder('Combo').select(['Combo.id','Combo.name','Combo.specialPrice','Combo.currency','Combo.description','Combo.comboImage','Combo.products']).where('Combo.id = :id',{id}).getOne();
+            const getCombo = await this.comboMapper.fromPersistenceToDomain(combo);
+            return Result.success<Combo>(getCombo, 200)
+          } catch (error) {
+            console.log(error.message);
+            return Result.fail<Combo>(new Error(error.message), error.code, error.message);
+          }
+    }
+
+    async findPaginatedCombos(page: number, take: number): Promise<Result<Combo[]>>{ 
+        try {
+            const skip = page * take - take;
+            var combo = await this.createQueryBuilder('Combo').select(['Combo.id','Combo.name','Combo.specialPrice','Combo.currency','Combo.description','Combo.comboImage','Combo.products']).skip(skip).take(take).getMany();
+            const response = await Promise.all(combo.map(combo => this.comboMapper.fromPersistenceToDomain(combo)));
+            return Result.success<Combo[]>(response,200)
+          } catch (error) {
+            return Result.fail(error, 400, error.message);
+          }
+    }
 
     async saveComboAggregate(combo: Combo): Promise<Result<Combo>> {
         try {
