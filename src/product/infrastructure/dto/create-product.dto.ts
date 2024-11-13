@@ -24,4 +24,12 @@ export class CreateProductDto {
   @IsNumber()
   @Min(0)
   weight: number;
+
+  @IsNumber()
+  @Min(0)
+  stock: number;
+
+  @IsString()
+  @MinLength(1)
+  category: string;
 }

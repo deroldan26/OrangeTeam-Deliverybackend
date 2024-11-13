@@ -12,6 +12,8 @@ import { ProductImage } from "../../domain/value-objects/product.image";
 import { ProductPrice } from "../../domain/value-objects/product.price";
 import { ProductCurrency } from "../../domain/value-objects/product.currency";
 import { ProductWeight } from "../../domain/value-objects/product.weight";
+import { ProductStock } from "src/product/domain/value-objects/product.stock";
+import { CategoryName } from "src/product/domain/value-objects/category.name";
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
 
@@ -28,7 +30,9 @@ export class createProductService implements IApplicationService<CreateProductSe
             new ProductImage(data.image),
             new ProductPrice(data.price),
             new ProductCurrency(data.currency),
-            new ProductWeight(data.weight));
+            new ProductWeight(data.weight),
+            new ProductStock(data.stock),
+            new CategoryName(data.category));
         const result = await this.productRepository.saveProductAggregate(product);
         if ( !result.isSuccess() ){
             return Result.fail<CreateProductServiceResponseDto>( result.Error, result.StatusCode, result.Message )
@@ -40,7 +44,9 @@ export class createProductService implements IApplicationService<CreateProductSe
             image: product.Image.Image,
             price: product.Price.Price,
             currency: product.Currency.Currency,
-            weight: product.Weight.Weight
+            weight: product.Weight.Weight,
+            stock: product.Stock.Stock,
+            category: product.Category.Name
         };
         return Result.success<CreateProductServiceResponseDto>(response, 200);
     }

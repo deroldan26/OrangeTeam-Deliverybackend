@@ -5,4 +5,6 @@ export interface CreateProductServiceEntryDto{
     price: number
     currency: string
     weight: number
+    stock: number
+    category: string
 }

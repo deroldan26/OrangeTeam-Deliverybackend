@@ -27,7 +27,9 @@ export class getProductByIdService implements IApplicationService<GetProductById
             image: url,
             price: product.Value.Price.Price,
             currency: product.Value.Currency.Currency,
-            weight: product.Value.Weight.Weight
+            weight: product.Value.Weight.Weight,
+            stock: product.Value.Stock.Stock,
+            category: product.Value.Category.Name
         };
         return Result.success(response, 200);
     }

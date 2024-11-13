@@ -17,7 +17,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     
   async findProductById(id: string): Promise<Result<Product>> {
     try {
-      var product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight']).where('Product.id = :id',{id}).getOne()
+      var product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).where('Product.id = :id',{id}).getOne()
       const getProduct = await this.productMapper.fromPersistenceToDomain(product);
       return Result.success<Product>(getProduct, 200)
     } catch (error) {
@@ -29,7 +29,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
   async findPaginatedProducts(page: number, take: number): Promise<Result<Product[]>>{
     try {
       const skip = page * take - take;
-      const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight']).skip(skip).take(take).getMany();
+      const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).skip(skip).take(take).getMany();
       const response = await Promise.all(products.map(product => this.productMapper.fromPersistenceToDomain(product)));
       return Result.success<Product[]>(response,200)
     } catch (error) {

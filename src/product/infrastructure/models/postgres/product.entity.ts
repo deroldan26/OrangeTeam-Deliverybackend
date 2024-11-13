@@ -30,4 +30,12 @@ export class ProductEntity {
         type: 'integer',
     })
     weight: number
+    @Column({
+        type: 'integer',
+    })
+    stock: number
+    @Column({
+        type: 'varchar',
+    })
+    category: string
 }
