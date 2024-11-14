@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { MessagingService } from '../../../application/events/messaging.service';
-import { RabbitMQConsumerService } from '../../../application/events/rabbitmq-consumer.service';
+import { MessagingService } from './messaging.service';
+import { RabbitMQConsumerService } from './rabbitmq-consumer.service';
 
 @Module({
   imports: [
@@ -21,7 +21,7 @@ import { RabbitMQConsumerService } from '../../../application/events/rabbitmq-co
         }),
         inject: [ConfigService],
       },
-    ]),
+    ])
   ],
   exports: [ClientsModule, MessagingService],
   providers: [MessagingService],

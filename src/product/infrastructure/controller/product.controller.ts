@@ -8,20 +8,23 @@ import { createProductService } from '../../../product/application/commands/crea
 import { getProductByIdService } from '../../../product/application/queries/get-productById.service';
 import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
+import { MessagingService } from '../../../core/infrastructure/events/rabbitmq/messaging.service';
+import { DomainEvent } from '../../../core/domain/domain.event';
 
 @ApiTags('Product')
 @Controller('product')
 export class ProductController {
   private readonly productRepository: ProductPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
-  constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
+  
+  constructor(@Inject('DataSource') private readonly dataSource: DataSource, private readonly messagingService: MessagingService<DomainEvent>) {
     this.uuidCreator = new UuidGenerator();
     this.productRepository = new ProductPostgresRepository(this.dataSource);
   }
 
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
-    const service = new createProductService(this.productRepository, this.uuidCreator);
+    const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService);
     return await service.execute(createProductDto);
   }
 
