@@ -4,12 +4,19 @@ import { DatabaseProvider } from './core/infrastructure/database/postgresSQL/pos
 import { ProductController } from './product/infrastructure/controller/product.controller';
 import { ComboController } from './combo/infraestructure/controller/combo.controller';
 import { CategoryController } from './category/infraestructure/controller/category.controller';
+import { MessagingService } from './core/application/events/messaging.service';
+import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.module';
+
 
 @Module({
   imports: [
-    ConfigModule.forRoot({})
+    ConfigModule.forRoot({isGlobal: true}),
+    RabbitmqModule
   ],
   controllers: [ProductController, ComboController, CategoryController],
-  providers: [...DatabaseProvider],
+  providers: [...DatabaseProvider,{
+    provide: 'MessagingService',
+    useClass: MessagingService,
+  }],
 })
 export class AppModule {}
