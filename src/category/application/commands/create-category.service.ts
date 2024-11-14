@@ -8,7 +8,6 @@ import { Category } from "../../domain/category";
 import { CategoryID } from "../../domain/value-objects/category.id";
 import { CategoryName } from "../../domain/value-objects/category.name";
 import { CategoryImage } from "../../domain/value-objects/category.image";
-import { CategoryValidatorService } from "src/category/application/services/category-validator.services";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 export class createCategoryService implements IApplicationService<CreateCategoryServiceEntryDto, CreateCategoryServiceResponseDto> {

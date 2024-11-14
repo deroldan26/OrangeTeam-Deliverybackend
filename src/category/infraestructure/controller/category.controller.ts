@@ -1,11 +1,10 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Inject, ValidationPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Inject, ValidationPipe, Query } from '@nestjs/common';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { UuidGenerator } from '../../../core/infrastructure/id.generator.ts/uuid-generator';
 import { CategoryPostgresRepository } from '../repositories/postgres/category.repository';
 import { DataSource } from 'typeorm';
 import { createCategoryService } from '../../../category/application/commands/create-category.service';
-import { getProductByIdService } from '../../../product/application/queries/get-productById.service';
 import { FindPaginatedCategoryDto } from '../dto/find-paginated-category.dto';
 import { GetPaginatedCategoryService } from '../../../category/application/queries/get-paginatedCategory.service';
 

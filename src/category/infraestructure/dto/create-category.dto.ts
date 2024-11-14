@@ -1,4 +1,4 @@
-import { IsString, IsNumber, Min, MinLength, IsArray } from 'class-validator';
+import { IsString,  MinLength} from 'class-validator';
 
 export class CreateCategoryDto {
     @IsString()
