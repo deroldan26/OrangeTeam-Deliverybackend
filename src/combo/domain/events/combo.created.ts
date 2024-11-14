@@ -5,7 +5,7 @@ import { ComboSpecialPrice } from "../value-objects/combo.specialPrice";
 import { ComboCurrency } from "../value-objects/combo.currency";
 import { ComboDescription } from "../value-objects/combo.description";
 import { ComboImage } from "../value-objects/combo.image";
-import { ProductID } from "src/product/domain/value-objects/product.id";
+import { ProductID } from "../../../product/domain/value-objects/product.id";
 
 export class ComboCreatedEvent extends DomainEvent {
   constructor(

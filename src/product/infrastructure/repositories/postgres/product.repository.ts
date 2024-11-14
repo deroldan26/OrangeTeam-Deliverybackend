@@ -26,10 +26,19 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     }
   }
 
-  async findPaginatedProducts(page: number, take: number): Promise<Result<Product[]>>{
+  async findPaginatedProducts(page: number, take: number, name?: string, category?: string): Promise<Result<Product[]>>{
     try {
+      const query = this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category'])
+      if(name){
+        query.where('Product.name LIKE :name',{name: `%${name}%`});
+      }
+      if(category){
+        query.where('Product.category = :category',{category});
+      }
       const skip = page * take - take;
-      const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).skip(skip).take(take).getMany();
+      query.skip(skip).take(take);
+      //const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).skip(skip).take(take).getMany();
+      const products = await query.getMany();
       const response = await Promise.all(products.map(product => this.productMapper.fromPersistenceToDomain(product)));
       return Result.success<Product[]>(response,200)
     } catch (error) {

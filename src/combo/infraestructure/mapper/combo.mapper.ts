@@ -7,7 +7,7 @@ import { ComboDescription } from "../../domain/value-objects/combo.description";
 import { ComboImage } from '../../domain/value-objects/combo.image';
 import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice";
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
-import { ProductID } from "src/product/domain/value-objects/product.id";
+import { ProductID } from "../../../product/domain/value-objects/product.id";
 
 export class ComboMapper implements IMapper<Combo, ComboEntity> {
   
