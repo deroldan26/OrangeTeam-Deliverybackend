@@ -7,13 +7,13 @@ export class RabbitMQConsumerService<T> implements OnModuleInit {
     //console.log('RabbitMQ Consumer Service initialized');
   }
 
-  @EventPattern('ProductCreatedEvent')
+  @EventPattern('productCreatedEvent')
   async handleProductCreated(@Payload() data: T, @Ctx() context: RmqContext) {
     // const channel = context.getChannelRef();
     // const originalMsg = context.getMessage();
 
     // channel.ack(originalMsg);
-
+    //throw new Error('Not implemented');
     console.log('Product created event received:', data);
   }
 }
