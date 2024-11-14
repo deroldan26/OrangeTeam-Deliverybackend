@@ -14,6 +14,7 @@ import { ProductCurrency } from "../../domain/value-objects/product.currency";
 import { ProductWeight } from "../../domain/value-objects/product.weight";
 import { ProductStock } from "src/product/domain/value-objects/product.stock";
 import { CategoryName } from "src/product/domain/value-objects/category.name";
+import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
 
@@ -23,11 +24,13 @@ export class createProductService implements IApplicationService<CreateProductSe
     ){}
     
     async execute(data: CreateProductServiceEntryDto): Promise<Result<CreateProductServiceResponseDto>> {
+        const imageUrlGenerator = new ImageUrlGenerator();
+        const imageID = await imageUrlGenerator.UploadImage(data.image);
         const product = new Product(
             new ProductID( await this.idGenerator.generateId()), 
             new ProductName(data.name),
             new ProductDescription(data.description),
-            new ProductImage(data.image),
+            new ProductImage(imageID),
             new ProductPrice(data.price),
             new ProductCurrency(data.currency),
             new ProductWeight(data.weight),
