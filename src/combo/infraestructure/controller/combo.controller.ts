@@ -6,10 +6,10 @@ import { ComboPostgresRepository } from '../repositories/postgres/combo.reposito
 import { createComboService } from '../../../combo/application/commands/create-combo.service';
 import { DataSource } from 'typeorm';
 import { ProductPostgresRepository } from '../../../product/infrastructure/repositories/postgres/product.repository';
-import { ProductValidatorService } from 'src/product/application/services/product-validator.services';
+import { ProductValidatorService } from '../../../product/application/services/product-validator.services';
 import { getComboByIdService } from '../../application/queries/get-comboById.service';
 import { FindPaginatedComboDto } from '../dto/find-paginated-product.dto';
-import { GetPaginatedComboService } from 'src/combo/application/queries/get-paginatedCombo.service';
+import { GetPaginatedComboService } from '../../../combo/application/queries/get-paginatedCombo.service';
 
 @ApiTags('Combo')
 @Controller('combo')
