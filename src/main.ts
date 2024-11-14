@@ -27,7 +27,9 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, documentFactory);app.connectMicroservice<MicroserviceOptions>({
+
+  SwaggerModule.setup('api', app, documentFactory);
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [configService.get<string>('RABBITMQ_URL')],
