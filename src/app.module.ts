@@ -6,11 +6,13 @@ import { ComboController } from './combo/infraestructure/controller/combo.contro
 import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.module';
 import { MessagingService } from './core/infrastructure/events/rabbitmq/messaging.service';
 import { RabbitMQConsumerService } from './core/infrastructure/events/rabbitmq/rabbitmq-consumer.service';
+import { EmailModule } from './core/infrastructure/emailsender/email.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
-    RabbitmqModule
+    RabbitmqModule,
+    EmailModule
   ],
   controllers: [ProductController, ComboController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
