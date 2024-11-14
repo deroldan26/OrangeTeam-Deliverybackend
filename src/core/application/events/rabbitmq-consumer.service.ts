@@ -4,7 +4,7 @@ import { EventPattern, Payload, Ctx, RmqContext } from '@nestjs/microservices';
 @Controller()
 export class RabbitMQConsumerService<T> implements OnModuleInit {
   onModuleInit() {
-    console.log('RabbitMQ Consumer Service initialized');
+    //console.log('RabbitMQ Consumer Service initialized');
   }
 
   @EventPattern('ProductCreatedEvent')

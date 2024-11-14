@@ -1,9 +1,16 @@
 import { Type } from "class-transformer";
-import { IsInt, IsOptional, Min } from "class-validator";
+import { IsInt, IsOptional, IsString, Min } from "class-validator";
 
 
-export class FindPaginatedProductDto {
+export class FindPaginatedProductDto {  
+  @IsOptional()
     @IsOptional()
+    @IsString()
+    category?: string;
+    @IsOptional()
+    @IsString()
+    name?: string;
+    
     @IsInt()
     @Min(1)
     @Type(() => Number)

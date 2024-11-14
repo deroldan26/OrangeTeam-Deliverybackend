@@ -6,7 +6,7 @@ import { ComboPostgresRepository } from '../repositories/postgres/combo.reposito
 import { createComboService } from '../../../combo/application/commands/create-combo.service';
 import { DataSource } from 'typeorm';
 import { ProductPostgresRepository } from '../../../product/infrastructure/repositories/postgres/product.repository';
-import { ProductValidatorService } from 'src/product/application/services/product-validator.services';
+import { ProductValidatorService } from '../../../product/application/services/product-validator.services';
 
 @ApiTags('Combo')
 @Controller('combo')

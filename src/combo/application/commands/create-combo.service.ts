@@ -11,7 +11,7 @@ import { ComboDescription } from "../../domain/value-objects/combo.description";
 import { ComboImage } from "../../domain/value-objects/combo.image";
 import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice";
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
-import { ProductValidatorService } from "src/product/application/services/product-validator.services";
+import { ProductValidatorService } from "../../../product/application/services/product-validator.services";
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
