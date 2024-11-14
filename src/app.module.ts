@@ -3,12 +3,18 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseProvider } from './core/infrastructure/database/postgresSQL/postgresProvider';
 import { ProductController } from './product/infrastructure/controller/product.controller';
 import { ComboController } from './combo/infraestructure/controller/combo.controller';
+import { MessagingService } from './core/application/events/messaging.service';
+import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({})
+    ConfigModule.forRoot({isGlobal: true}),
+    RabbitmqModule
   ],
   controllers: [ProductController, ComboController],
-  providers: [...DatabaseProvider],
+  providers: [...DatabaseProvider,{
+    provide: 'MessagingService',
+    useClass: MessagingService,
+  }],
 })
 export class AppModule {}
