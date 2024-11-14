@@ -12,6 +12,7 @@ import { ComboImage } from "../../domain/value-objects/combo.image";
 import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice";
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
 import { ProductValidatorService } from "src/product/application/services/product-validator.services";
+import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
@@ -30,12 +31,14 @@ export class createComboService implements IApplicationService<CreateComboServic
                 return Result.fail<CreateComboServiceResponseDto>(validationResult.Error, validationResult.StatusCode, validationResult.Message);
             }
 
-
+            const imageUrlGenerator = new ImageUrlGenerator();
+            const imageID = await imageUrlGenerator.UploadImage(data.comboImage);
+            
             const combo = new Combo(
                 new ComboID(await this.idGenerator.generateId()),
                 new ComboName(data.name),
                 new ComboDescription(data.description),
-                new ComboImage(data.comboImage),
+                new ComboImage(imageID),
                 new ComboSpecialPrice(data.specialPrice),
                 new ComboCurrency(data.currency),
                 validationResult.Value
