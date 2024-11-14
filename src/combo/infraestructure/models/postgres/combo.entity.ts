@@ -9,7 +9,7 @@ export class ComboEntity {
     @Column('varchar')
     name: string;
 
-    @Column('float')
+    @Column({ type: 'double precision', name: 'specialPrice' })
     specialPrice: number;
 
     @Column('varchar')
@@ -18,9 +18,9 @@ export class ComboEntity {
     @Column('varchar')
     description: string;
 
-    @Column('varchar')
+    @Column({ type: 'varchar', name: 'comboImage' })
     comboImage: string;
 
-    @Column('json')
+    @Column({ type: 'json' })
     products: string[];
 }
