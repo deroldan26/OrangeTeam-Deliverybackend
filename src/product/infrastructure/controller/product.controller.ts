@@ -34,9 +34,9 @@ export class ProductController {
 
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
-    const {page, take} = query;
+    const {page, take, name, category} = query;
     const service = new GetPaginatedProductService(this.productRepository);
-    return (await service.execute({page, take})).Value;
+    return (await service.execute({page, take, name, category})).Value;
   }
 
   // @Get('image/:id')

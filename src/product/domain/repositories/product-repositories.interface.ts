@@ -4,5 +4,5 @@ import { Product } from '../product';
 export interface IProductRepository {
   findProductById(id: string): Promise<Result<Product>>;
   saveProductAggregate(product: Product): Promise<Result<Product>>;
-  findPaginatedProducts(page: number, take: number): Promise<Result<Product[]>>
+  findPaginatedProducts(page: number, take: number, name?: string, category?: string): Promise<Result<Product[]>>
 }

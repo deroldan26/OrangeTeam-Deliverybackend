@@ -65,7 +65,8 @@ export class Product extends AggregateRoot<ProductID>{
     
     constructor(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category: CategoryName){
         const productCreated = productCreatedEvent.create(id, name, description, image, price, currency, weight, stock, category);
-        super(id, productCreated);
+        
+        super(id,productCreated);
     }
     
     protected when(event: DomainEvent): void {
