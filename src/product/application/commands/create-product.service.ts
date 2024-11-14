@@ -15,12 +15,14 @@ import { ProductWeight } from "../../domain/value-objects/product.weight";
 import { ProductStock } from "src/product/domain/value-objects/product.stock";
 import { CategoryName } from "src/product/domain/value-objects/category.name";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { DomainEvent } from "../../../core/domain/domain.event";
+import { MessagingService } from "../../../core/infrastructure/events/rabbitmq/messaging.service";
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
-
     constructor(
         private readonly productRepository:IProductRepository,
-        private readonly idGenerator: IdGenerator<string>   
+        private readonly idGenerator: IdGenerator<string>,
+        private readonly messagingService: MessagingService<DomainEvent>   
     ){}
     
     async execute(data: CreateProductServiceEntryDto): Promise<Result<CreateProductServiceResponseDto>> {
@@ -51,6 +53,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             stock: product.Stock.Stock,
             category: product.Category.Name
         };
+        await this.messagingService.sendMessage('productCreatedEvent', product.pullDomainEvent());
         return Result.success<CreateProductServiceResponseDto>(response, 200);
     }
 }
