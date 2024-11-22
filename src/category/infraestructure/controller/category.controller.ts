@@ -7,8 +7,12 @@ import { DataSource } from 'typeorm';
 import { createCategoryService } from '../../../category/application/commands/create-category.service';
 import { FindPaginatedCategoryDto } from '../dto/find-paginated-category.dto';
 import { GetPaginatedCategoryService } from '../../../category/application/queries/get-paginatedCategory.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Category')
+@ApiBearerAuth('JWT-auth')
 @Controller('category')
 export class CategoryController {
   private readonly categoryRepository: CategoryPostgresRepository;
@@ -18,6 +22,7 @@ export class CategoryController {
     this.categoryRepository = new CategoryPostgresRepository(this.dataSource);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createProduct(@Body() createCategoryDto: CreateCategoryDto) {
     const service = new createCategoryService(this.categoryRepository, this.uuidCreator);
@@ -31,6 +36,7 @@ export class CategoryController {
 //     return response;
 //   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedCategoryDto) {
     const {page, take} = query;

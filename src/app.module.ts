@@ -8,14 +8,18 @@ import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.m
 import { MessagingService } from './core/infrastructure/events/rabbitmq/messaging.service';
 import { RabbitMQConsumerService } from './core/infrastructure/events/rabbitmq/rabbitmq-consumer.service';
 import { EmailModule } from './core/infrastructure/emailsender/email.module';
+import { AuthModule } from './auth/infraestructure/auth.module';
+import { AuthController } from './auth/infraestructure/controller/auth.controller';
+import { UserController } from './user/infrastructure/controller/user.controller';
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     RabbitmqModule,
-    EmailModule
+    EmailModule,
+    AuthModule
   ],
-  controllers: [ProductController, ComboController, CategoryController, RabbitMQConsumerService],
+  controllers: [ProductController, ComboController, CategoryController, AuthController, UserController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,

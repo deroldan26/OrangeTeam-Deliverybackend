@@ -10,8 +10,12 @@ import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
 import { MessagingService } from '../../../core/infrastructure/events/rabbitmq/messaging.service';
 import { DomainEvent } from '../../../core/domain/domain.event';
+import { ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
+import { UseGuards } from '@nestjs/common';
 
 @ApiTags('Product')
+@ApiBearerAuth('JWT-auth')
 @Controller('product')
 export class ProductController {
   private readonly productRepository: ProductPostgresRepository;
@@ -22,12 +26,14 @@ export class ProductController {
     this.productRepository = new ProductPostgresRepository(this.dataSource);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService);
     return await service.execute(createProductDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
@@ -35,6 +41,7 @@ export class ProductController {
     return response;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
     const {page, take, name, category} = query;
