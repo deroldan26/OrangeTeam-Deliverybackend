@@ -55,4 +55,13 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
       return Result.fail<Product>(new Error(error.message), error.code, error.message);
     }
   }
+
+  async deleteProductById(id: string): Promise<Result<string>> {
+    try {
+      await this.delete(id);
+      return Result.success<string>(id, 200);
+    } catch (error) {
+      return Result.fail<string>(new Error(error.message), error.code, error.message);
+    }
+  }
 }

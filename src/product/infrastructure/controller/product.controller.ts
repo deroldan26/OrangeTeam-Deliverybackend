@@ -10,6 +10,9 @@ import { FindPaginatedProductDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedProductService } from '../../../product/application/queries/get-paginatedProduct.service';
 import { MessagingService } from '../../../core/infrastructure/events/rabbitmq/messaging.service';
 import { DomainEvent } from '../../../core/domain/domain.event';
+import { deleteProductService } from '../../../product/application/commands/delete-product.service';
+import { UpdateProductDto } from '../dto/update-product.dto';
+import { updateProductService } from 'src/product/application/commands/update-product.service';
 
 @ApiTags('Product')
 @Controller('product')
@@ -42,20 +45,17 @@ export class ProductController {
     return (await service.execute({page, take, name, category})).Value;
   }
 
-  // @Get('image/:id')
-  // async GetImage(@Param('id') id: string) {
-  //   const urlGenerator = new ImageUrlGenerator();
-  //   const url = await urlGenerator.generateUrl(id);
-  //   return url;
-  // }
+  @Patch(':id')
+  async update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
+    const service = new updateProductService(this.productRepository, this.messagingService);
+    var response = await service.execute({id: id, ...updateProductDto});
+    return response;
+  }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-  //   return this.productService.update(+id, updateProductDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.productService.remove(+id);
-  // }
+  @Delete(':id')
+  async deleteProduct(@Param('id') id: string) {
+    const service = new deleteProductService(this.productRepository, this.messagingService);
+    var response = await service.execute({id:id});
+    return response;
+  }
 }

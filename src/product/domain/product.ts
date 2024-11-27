@@ -62,6 +62,38 @@ export class Product extends AggregateRoot<ProductID>{
     {
         return this.category
     }
+
+    ChangeName(name: ProductName): void {
+        this.name = name;
+    }
+
+    ChangeDescription(description: ProductDescription): void {
+        this.description = description;
+    }
+
+    ChangeImage(image: ProductImage): void {
+        this.image = image;
+    }
+
+    ChangePrice(price: ProductPrice): void {
+        this.price = price;
+    }
+
+    ChangeCurrency(currency: ProductCurrency): void {
+        this.currency = currency;
+    }
+
+    ChangeWeight(weight: ProductWeight): void {
+        this.weight = weight;
+    }
+
+    ChangeStock(stock: ProductStock): void {
+        this.stock = stock;
+    }
+
+    ChangeCategory(category: CategoryName): void {
+        this.category = category;
+    }
     
     constructor(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category: CategoryName){
         const productCreated = productCreatedEvent.create(id, name, description, image, price, currency, weight, stock, category);
