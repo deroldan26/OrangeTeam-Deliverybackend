@@ -1,5 +1,5 @@
-import { Type } from "class-transformer";
-import { IsInt, IsOptional, Min } from "class-validator";
+import { Transform, Type } from "class-transformer";
+import { IsArray, IsInt, IsNumber, IsOptional, IsString, Min } from "class-validator";
 
 
 export class FindPaginatedComboDto {
@@ -14,4 +14,20 @@ export class FindPaginatedComboDto {
     @Min(1)
     @Type(() => Number)
     take: number = 10;
+
+    @IsOptional()
+    @Transform(({ value }) => (typeof value === 'string' ? [value] : value))
+    @IsArray()
+    @IsString({ each: true })
+    category?: string[];
+  
+    @IsOptional()
+    @IsString()
+    name?: string;
+  
+    @IsOptional()
+    @IsNumber()
+    @Min(1)
+    @Type(() => Number)
+    price?: number;
   }

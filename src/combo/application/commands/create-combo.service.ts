@@ -13,35 +13,54 @@ import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
 import { ProductValidatorService } from "../../../product/application/services/product-validator.services";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { CategoryValidatorService } from "src/category/application/services/category-validator.services";
+import { ComboWeight } from "src/combo/domain/value-objects/combo.weight";
+import { ComboMeasurement } from "src/combo/domain/value-objects/combo.measurement";
+import { ComboStock } from "src/combo/domain/value-objects/combo.stock";
+import { ComboCaducityDate } from "src/combo/domain/value-objects/combo.caducityDate";
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
     constructor(
         private readonly comboRepository: IComboRepository,
         private readonly idGenerator: IdGenerator<string> ,
-        private readonly productValidator: ProductValidatorService  
+        private readonly productValidator: ProductValidatorService,
+        private readonly categoryValidator: CategoryValidatorService
     ) {}
 
     async execute(data: CreateComboServiceEntryDto): Promise<Result<CreateComboServiceResponseDto>> {
         
             //!Validacion de los ID productos si exiten
-            const validationResult = await this.productValidator.validateProductIds(data.products);
+            const validationProductResult = await this.productValidator.validateProductIds(data.products);
 
-            if (!validationResult.isSuccess()) {
-                return Result.fail<CreateComboServiceResponseDto>(validationResult.Error, validationResult.StatusCode, validationResult.Message);
+            if (!validationProductResult.isSuccess()) {
+                return Result.fail<CreateComboServiceResponseDto>(validationProductResult.Error, validationProductResult.StatusCode, validationProductResult.Message);
+            }
+
+            //!Validacion de los ID categoria si exiten
+            const validationCategoryResult = await this.categoryValidator.validateCategoryIds(data.categories);
+
+            if (!validationCategoryResult.isSuccess()) {
+                return Result.fail<CreateComboServiceResponseDto>(validationCategoryResult.Error, validationCategoryResult.StatusCode, validationCategoryResult.Message);
             }
 
             const imageUrlGenerator = new ImageUrlGenerator();
-            const imageID = await imageUrlGenerator.UploadImage(data.comboImage);
-            
+            const imageIDs = await Promise.all(data.comboImages.map(image => imageUrlGenerator.UploadImage(image)));
+            const comboImages = imageIDs.map(imageID => new ComboImage(imageID));
+
             const combo = new Combo(
                 new ComboID(await this.idGenerator.generateId()),
                 new ComboName(data.name),
                 new ComboDescription(data.description),
-                new ComboImage(imageID),
+                comboImages,
                 new ComboSpecialPrice(data.specialPrice),
                 new ComboCurrency(data.currency),
-                validationResult.Value
+                validationProductResult.Value,
+                new ComboWeight(data.weight),
+                new ComboMeasurement(data.measurement),
+                new ComboStock(data.stock),
+                data.caducityDate ? new ComboCaducityDate(data.caducityDate) : undefined,
+                validationCategoryResult.Value
             );
 
             const result = await this.comboRepository.saveComboAggregate(combo);
@@ -55,8 +74,14 @@ export class createComboService implements IApplicationService<CreateComboServic
                 specialPrice: combo.SpecialPrice.Price,
                 currency: combo.Currency.Currency,
                 description: combo.Description.Description,
-                comboImage: combo.ComboImage.Image,
+                comboImages: combo.ComboImages.map(image => image.Image),
                 products: combo.Products.map(product => product.Id),
+                weight: combo.Weight.Weight,
+                measurement: combo.Measurement.Measurement,
+                stock: combo.Stock.Stock,
+                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
+                categories: combo.Categories.map(category => category.Id)
+
             };
 
             return Result.success<CreateComboServiceResponseDto>(response, 200);
