@@ -17,6 +17,6 @@ export class OrderComboMapper implements IMapper<Combo, OrderComboEntity> {
     async fromPersistenceToDomain(persistence: OrderComboEntity): Promise<Combo> {
         return new Combo(new OrderComboID(persistence.id), 
             new OrderComboQuantity(persistence.quantity),
-            new OrderID(persistence.order.orderId));
+            new OrderID(persistence.orderId));
     }
   }

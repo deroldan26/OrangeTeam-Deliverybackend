@@ -21,7 +21,6 @@ export class ReportPostgresRepository extends Repository<ReportORM> implements I
         } catch (error) {
             return Result.fail<OrderReport>(new Error(error.message), error.code, error.message);
         }
-        throw new Error("Method not implemented.");
     }
 
     async saveReportEntity(report: OrderReport): Promise<Result<OrderReport>> {

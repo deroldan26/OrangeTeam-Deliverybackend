@@ -65,8 +65,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
         )
         await this.paymentRepository.savePaymentEntity(order.PaymentMethod);
         await this.reportRepository.saveReportEntity(order.Report);
-        await this.orderProductRepository.saveOrderProductAggregate(order.Products);
-        await this.orderComboProductRepository.saveOrderComboAggregate(order.Combos);
+        await this.orderProductRepository.saveOrderProductEntity(order.Products);
+        await this.orderComboProductRepository.saveOrderComboEntity(order.Combos);
         console.log("prueba",order.Combos, order.Products)
         const result = await this.orderRepository.saveOrderAggregate(order);
         if ( !result.isSuccess() ){

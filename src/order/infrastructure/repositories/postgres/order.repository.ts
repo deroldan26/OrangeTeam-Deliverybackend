@@ -40,8 +40,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'Order.createdDate',
                 'Order.status',
                 'Order.address',
-                'Order.products',
-                'Order.combos',
                 'Order.receivedDate',
                 'paymentMethod.id',
                 'paymentMethod.amount',
@@ -51,8 +49,13 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'report.description',
                 'report.reportDate'
             ]).where('Order.orderId = :id',{id}).getOne()
-            console.log("Select de la BD orden: ",order)
+            var products = await this.orderProductRepository.findOrderProductById(order.orderId);
+            console.log("Entra al findOrderComboById")
+            var combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
+            console.log("Select de la BD combos: ",combos)
             const getOrder = await this.orderMapper.fromPersistenceToDomain(order);
+            const updatedOrder = { ...getOrder, Products: products.Value, Combos: combos.Value };
+            console.log("UpdatedOrder:************", updatedOrder)
             return Result.success<Order>(getOrder, 200)
         } catch (error) {
             return Result.fail<Order>(new Error(error.message), error.code, error.message);

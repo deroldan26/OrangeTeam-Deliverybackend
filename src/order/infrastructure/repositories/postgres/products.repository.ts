@@ -14,10 +14,23 @@ export class OrderProductPostgresRepository extends Repository<ProductORM> imple
         this.productMapper = new OrderProductMapper();
     }
     
-    async findOrderById(id: string): Promise<Result<Product[]>> {
-        throw new Error("Method not implemented.");
+    async findOrderProductById(id: string): Promise<Result<Product[]>> {
+        try {
+            var orderProducts = await this.createQueryBuilder('OrderProduct')
+                .select(['OrderProduct.id','OrderProduct.quantity','OrderProduct.orderId'])
+                .where('OrderProduct.orderId = :id',{id})
+                .getMany()
+            const products: Product[] = [];
+            for (const orderProduct of orderProducts) {
+                const product = await this.productMapper.fromPersistenceToDomain(orderProduct);
+                products.push(product);
+            }
+            return Result.success<Product[]>(products, 200)
+        } catch (error) {
+            return Result.fail<Product[]>(new Error(error.message), error.code, error.message);
+        }
     }
-    async saveOrderProductAggregate(products: Product[]): Promise<Result<Product[]>> {
+    async saveOrderProductEntity(products: Product[]): Promise<Result<Product[]>> {
         try {
             console.log("Guardando productos en BD",products)
             // const newProducts = await Promise.all(products.map(product => this.productMapper.fromDomainToPersistence(product)));

@@ -44,7 +44,7 @@ export class OrderController{
 
     @Get(':id')
     async findOne(@Param('id') id: string) {
-        const service = new getOrderByIdService(this.orderRepository);
+        const service = new getOrderByIdService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
         var response = await service.execute({id:id})
         return response;
     }

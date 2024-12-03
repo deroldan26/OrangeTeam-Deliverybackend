@@ -14,10 +14,25 @@ export class OrderComboPostgresRepository extends Repository<ComboORM> implement
         this.comboMapper = new OrderComboMapper();
     }
     
-    async findOrderById(id: string): Promise<Result<Combo[]>> {
-        throw new Error("Method not implemented.");
+    async findOrderComboById(id: string): Promise<Result<Combo[]>> {
+        try {
+            console.log("findOrderComboById")
+            var orderCombos = await this.createQueryBuilder('OrderCombo')
+                .select(['OrderCombo.id','OrderCombo.quantity','OrderCombo.orderId'])
+                .where('OrderCombo.orderId = :id',{id})
+                .getMany()
+            console.log("Select de la BD combos: ",orderCombos)
+            const combos: Combo[] = [];
+            for (const orderCombo of orderCombos) {
+                const product = await this.comboMapper.fromPersistenceToDomain(orderCombo);
+                combos.push(product);
+            }
+            return Result.success<Combo[]>(combos, 200)
+        } catch (error) {
+            return Result.fail<Combo[]>(new Error(error.message), error.code, error.message);
+        }
     }
-    async saveOrderComboAggregate(combos: Combo[]): Promise<Result<Combo[]>> {
+    async saveOrderComboEntity(combos: Combo[]): Promise<Result<Combo[]>> {
         try {
             const newCombos = await Promise.all(combos.map(combo => this.comboMapper.fromDomainToPersistence(combo)));
             await this.save(newCombos);

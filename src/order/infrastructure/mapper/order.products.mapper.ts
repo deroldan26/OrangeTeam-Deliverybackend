@@ -18,7 +18,7 @@ export class OrderProductMapper implements IMapper<Product, OrderProductEntity> 
     async fromPersistenceToDomain(persistence: OrderProductEntity): Promise<Product> {
         return new Product(new OrderProductID(persistence.id), 
             new OrderProductQuantity(persistence.quantity),
-            new OrderID(persistence.order.orderId),
+            new OrderID(persistence.orderId),
         );
     }
   }
