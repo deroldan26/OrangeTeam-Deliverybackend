@@ -3,7 +3,9 @@ import { ValueObject } from "../../../core/domain/value.object";
 
 export class DiscountInitDate implements ValueObject<DiscountInitDate> {
   constructor(private _initDate: Date) {
-    
+    if (!(_initDate instanceof Date)) {
+      throw new unvalidDiscountInitDateException("Init Date not valid.");
+    }
   }
 
   get InitDate() {

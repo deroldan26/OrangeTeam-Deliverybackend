@@ -11,15 +11,15 @@ import { DiscountEntity } from "../models/postgres/discount.entity";
 export class DiscountMapper implements IMapper<Discount, DiscountEntity> {
   
     async fromDomainToPersistence(domain: Discount): Promise<DiscountEntity> {
-        const comboORM = new DiscountEntity();
-        comboORM.id = domain.Id.Id;
-        comboORM.name = domain.Name.Name;
-        comboORM.description = domain.Description.Description;
-        comboORM.expireDate = domain.ExpireDate.ExpireDate
-        comboORM.initDate = domain.InitDate.InitDate;
-        comboORM.percentage = domain.Percentage.Percentage;
+        const discountORM = new DiscountEntity();
+        discountORM.id = domain.Id.Id;
+        discountORM.name = domain.Name.Name;
+        discountORM.description = domain.Description.Description;
+        discountORM.expireDate = domain.ExpireDate.ExpireDate
+        discountORM.initDate = domain.InitDate.InitDate;
+        discountORM.percentage = domain.Percentage.Percentage;
         
-        return comboORM;
+        return discountORM;
     }
 
     async fromPersistenceToDomain(persistence: DiscountEntity): Promise<Discount> {
