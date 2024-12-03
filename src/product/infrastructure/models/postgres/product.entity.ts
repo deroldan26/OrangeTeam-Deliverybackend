@@ -15,9 +15,10 @@ export class ProductEntity {
     })
     description: string
     @Column({
-        type: 'varchar',
+        type: 'json',
+        nullable: true
     })
-    image: string
+    images: string[]
     @Column({
         type: 'float',
     })

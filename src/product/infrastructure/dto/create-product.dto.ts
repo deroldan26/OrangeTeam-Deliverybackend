@@ -1,4 +1,4 @@
-import { IsNumber, IsString, Min, MinLength } from 'class-validator';
+import { IsNumber, IsString, Min, MinLength, IsArray} from 'class-validator';
 
 export class CreateProductDto {
   @IsString()
@@ -9,9 +9,9 @@ export class CreateProductDto {
   @MinLength(10)
   description: string;
 
-  @IsString()
-  @MinLength(1)
-  image: string;
+  @IsArray()
+  @IsString({ each: true })
+  images: string[];
 
   @IsNumber()
   @Min(0)

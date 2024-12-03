@@ -14,17 +14,18 @@ export class getUserByIdService implements IApplicationService<GetUserByIdServic
     
     async execute(data: GetUserByIdServiceEntryDto): Promise<Result<GetUserServiceResponseDto>> {
         
-        const product: Result<User> = await this.userRepository.findUserById(data.id)
-        if(!product.isSuccess()) {
-            return Result.fail( product.Error, product.StatusCode, product.Message )
+        const user: Result<User> = await this.userRepository.findUserById(data.id)
+        if(!user.isSuccess()) {
+            return Result.fail( user.Error, user.StatusCode, user.Message )
         }
 
         const response: GetUserServiceResponseDto = {
-            id: product.Value.Id.Id,
-            username: product.Value.Username.Username,
-            email: product.Value.Email.Email,
-            password: product.Value.Password.Password,
-            phone: product.Value.Phone.Phone
+            id: user.Value.Id.Id,
+            name: user.Value.Name.Name,
+            email: user.Value.Email.Email,
+            password: user.Value.Password.Password,
+            phone: user.Value.Phone.Phone,
+            type: user.Value.Type.Type
         };
         return Result.success(response, 200);
     }

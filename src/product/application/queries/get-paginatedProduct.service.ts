@@ -22,7 +22,7 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 id: product.Id.Id,
                 name: product.Name.Name,
                 description: product.Description.Description,
-                image: product.Image.Image,
+                images: product.Images.map(image => image.Image),
                 price: product.Price.Price,
                 currency: product.Currency.Currency,
                 weight: product.Weight.Weight,
@@ -32,7 +32,9 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
         }
 
         for (let i = 0; i < response.products.length; i++) {
-            response.products[i].image = await urlGenerator.generateUrl(response.products[i].image);
+            response.products[i].images = await Promise.all(
+                response.products[i].images.map(async (image) => await urlGenerator.generateUrl(image))
+            ); 
         }
         
         return Result.success(response,200);

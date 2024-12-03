@@ -26,14 +26,14 @@ export class ProductController {
     this.productRepository = new ProductPostgresRepository(this.dataSource);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService);
     return await service.execute(createProductDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
@@ -41,7 +41,7 @@ export class ProductController {
     return response;
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
     const {page, take, name, category} = query;

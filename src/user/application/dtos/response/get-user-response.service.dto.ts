@@ -1,8 +1,9 @@
 
 export interface GetUserServiceResponseDto {
     id: string
-    username: string
+    name: string
     email: string
     password: string
     phone: string
+    type: string
 }

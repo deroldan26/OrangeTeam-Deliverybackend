@@ -12,8 +12,9 @@ export class UserEntity {
     email: string
     @Column({
         type: 'varchar',
+        nullable: true
     })
-    username: string
+    name: string
     @Column({
         type: 'varchar',
     })
@@ -22,4 +23,9 @@ export class UserEntity {
         type: 'varchar',
     })
     phone: string
+    @Column({
+        type: 'varchar',
+        nullable: true
+    })
+    type: string
 }

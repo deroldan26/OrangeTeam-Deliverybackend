@@ -2,7 +2,7 @@ export interface CreateProductServiceResponseDto {
     id: string
     name: string
     description: string
-    image: string
+    images: string[]
     price: number
     currency: string
     weight: number

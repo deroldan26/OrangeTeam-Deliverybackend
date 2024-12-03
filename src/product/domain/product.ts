@@ -8,20 +8,26 @@ import { ProductImage } from "./value-objects/product.image";
 import { ProductCurrency } from "./value-objects/product.currency";
 import { ProductPrice } from "./value-objects/product.price";
 import { ProductWeight } from "./value-objects/product.weight";
+import { ProductMeasuerement } from "./value-objects/product.measurement";
+import { ProductCaducityDate } from "./value-objects/product.caducityDate";
 import { ProductID } from "./value-objects/product.id";
 import { ProductStock } from "./value-objects/product.stock";
 import { CategoryName } from "./value-objects/category.name";
+//import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class Product extends AggregateRoot<ProductID>{
     
     private name: ProductName
     private description: ProductDescription
-    private image: ProductImage
+    private images: ProductImage[]
     private price: ProductPrice
     private currency: ProductCurrency
     private weight: ProductWeight
+    private measurement: ProductMeasuerement
     private stock: ProductStock
     private category: CategoryName
+    private caducityDate: ProductCaducityDate
+    //private discount: 
 
     get Name (): ProductName
     {
@@ -33,9 +39,9 @@ export class Product extends AggregateRoot<ProductID>{
         return this.description
     }
 
-    get Image (): ProductImage
+    get Images (): ProductImage[]
     {
-        return this.image
+        return this.images
     }
 
     get Price (): ProductPrice
@@ -63,8 +69,8 @@ export class Product extends AggregateRoot<ProductID>{
         return this.category
     }
     
-    constructor(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category: CategoryName){
-        const productCreated = productCreatedEvent.create(id, name, description, image, price, currency, weight, stock, category);
+    constructor(id: ProductID, name: ProductName, description: ProductDescription, images: ProductImage[], price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category: CategoryName){
+        const productCreated = productCreatedEvent.create(id, name, description, images, price, currency, weight, stock, category);
         
         super(id,productCreated);
     }
@@ -73,7 +79,7 @@ export class Product extends AggregateRoot<ProductID>{
         if (event instanceof productCreatedEvent) {
             this.name = event.name;
             this.description = event.description;
-            this.image = event.image;
+            this.images = event.images;
             this.price = event.price;
             this.currency = event.currency;
             this.weight = event.weight;
@@ -82,7 +88,7 @@ export class Product extends AggregateRoot<ProductID>{
           }
     }
     protected checkValidState (): void{
-        if ( !this.name || !this.description || !this.image || !this.price || !this.currency || !this.weight || !this.stock || !this.category)
+        if ( !this.name || !this.description || !this.images || !this.price || !this.currency || !this.weight || !this.stock || !this.category)
             throw new unvalidProductException(`Product not valid`)
     }
 }

@@ -17,7 +17,7 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
       productORM.id = domain.Id.Id;
       productORM.name = domain.Name.Name;
       productORM.description = domain.Description.Description;
-      productORM.image = domain.Image.Image;
+      productORM.images = domain.Images.map(image => image.Image);
       productORM.price = domain.Price.Price;
       productORM.currency = domain.Currency.Currency;
       productORM.weight = domain.Weight.Weight
@@ -30,7 +30,7 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
       return new Product(new ProductID(persistence.id), 
              new ProductName(persistence.name), 
              new ProductDescription(persistence.description), 
-             new ProductImage(persistence.image), 
+             persistence.images.map(imageUrl => new ProductImage(imageUrl)),
              new ProductPrice(persistence.price), 
              new ProductCurrency(persistence.currency),
              new ProductWeight(persistence.weight),

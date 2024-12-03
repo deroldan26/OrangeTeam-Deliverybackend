@@ -19,12 +19,12 @@ export class getProductByIdService implements IApplicationService<GetProductById
             return Result.fail( product.Error, product.StatusCode, product.Message )
         }
         const urlGenerator = new ImageUrlGenerator();
-        const url = await urlGenerator.generateUrl(product.Value.Image.Image);
+        const urls = await Promise.all(product.Value.Images.map(image => urlGenerator.generateUrl(image.Image)));
         const response: GetProductByIdServiceResponseDto = {
             id: product.Value.Id.Id,
             name: product.Value.Name.Name,
             description: product.Value.Description.Description,
-            image: url,
+            images: urls,
             price: product.Value.Price.Price,
             currency: product.Value.Currency.Currency,
             weight: product.Value.Weight.Weight,

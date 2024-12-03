@@ -27,12 +27,13 @@ export class createProductService implements IApplicationService<CreateProductSe
     
     async execute(data: CreateProductServiceEntryDto): Promise<Result<CreateProductServiceResponseDto>> {
         const imageUrlGenerator = new ImageUrlGenerator();
-        const imageID = await imageUrlGenerator.UploadImage(data.image);
+        const imageIDs = await Promise.all(data.images.map(image => imageUrlGenerator.UploadImage(image)));
+        const productImages = imageIDs.map(imageID => new ProductImage(imageID));
         const product = new Product(
             new ProductID( await this.idGenerator.generateId()), 
             new ProductName(data.name),
             new ProductDescription(data.description),
-            new ProductImage(imageID),
+            productImages,
             new ProductPrice(data.price),
             new ProductCurrency(data.currency),
             new ProductWeight(data.weight),
@@ -46,7 +47,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             id: product.Id.Id,
             name: product.Name.Name,
             description: product.Description.Description,
-            image: product.Image.Image,
+            images: product.Images.map(image => image.Image),
             price: product.Price.Price,
             currency: product.Currency.Currency,
             weight: product.Weight.Weight,

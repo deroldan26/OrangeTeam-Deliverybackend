@@ -14,7 +14,7 @@ export class productCreatedEvent extends DomainEvent{
         public id: ProductID,
         public name: ProductName,
         public description: ProductDescription,
-        public image: ProductImage,
+        public images: ProductImage[],
         public price: ProductPrice,
         public currency: ProductCurrency,
         public weight: ProductWeight,
@@ -23,7 +23,7 @@ export class productCreatedEvent extends DomainEvent{
     ){
         super()
     }
-    static create(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category:CategoryName): productCreatedEvent{
-        return new productCreatedEvent(id, name, description, image, price, currency, weight, stock, category);
+    static create(id: ProductID, name: ProductName, description: ProductDescription, images: ProductImage[], price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category:CategoryName): productCreatedEvent{
+        return new productCreatedEvent(id, name, description, images, price, currency, weight, stock, category);
     }
 }

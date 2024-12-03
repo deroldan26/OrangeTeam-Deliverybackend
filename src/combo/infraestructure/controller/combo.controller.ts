@@ -28,14 +28,14 @@ export class ComboController {
     this.productValidator = new ProductValidatorService(new ProductPostgresRepository(this.dataSource));
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Post()
   async createCombo(@Body() createComboDto: CreateComboDto) {
     const service = new createComboService(this.comboRepository, this.uuidCreator, this.productValidator);
     return await service.execute(createComboDto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getComboByIdService(this.comboRepository)
@@ -43,7 +43,7 @@ export class ComboController {
     return response;
   }
 
-  @UseGuards(JwtAuthGuard)
+  //@UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedCombo(@Query(ValidationPipe) query: FindPaginatedComboDto) {
     const {page, take} = query;

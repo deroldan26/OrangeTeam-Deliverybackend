@@ -15,7 +15,7 @@ export class UserPostgresRepository extends Repository<UserORM> implements IUser
 
     async findUserById(id: string): Promise<Result<User>> {
       try {
-        var user = await this.createQueryBuilder('User').select(['User.id','User.username','User.email','User.password','User.phone']).where('User.id = :id',{id}).getOne()
+        var user = await this.createQueryBuilder('User').select(['User.id','User.name','User.email','User.password','User.phone','User.type']).where('User.id = :id',{id}).getOne()
         const getUser = await this.userMapper.fromPersistenceToDomain(user);
         return Result.success<User>(getUser, 200)
       } catch (error) {
@@ -26,7 +26,7 @@ export class UserPostgresRepository extends Repository<UserORM> implements IUser
 
     async findUserByEmail(email: string): Promise<Result<User> | null> {
       try {
-        var user = await this.createQueryBuilder('User').select(['User.id','User.username','User.email','User.password','User.phone']).where('User.email = :email',{email}).getOne()
+        var user = await this.createQueryBuilder('User').select(['User.id','User.name','User.email','User.password','User.phone','User.type']).where('User.email = :email',{email}).getOne()
         if(user){
           const getUser = await this.userMapper.fromPersistenceToDomain(user);
           return Result.success<User>(getUser, 200)
