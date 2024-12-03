@@ -14,6 +14,7 @@ import { ComboMeasurement } from "./value-objects/combo.measurement";
 import { ComboStock } from "./value-objects/combo.stock";
 import { ComboCaducityDate } from "./value-objects/combo.caducityDate";
 import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class Combo extends AggregateRoot<ComboID> {
     
@@ -28,6 +29,7 @@ export class Combo extends AggregateRoot<ComboID> {
     private caducityDate?: ComboCaducityDate;
     private categories: CategoryID[];
     private products: ProductID[];
+    private discount?: DiscountID;
 
     get Name(): ComboName {
         return this.name;
@@ -73,6 +75,10 @@ export class Combo extends AggregateRoot<ComboID> {
         return this.products;
     }
 
+    get Discount(): DiscountID {
+        return this.discount;
+    }
+
     constructor(
         id: ComboID, 
         name: ComboName, 
@@ -85,9 +91,10 @@ export class Combo extends AggregateRoot<ComboID> {
         measurement: ComboMeasurement,
         stock: ComboStock,
         caducityDate?: ComboCaducityDate,
-        categories: CategoryID[] = []
+        categories: CategoryID[] = [],
+        discount?: DiscountID
     ) {
-        const comboCreated = ComboCreatedEvent.create(id, name, specialPrice, currency, description, comboImages, products, weight, measurement, stock, categories, caducityDate);
+        const comboCreated = ComboCreatedEvent.create(id, name, specialPrice, currency, description, comboImages, products, weight, measurement, stock, categories, caducityDate, discount);
         super(id, comboCreated);
     }
     
@@ -104,6 +111,7 @@ export class Combo extends AggregateRoot<ComboID> {
             this.stock = event.stock;
             this.caducityDate = event.caducityDate;
             this.categories = event.categories;
+            this.discount = event.discount;
         }
     }
 

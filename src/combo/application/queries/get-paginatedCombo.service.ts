@@ -12,8 +12,8 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
     constructor(private readonly comboRepository: IComboRepository){}
 
     async execute(data: GetPaginatedComboServiceEntryDto): Promise<Result<GetPaginatedComboServiceResponseDto>> {
-        const { category, name, price, page, take } = data;
-        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.take,{ category, name, price });
+        const { category, name, price, discount, page, take } = data;
+        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.take,{ category, name, price, discount});
 
         if(!combo.isSuccess){
             return Result.fail(combo.Error, combo.StatusCode, combo.Message);
@@ -32,8 +32,9 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
                 weight: combo.Weight.Weight,
                 measurement: combo.Measurement.Measurement,
                 stock: combo.Stock.Stock,
-                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : null,
-                categories: combo.Categories.map(ComboID => ComboID.Id)
+                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
+                categories: combo.Categories.map(ComboID => ComboID.Id),
+                discount: combo.Discount ? combo.Discount.Id : undefined
             }))
         }
 

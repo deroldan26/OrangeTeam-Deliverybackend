@@ -12,6 +12,8 @@ import { FindPaginatedComboDto } from '../dto/find-paginated-product.dto';
 import { GetPaginatedComboService } from '../../../combo/application/queries/get-paginatedCombo.service';
 import { CategoryValidatorService } from 'src/category/application/services/category-validator.services';
 import { CategoryPostgresRepository } from 'src/category/infraestructure/repositories/postgres/category.repository';
+import { DiscountValidatorService } from 'src/discount/application/services/discount-validator.services';
+import { DiscountPostgresRepository } from 'src/discount/infraestructure/repositories/postgres/discount.repository';
 
 @ApiTags('Combo')
 @Controller('combo')
@@ -20,18 +22,21 @@ export class ComboController {
   private readonly uuidCreator: UuidGenerator;
   private readonly productValidator: ProductValidatorService;
   private readonly categoryValidator: CategoryValidatorService;
+  private readonly discountValidator?: DiscountValidatorService
 
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
     this.comboRepository = new ComboPostgresRepository(this.dataSource);
     this.productValidator = new ProductValidatorService(new ProductPostgresRepository(this.dataSource));
     this.categoryValidator = new CategoryValidatorService(new CategoryPostgresRepository(this.dataSource));
-    
+    if (dataSource.getRepository(DiscountValidatorService)) {
+      this.discountValidator = new DiscountValidatorService(new DiscountPostgresRepository(this.dataSource));
+    }
   }
 
   @Post()
   async createCombo(@Body() createComboDto: CreateComboDto) {
-    const service = new createComboService(this.comboRepository, this.uuidCreator, this.productValidator, this.categoryValidator);
+    const service = new createComboService(this.comboRepository, this.uuidCreator, this.productValidator, this.categoryValidator, this.discountValidator);
     return await service.execute(createComboDto);
   }
 
@@ -45,8 +50,8 @@ export class ComboController {
   @Get()
   async findPaginatedCombo(@Query(ValidationPipe) query: FindPaginatedComboDto) {
     // const {page, take} = query;
-    const { page, take, category, name, price } = query;
+    const { page, take, category, name, price, discount} = query;
     const service = new GetPaginatedComboService(this.comboRepository);
-    return (await service.execute({ page, take, category, name, price })).Value;
+    return (await service.execute({ page, take, category, name, price, discount })).Value;
   }
 }

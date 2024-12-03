@@ -35,7 +35,8 @@ export class getComboByIdService implements IApplicationService<GetComboByIdServ
             measurement: combo.Value.Measurement.Measurement,
             stock: combo.Value.Stock.Stock,
             caducityDate: combo.Value.CaducityDate ? combo.Value.CaducityDate.CaducityDate : undefined,
-            categories: combo.Value.Categories.map(CategoryID => CategoryID.Id)
+            categories: combo.Value.Categories.map(CategoryID => CategoryID.Id),
+            discount: combo.Value.Discount ? combo.Value.Discount.Id : undefined,
         };
         return Result.success(response, 200);
     }

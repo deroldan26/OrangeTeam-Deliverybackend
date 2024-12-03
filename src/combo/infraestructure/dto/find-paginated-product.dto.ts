@@ -30,4 +30,8 @@ export class FindPaginatedComboDto {
     @Min(1)
     @Type(() => Number)
     price?: number;
+  
+    @IsOptional()
+    @IsString()
+    discount?: string;
   }

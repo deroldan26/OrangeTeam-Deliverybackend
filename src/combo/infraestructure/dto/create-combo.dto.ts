@@ -46,4 +46,9 @@ export class CreateComboDto {
     @IsArray()
     @IsString({ each: true })
     categories: string[];
+    
+    @IsString()
+    @MinLength(1)
+    @IsOptional()
+    discount?: string;
 }

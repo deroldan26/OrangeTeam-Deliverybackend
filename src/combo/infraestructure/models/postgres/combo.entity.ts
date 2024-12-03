@@ -38,4 +38,7 @@ export class ComboEntity {
 
     @Column({ type: 'json' })
     categories: string[];
+
+    @Column( {type: 'varchar', nullable: true})
+    discount: string;
 }

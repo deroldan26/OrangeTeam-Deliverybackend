@@ -10,5 +10,6 @@ export interface GetComboByIdServiceResponseDto {
     stock: number;
     categories: string[];
     products: string[];
-    caducityDate: Date;
+    caducityDate?: Date;
+    discount?: string;
 }

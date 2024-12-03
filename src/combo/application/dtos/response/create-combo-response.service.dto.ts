@@ -11,4 +11,5 @@ export interface CreateComboServiceResponseDto {
     stock: number;
     caducityDate?: Date;
     categories: string[];
+    discount?: string;
 }

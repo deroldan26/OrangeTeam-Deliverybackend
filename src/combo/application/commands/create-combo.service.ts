@@ -18,6 +18,7 @@ import { ComboWeight } from "src/combo/domain/value-objects/combo.weight";
 import { ComboMeasurement } from "src/combo/domain/value-objects/combo.measurement";
 import { ComboStock } from "src/combo/domain/value-objects/combo.stock";
 import { ComboCaducityDate } from "src/combo/domain/value-objects/combo.caducityDate";
+import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
@@ -25,7 +26,8 @@ export class createComboService implements IApplicationService<CreateComboServic
         private readonly comboRepository: IComboRepository,
         private readonly idGenerator: IdGenerator<string> ,
         private readonly productValidator: ProductValidatorService,
-        private readonly categoryValidator: CategoryValidatorService
+        private readonly categoryValidator: CategoryValidatorService,
+        private readonly discountValidator?: DiscountValidatorService
     ) {}
 
     async execute(data: CreateComboServiceEntryDto): Promise<Result<CreateComboServiceResponseDto>> {
@@ -44,9 +46,18 @@ export class createComboService implements IApplicationService<CreateComboServic
                 return Result.fail<CreateComboServiceResponseDto>(validationCategoryResult.Error, validationCategoryResult.StatusCode, validationCategoryResult.Message);
             }
 
+            let validationDiscountResult;
+            if(data.discount){//!Validacion de ID discount si exite
+                validationDiscountResult = await this.discountValidator.validateDiscountId(data.discount);
+                if (!validationDiscountResult.isSuccess()) {
+                    return Result.fail<CreateComboServiceResponseDto>(validationDiscountResult.Error, validationDiscountResult.StatusCode, validationDiscountResult.Message);
+                }
+            }
+
             const imageUrlGenerator = new ImageUrlGenerator();
             const imageIDs = await Promise.all(data.comboImages.map(image => imageUrlGenerator.UploadImage(image)));
             const comboImages = imageIDs.map(imageID => new ComboImage(imageID));
+            const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : undefined;
 
             const combo = new Combo(
                 new ComboID(await this.idGenerator.generateId()),
@@ -60,7 +71,8 @@ export class createComboService implements IApplicationService<CreateComboServic
                 new ComboMeasurement(data.measurement),
                 new ComboStock(data.stock),
                 data.caducityDate ? new ComboCaducityDate(data.caducityDate) : undefined,
-                validationCategoryResult.Value
+                validationCategoryResult.Value,
+                discount
             );
 
             const result = await this.comboRepository.saveComboAggregate(combo);
@@ -80,7 +92,8 @@ export class createComboService implements IApplicationService<CreateComboServic
                 measurement: combo.Measurement.Measurement,
                 stock: combo.Stock.Stock,
                 caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
-                categories: combo.Categories.map(category => category.Id)
+                categories: combo.Categories.map(category => category.Id),
+                discount
 
             };
 

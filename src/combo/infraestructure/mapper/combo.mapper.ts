@@ -13,6 +13,7 @@ import { ComboMeasurement } from "src/combo/domain/value-objects/combo.measureme
 import { ComboStock } from "src/combo/domain/value-objects/combo.stock";
 import { ComboCaducityDate } from "src/combo/domain/value-objects/combo.caducityDate";
 import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class ComboMapper implements IMapper<Combo, ComboEntity> {
   
@@ -28,10 +29,9 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
         comboORM.weight = domain.Weight.Weight;
         comboORM.measurement = domain.Measurement.Measurement;
         comboORM.stock = domain.Stock.Stock;
-        if (domain.CaducityDate) {
-            comboORM.caducityDate = domain.CaducityDate.CaducityDate;
-        }
+        if (domain.CaducityDate) {comboORM.caducityDate = domain.CaducityDate.CaducityDate;}
         comboORM.categories = domain.Categories.map(category => category.Id);
+        if( domain.Discount ){comboORM.discount = domain.Discount.Id}
         
         return comboORM;
     }
@@ -49,7 +49,8 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
             new ComboMeasurement(persistence.measurement),
             new ComboStock(persistence.stock),
             persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : undefined, 
-            persistence.categories.map(categoryId => new CategoryID(categoryId))
+            persistence.categories.map(categoryId => new CategoryID(categoryId)),
+            persistence.discount ? new DiscountID(persistence.discount) : undefined, 
         );
     }
 }

@@ -11,6 +11,7 @@ import { ComboMeasurement } from "../value-objects/combo.measurement";
 import { ComboStock } from "../value-objects/combo.stock";
 import { ComboCaducityDate } from "../value-objects/combo.caducityDate";
 import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class ComboCreatedEvent extends DomainEvent {
   constructor(
@@ -26,6 +27,7 @@ export class ComboCreatedEvent extends DomainEvent {
     public readonly stock: ComboStock,
     public readonly categories: CategoryID[],
     public readonly caducityDate?: ComboCaducityDate,
+    public readonly discount?: DiscountID
     
   ) {
     super();
@@ -44,8 +46,9 @@ export class ComboCreatedEvent extends DomainEvent {
     stock: ComboStock,
     categories: CategoryID[],
     caducityDate?: ComboCaducityDate,
+    discount?: DiscountID
     
   ): ComboCreatedEvent {
-    return new ComboCreatedEvent(id, name, specialPrice, currency, description, comboImages, products, weight, measurement, stock, categories, caducityDate);
+    return new ComboCreatedEvent(id, name, specialPrice, currency, description, comboImages, products, weight, measurement, stock, categories, caducityDate, discount);
   }
 }
