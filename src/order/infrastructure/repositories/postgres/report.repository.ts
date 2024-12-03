@@ -1,7 +1,6 @@
 import { DataSource, Repository } from "typeorm";
 import { OrderReportEntity as ReportORM } from "../../models/order.report.entity";
 import { Result } from "src/core/domain/result-handler/result";
-import { PaymentMethod } from "src/order/domain/entities/paymentMethod";
 import { ReportMapper } from "../../mapper/report.mapper";
 import { IReportRepository } from "src/order/domain/repositories/report-repositories.interface";
 import { OrderReport } from "src/order/domain/entities/orderReport";
@@ -14,11 +13,13 @@ export class ReportPostgresRepository extends Repository<ReportORM> implements I
         this.reportMapper = new ReportMapper();
     }
 
-    findReportById(id: string): Promise<Result<OrderReport>> {
+    async findReportById(id: string): Promise<Result<OrderReport>> {
         try {
-            
+            var report = await this.createQueryBuilder('OrderReport').select(['OrderReport.id','OrderReport.reportDate','OrderReport.description']).where('OrderReport.id = :id',{id}).getOne()
+            const getReport = await this.reportMapper.fromPersistenceToDomain(report);
+            return Result.success<OrderReport>(getReport, 200)
         } catch (error) {
-            //return Result.fail<Order>(new Error(error.message), error.code, error.message);
+            return Result.fail<OrderReport>(new Error(error.message), error.code, error.message);
         }
         throw new Error("Method not implemented.");
     }

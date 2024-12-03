@@ -29,6 +29,8 @@ import { OrderReportDate } from "src/order/domain/value-objects/order.report.dat
 import { OrderReceivedDate } from "src/order/domain/value-objects/order.received.date";
 import { IPaymentRepository } from "src/order/domain/repositories/payment-repositories.interface";
 import { IReportRepository } from "src/order/domain/repositories/report-repositories.interface";
+import { IOrderProductsRepository } from "src/order/domain/repositories/order-products-repositories.interface";
+import { IOrderCombosRepository } from "src/order/domain/repositories/order-combos-repositories.interface";
 
 
 export class createOrderService implements IApplicationService<CreateOrderServiceEntryDto, CreateOrderServiceResponseDto>{
@@ -36,19 +38,22 @@ export class createOrderService implements IApplicationService<CreateOrderServic
         private readonly orderRepository:IOrderRepository,
         private readonly paymentRepository:IPaymentRepository,
         private readonly reportRepository:IReportRepository,
+        private readonly orderProductRepository: IOrderProductsRepository,
+        private readonly orderComboProductRepository: IOrderCombosRepository,
         private readonly idGenerator: IdGenerator<string>,
         private readonly messagingService: MessagingService<DomainEvent>,  
     ){}
     async execute(data: CreateOrderServiceEntryDto): Promise<Result<CreateOrderServiceResponseDto>> {
+        const orderId = new OrderID( await this.idGenerator.generateId())
         const products = data.products.map(productData => {
-            return new Product(new OrderProductID(productData.id), new OrderProductQuantity(productData.quantity));
+            return new Product(new OrderProductID(productData.id), new OrderProductQuantity(productData.quantity), orderId);
         })
 
         const combos = await Promise.all(data.combos.map(async comboData => {
-            return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity));
+            return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity), orderId);
         }))
         const order = new Order(
-            new OrderID( await this.idGenerator.generateId()),
+            orderId,
             new OrderCreatedDate(new Date()),
             new OrderStatus('CREATED'),
             new OrderAddress(data.address),
@@ -60,6 +65,9 @@ export class createOrderService implements IApplicationService<CreateOrderServic
         )
         await this.paymentRepository.savePaymentEntity(order.PaymentMethod);
         await this.reportRepository.saveReportEntity(order.Report);
+        await this.orderProductRepository.saveOrderProductAggregate(order.Products);
+        await this.orderComboProductRepository.saveOrderComboAggregate(order.Combos);
+        console.log("prueba",order.Combos, order.Products)
         const result = await this.orderRepository.saveOrderAggregate(order);
         if ( !result.isSuccess() ){
             return Result.fail<CreateOrderServiceResponseDto>( result.Error, result.StatusCode, result.Message )

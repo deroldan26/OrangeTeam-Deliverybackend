@@ -1,8 +1,10 @@
 import { Combo } from "src/order/domain/entities/combo";
 import { Product } from "src/order/domain/entities/product";
-import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from "typeorm";
+import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryColumn } from "typeorm";
 import { PaymentMethodEntity } from "./order.payment.method.entity";
 import { OrderReportEntity } from "./order.report.entity";
+import { OrderComboEntity } from "./order.combos.entity";
+import { OrderProductEntity } from "./order.products.entity";
 
 @Entity('Order')
 export class OrderEntity{
@@ -26,19 +28,21 @@ export class OrderEntity{
     })
     address: string
 
-    @Column({
-        type: 'varchar'
-    })
-    products: Product[]
+    @OneToMany(() => OrderProductEntity, 
+        product => product.order, 
+        { eager: true }
+    )
+    products: OrderProductEntity[]
 
-    @Column({
-        type: 'varchar'
-    })
-    combos: Combo[]
+    @OneToMany(() => OrderComboEntity, 
+        combo => combo.order, 
+        {eager: true}
+    )
+    combos: OrderComboEntity[]
 
     @OneToOne(() => PaymentMethodEntity, {eager: true})
     @JoinColumn({
-        name: 'paymenMethodId'
+        name: 'paymentMethodId'
     })
     paymentMethod?: PaymentMethodEntity
 

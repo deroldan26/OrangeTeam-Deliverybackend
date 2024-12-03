@@ -13,18 +13,20 @@ export class PaymentMethodPostgresRepository extends Repository<PaymentORM> impl
         this.paymentMapper = new PaymentMapper();
     }
 
-    findPaymentById(id: string): Promise<Result<PaymentMethod>> {
+    async findPaymentById(id: string): Promise<Result<PaymentMethod>> {
         try {
-            
+            var payment = await this.createQueryBuilder('PaymentMethod').select(['PaymentMethod.id','PaymentMethod.amount','PaymentMethod.currency','PaymentMethod.paymentMethodName']).where('PaymentMethod.id = :id',{id}).getOne()
+            const getPayment = await this.paymentMapper.fromPersistenceToDomain(payment);
+            return Result.success<PaymentMethod>(getPayment, 200)
         } catch (error) {
-            //return Result.fail<Order>(new Error(error.message), error.code, error.message);
+            return Result.fail<PaymentMethod>(new Error(error.message), error.code, error.message);
         }
-        throw new Error("Method not implemented.");
     }
 
     async savePaymentEntity(payment: PaymentMethod): Promise<Result<PaymentMethod>> {
         try {
             const newPayment = await this.paymentMapper.fromDomainToPersistence(payment);
+            console.log("Saving in repo",newPayment)
             await this.save(newPayment);
             return Result.success<PaymentMethod>(payment, 200);
         } catch (error) {
