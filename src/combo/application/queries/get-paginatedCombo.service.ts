@@ -12,7 +12,8 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
     constructor(private readonly comboRepository: IComboRepository){}
 
     async execute(data: GetPaginatedComboServiceEntryDto): Promise<Result<GetPaginatedComboServiceResponseDto>> {
-        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.take);
+        const { category, name, price, discount, page, take } = data;
+        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.take,{ category, name, price, discount});
 
         if(!combo.isSuccess){
             return Result.fail(combo.Error, combo.StatusCode, combo.Message);
@@ -26,13 +27,21 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
                 specialPrice: combo.SpecialPrice.Price,
                 currency: combo.Currency.Currency,
                 description: combo.Description.Description,
-                comboImage: combo.ComboImage.Image,
-                Products: combo.Products.map(ComboID => ComboID.Id)
+                comboImages: combo.ComboImages.map(image => image.Image),
+                products: combo.Products.map(ComboID => ComboID.Id),
+                weight: combo.Weight.Weight,
+                measurement: combo.Measurement.Measurement,
+                stock: combo.Stock.Stock,
+                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
+                categories: combo.Categories.map(ComboID => ComboID.Id),
+                discount: combo.Discount ? combo.Discount.Id : undefined
             }))
         }
 
         for (let i = 0; i < response.combos.length; i++) {
-            response.combos[i].comboImage = await urlGenerator.generateUrl(response.combos[i].comboImage);
+            response.combos[i].comboImages = await Promise.all(
+                response.combos[i].comboImages.map(async (image) => await urlGenerator.generateUrl(image))
+            );    
         }
         
         return Result.success(response,200);

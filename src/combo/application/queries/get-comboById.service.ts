@@ -7,6 +7,7 @@ import { Product } from "../../../product/domain/product";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 import { Combo } from "src/combo/domain/combo";
 import { ProductID } from "src/product/domain/value-objects/product.id";
+import { CategoryID } from "src/category/domain/value-objects/category.id";
 
 export class getComboByIdService implements IApplicationService<GetComboByIdServiceEntryDto, GetComboByIdServiceResponseDto>{
 
@@ -21,15 +22,21 @@ export class getComboByIdService implements IApplicationService<GetComboByIdServ
             return Result.fail( combo.Error, combo.StatusCode, combo.Message )
         }
         const urlGenerator = new ImageUrlGenerator();
-        const url = await urlGenerator.generateUrl(combo.Value.ComboImage.Image);
+        const urls = await Promise.all(combo.Value.ComboImages.map(image => urlGenerator.generateUrl(image.Image)));
         const response: GetComboByIdServiceResponseDto = {
             id: combo.Value.Id.Id,
             name: combo.Value.Name.Name,
             specialPrice: combo.Value.SpecialPrice.Price,
             currency: combo.Value.Currency.Currency,
             description: combo.Value.Description.Description,
-            comboImage: url,           
-            Products: combo.Value.Products.map(ProductID => ProductID.Id)
+            comboImages: urls,           
+            products: combo.Value.Products.map(ProductID => ProductID.Id),
+            weight: combo.Value.Weight.Weight,
+            measurement: combo.Value.Measurement.Measurement,
+            stock: combo.Value.Stock.Stock,
+            caducityDate: combo.Value.CaducityDate ? combo.Value.CaducityDate.CaducityDate : undefined,
+            categories: combo.Value.Categories.map(CategoryID => CategoryID.Id),
+            discount: combo.Value.Discount ? combo.Value.Discount.Id : undefined,
         };
         return Result.success(response, 200);
     }

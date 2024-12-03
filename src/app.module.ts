@@ -11,6 +11,7 @@ import { EmailModule } from './core/infrastructure/emailsender/email.module';
 import { AuthModule } from './auth/infraestructure/auth.module';
 import { AuthController } from './auth/infraestructure/controller/auth.controller';
 import { UserController } from './user/infrastructure/controller/user.controller';
+import { DiscountController } from './discount/infraestructure/controller/discount.controller';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { UserController } from './user/infrastructure/controller/user.controller
     AuthModule
   ],
   controllers: [ProductController, ComboController, CategoryController, AuthController, UserController, RabbitMQConsumerService],
+  controllers: [ProductController, ComboController, CategoryController, DiscountController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,

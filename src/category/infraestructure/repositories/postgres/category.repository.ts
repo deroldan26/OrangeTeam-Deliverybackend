@@ -13,7 +13,16 @@ export class CategoryPostgresRepository extends Repository<CategoryORM> implemen
         this.categoryMapper = new CategoryMapper();
     }
 
-    async findCategoryById(id: string): Promise<Result<Category>>{return}
+    async findCategoryById(id: string): Promise<Result<Category>>{
+        try {
+            var category = await this.createQueryBuilder('Category').select(['Category.id','Category.name','Category.image']).where('Category.id = :id',{id}).getOne()
+            const getCategory = await this.categoryMapper.fromPersistenceToDomain(category);
+            return Result.success<Category>(getCategory, 200)
+          } catch (error) {
+            console.log(error.message);
+            return Result.fail<Category>(new Error(error.message), error.code, error.message);
+          }
+    }
 
     async findPaginatedCategory(page: number, take: number): Promise<Result<Category[]>>{
         try {
