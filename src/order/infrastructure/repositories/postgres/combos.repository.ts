@@ -9,7 +9,7 @@ export class OrderComboPostgresRepository extends Repository<ComboORM> implement
     
     private readonly comboMapper: OrderComboMapper;
 
-    constructor(dataSource: DataSource){
+    constructor(dataSource: DataSource){ 
         super(ComboORM, dataSource.createEntityManager());
         this.comboMapper = new OrderComboMapper();
     }
