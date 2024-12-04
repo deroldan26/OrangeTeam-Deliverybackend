@@ -8,7 +8,9 @@ import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.m
 import { MessagingService } from './core/infrastructure/events/rabbitmq/messaging.service';
 import { RabbitMQConsumerService } from './core/infrastructure/events/rabbitmq/rabbitmq-consumer.service';
 import { EmailModule } from './core/infrastructure/emailsender/email.module';
+import { DiscountController } from './discount/infraestructure/controller/discount.controller';
 import { OrderController } from './order/infrastructure/controller/order.controller';
+
 
 @Module({
   imports: [
@@ -16,7 +18,7 @@ import { OrderController } from './order/infrastructure/controller/order.control
     RabbitmqModule,
     EmailModule
   ],
-  controllers: [ProductController, ComboController, CategoryController, OrderController, RabbitMQConsumerService],
+  controllers: [ProductController, ComboController, CategoryController, OrderController, DiscountController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,
