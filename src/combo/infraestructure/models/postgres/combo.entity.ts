@@ -34,7 +34,7 @@ export class ComboEntity {
     stock: number;
 
     @Column({ type: 'date', nullable: true})
-    caducityDate: Date | null;
+    caducityDate: Date;
 
     @Column({ type: 'json' })
     categories: string[];

@@ -32,9 +32,9 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
                 weight: combo.Weight.Weight,
                 measurement: combo.Measurement.Measurement,
                 stock: combo.Stock.Stock,
-                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
+                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : new Date('2050-01-01'),
                 categories: combo.Categories.map(ComboID => ComboID.Id),
-                discount: combo.Discount ? combo.Discount.Id : undefined
+                discount: combo.Discount ? combo.Discount.Id : ""
             }))
         }
 

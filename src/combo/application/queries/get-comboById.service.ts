@@ -34,9 +34,9 @@ export class getComboByIdService implements IApplicationService<GetComboByIdServ
             weight: combo.Value.Weight.Weight,
             measurement: combo.Value.Measurement.Measurement,
             stock: combo.Value.Stock.Stock,
-            caducityDate: combo.Value.CaducityDate ? combo.Value.CaducityDate.CaducityDate : undefined,
+            caducityDate: combo.Value.CaducityDate ? combo.Value.CaducityDate.CaducityDate : new Date('2050-01-01'),
             categories: combo.Value.Categories.map(CategoryID => CategoryID.Id),
-            discount: combo.Value.Discount ? combo.Value.Discount.Id : undefined,
+            discount: combo.Value.Discount ? combo.Value.Discount.Id : "",
         };
         return Result.success(response, 200);
     }

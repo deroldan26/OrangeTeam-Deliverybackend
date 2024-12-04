@@ -57,7 +57,7 @@ export class createComboService implements IApplicationService<CreateComboServic
             const imageUrlGenerator = new ImageUrlGenerator();
             const imageIDs = await Promise.all(data.comboImages.map(image => imageUrlGenerator.UploadImage(image)));
             const comboImages = imageIDs.map(imageID => new ComboImage(imageID));
-            const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : undefined;
+            const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : "";
 
             const combo = new Combo(
                 new ComboID(await this.idGenerator.generateId()),
@@ -70,7 +70,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 new ComboWeight(data.weight),
                 new ComboMeasurement(data.measurement),
                 new ComboStock(data.stock),
-                data.caducityDate ? new ComboCaducityDate(data.caducityDate) : undefined,
+                data.caducityDate ? new ComboCaducityDate(data.caducityDate) : new ComboCaducityDate(new Date('2050-01-01')),
                 validationCategoryResult.Value,
                 discount
             );
@@ -91,7 +91,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 weight: combo.Weight.Weight,
                 measurement: combo.Measurement.Measurement,
                 stock: combo.Stock.Stock,
-                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : undefined,
+                caducityDate: combo.CaducityDate ? combo.CaducityDate.CaducityDate : new Date('2050-01-01'),
                 categories: combo.Categories.map(category => category.Id),
                 discount
 
