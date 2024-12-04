@@ -25,6 +25,8 @@ import { OrderReportDate } from "src/order/domain/value-objects/order.report.dat
 import { OrderReceivedDate } from "src/order/domain/value-objects/order.received.date";
 import { IPaymentRepository } from "src/order/domain/repositories/payment-repositories.interface";
 import { IReportRepository } from "src/order/domain/repositories/report-repositories.interface";
+import { IOrderProductsRepository } from "src/order/domain/repositories/order-products-repositories.interface";
+import { IOrderCombosRepository } from "src/order/domain/repositories/order-combos-repositories.interface";
 
 export class updateOrderService implements IApplicationService<UpdateOrderServiceEntryDto, UpdateOrderServiceResponseDto>{
     
@@ -32,6 +34,8 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
         private readonly orderRepository:IOrderRepository,
         private readonly paymentRepository:IPaymentRepository,
         private readonly reportRepository:IReportRepository,
+        private readonly orderProductRepository: IOrderProductsRepository,
+        private readonly orderComboProductRepository: IOrderCombosRepository,
         private readonly messagingService: MessagingService<DomainEvent>
     ) {}
 
@@ -47,12 +51,14 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             products = data.products.map(productData => {
                 return new Product(new OrderProductID(productData.id), new OrderProductQuantity(productData.quantity),result.Value.Id);
             })
+            await this.orderProductRepository.saveOrderProductEntity(products);
         }
         let combos = result.Value.Combos;
         if(data.combos){
             combos = data.combos.map( comboData => {
                 return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity), result.Value.Id);
             })
+            await this.orderComboProductRepository.saveOrderComboEntity(combos);
         }
         if(data.status) result.Value.ChangeStatus(new OrderStatus(data.status));
         if(data.address) result.Value.ChangeAddress(new OrderAddress(data.address));

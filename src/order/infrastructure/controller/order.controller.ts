@@ -59,7 +59,7 @@ export class OrderController{
 
     @Patch(':id')
     async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-        const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.messagingService);
+        const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.messagingService);
         var response = await service.execute({id: id, ...updateOrderDto});
         return response;
     }
