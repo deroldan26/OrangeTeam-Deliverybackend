@@ -7,9 +7,6 @@ import { DomainEvent } from "src/core/domain/domain.event";
 import { createOrderService } from "src/order/application/commands/create-order.service";
 import { CreateOrderDto } from "../dto/create-order.dto";
 import { MessagingService } from "src/core/infrastructure/events/rabbitmq/messaging.service";
-import { ProductValidatorService } from "src/product/application/services/product-validator.services";
-import { ComboValidatorService } from "src/combo/application/services/combo-validator.services";
-import { ProductPostgresRepository } from "src/product/infrastructure/repositories/postgres/product.repository";
 import { PaymentMethodPostgresRepository } from "../repositories/postgres/payment.repository";
 import { ReportPostgresRepository } from "../repositories/postgres/report.repository";
 import { getOrderByIdService } from "src/order/application/queries/get-orderById.service";
@@ -18,6 +15,7 @@ import { OrderComboPostgresRepository } from "../repositories/postgres/combos.re
 import { FindPaginatedOrderDto } from "../dto/find-paginated-order.dto";
 import { GetPaginatedOrderService } from "src/order/application/queries/get-paginatedOrder.service";
 import { updateOrderService } from "src/order/application/commands/update-order.service";
+import { UpdateOrderDto } from "../dto/update-order.dto";
 
 
 @ApiTags('Order')
@@ -59,10 +57,10 @@ export class OrderController{
         return (await service.execute({page, take, status})).Value;
     }
 
-    // @Patch(':id')
-    // async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    //     const service = new updateOrderService(this.orderRepository, this.messagingService);
-    //     var response = await service.execute({id: id, ...updateOrderDto});
-    //     return response;
-    // }
+    @Patch(':id')
+    async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+        const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.messagingService);
+        var response = await service.execute({id: id, ...updateOrderDto});
+        return response;
+    }
 }

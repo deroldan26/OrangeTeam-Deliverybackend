@@ -55,6 +55,34 @@ export class Order extends AggregateRoot<OrderID> {
         return this.receivedDate;
     }
 
+    ChangeStatus(status: OrderStatus): void{
+        this.status = status;
+    }
+
+    ChangeAddress(address: OrderAddress): void{
+        this.address = address;
+    }
+
+    ChangeProducts(products: Product[]): void{
+        this.products = products;
+    }
+
+    ChangeCombos(combos: Combo[]): void{
+        this.combos = combos;
+    }
+
+    ChangePaymentMethod(paymentMethod: PaymentMethod): void{
+        this.paymentMethod = paymentMethod;
+    }
+
+    ChangeReport(report: OrderReport): void{
+        this.report = report;
+    }
+
+    ChangeReceivedDate(receivedDate: OrderReceivedDate): void{
+        this.receivedDate = receivedDate;
+    }
+
     constructor(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, report?: OrderReport, receivedDate?: OrderReceivedDate){
         const orderCreated = orderCreatedEvent.create(id, createdDate, status, address, products, combos, paymentMethod, report, receivedDate);
         super(id, orderCreated);
