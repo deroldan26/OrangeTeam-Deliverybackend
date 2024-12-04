@@ -25,8 +25,8 @@ export class productCreatedEvent extends DomainEvent{
         public measurement: ProductMeasuerement,
         public stock: ProductStock,
         public categories: CategoryID[],
-        public caducityDate: ProductCaducityDate,
-        public discount: DiscountID
+        public caducityDate?: ProductCaducityDate,
+        public discount?: DiscountID
     ){
         super()
     }

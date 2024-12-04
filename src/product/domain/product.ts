@@ -96,8 +96,8 @@ export class Product extends AggregateRoot<ProductID>{
         measurement: ProductMeasuerement,
         stock: ProductStock, 
         categories: CategoryID[] = [], 
-        caducityDate: ProductCaducityDate, 
-        discount: DiscountID
+        caducityDate?: ProductCaducityDate, 
+        discount?: DiscountID
     )
     {
         const productCreated = productCreatedEvent.create(id, name, description, images, price, currency, weight, measurement, stock, categories, caducityDate, discount);

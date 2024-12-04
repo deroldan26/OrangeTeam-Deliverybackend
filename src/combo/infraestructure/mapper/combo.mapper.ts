@@ -48,9 +48,9 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
             new ComboWeight(persistence.weight),
             new ComboMeasurement(persistence.measurement),
             new ComboStock(persistence.stock),
-            persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : undefined, 
+            persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : null, 
             persistence.categories.map(categoryId => new CategoryID(categoryId)),
-            persistence.discount ? new DiscountID(persistence.discount) : undefined, 
+            persistence.discount ? new DiscountID(persistence.discount) : null, 
         );
     }
 }

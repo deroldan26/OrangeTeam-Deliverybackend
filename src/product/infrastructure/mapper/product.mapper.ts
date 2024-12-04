@@ -44,8 +44,8 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
         new ProductMeasuerement(persistence.measurement),
         new ProductStock(persistence.stock),       
         persistence.categories.map(categoryId => new CategoryID(categoryId)),
-        persistence.caducityDate ? new ProductCaducityDate(persistence.caducityDate) : new ProductCaducityDate(new Date('2050/01/01')),
-        persistence.discount ? new DiscountID(persistence.discount) : new DiscountID(""), 
+        persistence.caducityDate ? new ProductCaducityDate(persistence.caducityDate): null, //new ProductCaducityDate(new Date('2050/01/01')),
+        persistence.discount ? new DiscountID(persistence.discount) : null, //new DiscountID(""), 
       );
     }
   }
