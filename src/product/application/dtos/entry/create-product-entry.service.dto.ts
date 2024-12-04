@@ -5,6 +5,9 @@ export interface CreateProductServiceEntryDto{
     price: number
     currency: string
     weight: number
+    measurement: string
     stock: number
-    category: string
+    categories: string[]
+    caducityDate?: Date
+    discount?: string
 }

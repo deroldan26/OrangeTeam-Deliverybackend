@@ -26,8 +26,11 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 price: product.Price.Price,
                 currency: product.Currency.Currency,
                 weight: product.Weight.Weight,
+                measurement: product.Measurement.Measurement,
                 stock: product.Stock.Stock,
-                category: product.Category.Name
+                categories: product.Categories.map(category => category.Id),
+                caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : undefined,
+                discount: product.Discount ? product.Discount.Id : undefined
             }))
         }
 

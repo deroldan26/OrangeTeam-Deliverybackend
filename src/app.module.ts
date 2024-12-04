@@ -20,8 +20,7 @@ import { DiscountController } from './discount/infraestructure/controller/discou
     EmailModule,
     AuthModule
   ],
-  controllers: [ProductController, ComboController, CategoryController, AuthController, UserController, RabbitMQConsumerService],
-  controllers: [ProductController, ComboController, CategoryController, DiscountController, RabbitMQConsumerService],
+  controllers: [ProductController, ComboController, CategoryController,DiscountController, AuthController, UserController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,

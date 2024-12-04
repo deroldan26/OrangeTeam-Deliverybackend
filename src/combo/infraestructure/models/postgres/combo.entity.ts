@@ -18,25 +18,25 @@ export class ComboEntity {
     @Column('varchar')
     description: string;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', nullable: true })
     comboImages: string[];
 
     @Column({ type: 'json' })
     products: string[];
 
-    @Column('integer')
+    @Column({type: 'integer', nullable: true})
     weight: number;
 
-    @Column('varchar')
+    @Column({type: 'varchar', nullable: true})
     measurement: string;
 
-    @Column('integer')
+    @Column({type: 'integer', nullable: true})
     stock: number;
 
     @Column({ type: 'date', nullable: true})
     caducityDate: Date | null;
 
-    @Column({ type: 'json' })
+    @Column({ type: 'json', nullable: true})
     categories: string[];
 
     @Column( {type: 'varchar', nullable: true})

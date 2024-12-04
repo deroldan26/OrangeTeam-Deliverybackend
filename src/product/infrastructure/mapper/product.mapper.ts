@@ -10,6 +10,10 @@ import { ProductCurrency } from "../../domain/value-objects/product.currency";
 import { ProductWeight } from "../../domain/value-objects/product.weight";
 import { ProductStock } from "src/product/domain/value-objects/product.stock";
 import { CategoryName } from "src/product/domain/value-objects/category.name";
+import { ProductMeasuerement } from "src/product/domain/value-objects/product.measurement";
+import { ProductCaducityDate } from "src/product/domain/value-objects/product.caducityDate";
+import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class ProductMapper implements IMapper<Product, ProductEntity> {
     async fromDomainToPersistence(domain: Product): Promise<ProductEntity> {
@@ -21,20 +25,28 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
       productORM.price = domain.Price.Price;
       productORM.currency = domain.Currency.Currency;
       productORM.weight = domain.Weight.Weight
+      productORM.measurement = domain.Measurement.Measurement;
       productORM.stock = domain.Stock.Stock;
-      productORM.category = domain.Category.Name
+      if (domain.CaducityDate) {productORM.caducityDate = domain.CaducityDate.CaducityDate;}
+      productORM.categories = domain.Categories.map(category => category.Id);
+      if( domain.Discount ){productORM.discount = domain.Discount.Id}
       
       return productORM;
     }
     async fromPersistenceToDomain(persistence: ProductEntity): Promise<Product> {
-      return new Product(new ProductID(persistence.id), 
-             new ProductName(persistence.name), 
-             new ProductDescription(persistence.description), 
-             persistence.images.map(imageUrl => new ProductImage(imageUrl)),
-             new ProductPrice(persistence.price), 
-             new ProductCurrency(persistence.currency),
-             new ProductWeight(persistence.weight),
-             new ProductStock(persistence.stock),
-             new CategoryName(persistence.category));
+      return new Product(
+        new ProductID(persistence.id), 
+        new ProductName(persistence.name), 
+        new ProductDescription(persistence.description), 
+        persistence.images.map(imageUrl => new ProductImage(imageUrl)),
+        new ProductPrice(persistence.price), 
+        new ProductCurrency(persistence.currency),
+        new ProductWeight(persistence.weight),
+        new ProductMeasuerement(persistence.measurement),
+        new ProductStock(persistence.stock),       
+        persistence.categories.map(categoryId => new CategoryID(categoryId)),
+        persistence.caducityDate ? new ProductCaducityDate(persistence.caducityDate) : undefined,
+        persistence.discount ? new DiscountID(persistence.discount) : undefined, 
+      );
     }
   }

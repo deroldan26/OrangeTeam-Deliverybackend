@@ -3,9 +3,12 @@ import { ValueObject } from "../../../core/domain/value.object"
 
 
 export class ProductCaducityDate implements ValueObject<ProductCaducityDate> {
-    constructor(private _caducityDate: string) {
-        if (_caducityDate.length < 2) throw new unvalidProductCaducityDateException(`Caducity Date '${_caducityDate}' not valid`)
-    }
+    constructor(private _caducityDate: Date) {
+        const now = new Date();
+        if (_caducityDate <= now) {
+          throw new unvalidProductCaducityDateException(`Caducity date '${_caducityDate.toISOString()}' is not valid.`);
+        }
+      }
     get CaducityDate() {
         return this._caducityDate
     }

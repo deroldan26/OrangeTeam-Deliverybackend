@@ -17,18 +17,40 @@ import { CategoryName } from "src/product/domain/value-objects/category.name";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 import { DomainEvent } from "../../../core/domain/domain.event";
 import { MessagingService } from "../../../core/infrastructure/events/rabbitmq/messaging.service";
+import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
+import { CategoryValidatorService } from "src/category/application/services/category-validator.services";
+import { ProductMeasuerement } from "src/product/domain/value-objects/product.measurement";
+import { ProductCaducityDate } from "src/product/domain/value-objects/product.caducityDate";
 
 export class createProductService implements IApplicationService<CreateProductServiceEntryDto, CreateProductServiceResponseDto>{
     constructor(
         private readonly productRepository:IProductRepository,
         private readonly idGenerator: IdGenerator<string>,
-        private readonly messagingService: MessagingService<DomainEvent>   
+        private readonly messagingService: MessagingService<DomainEvent>,   
+        private readonly categoryValidator: CategoryValidatorService,
+        private readonly discountValidator?: DiscountValidatorService
     ){}
     
     async execute(data: CreateProductServiceEntryDto): Promise<Result<CreateProductServiceResponseDto>> {
+
+        const validationCategoryResult = await this.categoryValidator.validateCategoryIds(data.categories);
+
+        if (!validationCategoryResult.isSuccess()) {
+            return Result.fail<CreateProductServiceResponseDto>(validationCategoryResult.Error, validationCategoryResult.StatusCode, validationCategoryResult.Message);
+        }
+
+        let validationDiscountResult;
+        if(data.discount){//!Validacion de ID discount si exite
+            validationDiscountResult = await this.discountValidator.validateDiscountId(data.discount);
+            if (!validationDiscountResult.isSuccess()) {
+                return Result.fail<CreateProductServiceResponseDto>(validationDiscountResult.Error, validationDiscountResult.StatusCode, validationDiscountResult.Message);
+            }
+        }
+
         const imageUrlGenerator = new ImageUrlGenerator();
         const imageIDs = await Promise.all(data.images.map(image => imageUrlGenerator.UploadImage(image)));
         const productImages = imageIDs.map(imageID => new ProductImage(imageID));
+        const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : undefined;
         const product = new Product(
             new ProductID( await this.idGenerator.generateId()), 
             new ProductName(data.name),
@@ -37,8 +59,12 @@ export class createProductService implements IApplicationService<CreateProductSe
             new ProductPrice(data.price),
             new ProductCurrency(data.currency),
             new ProductWeight(data.weight),
+            new ProductMeasuerement(data.measurement),
             new ProductStock(data.stock),
-            new CategoryName(data.category));
+            validationCategoryResult.Value,
+            data.caducityDate ? new ProductCaducityDate(data.caducityDate) : undefined,
+            discount
+        );
         const result = await this.productRepository.saveProductAggregate(product);
         if ( !result.isSuccess() ){
             return Result.fail<CreateProductServiceResponseDto>( result.Error, result.StatusCode, result.Message )
@@ -51,8 +77,11 @@ export class createProductService implements IApplicationService<CreateProductSe
             price: product.Price.Price,
             currency: product.Currency.Currency,
             weight: product.Weight.Weight,
+            measurement: product.Measurement.Measurement,
             stock: product.Stock.Stock,
-            category: product.Category.Name
+            caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : undefined,
+            categories: product.Categories.map(category => category.Id),
+            discount
         };
         await this.messagingService.sendMessage('productCreatedEvent', product.pullDomainEvent());
         return Result.success<CreateProductServiceResponseDto>(response, 200);

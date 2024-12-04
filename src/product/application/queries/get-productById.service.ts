@@ -28,8 +28,11 @@ export class getProductByIdService implements IApplicationService<GetProductById
             price: product.Value.Price.Price,
             currency: product.Value.Currency.Currency,
             weight: product.Value.Weight.Weight,
+            measurement: product.Value.Measurement.Measurement,
             stock: product.Value.Stock.Stock,
-            category: product.Value.Category.Name
+            caducityDate: product.Value.CaducityDate ? product.Value.CaducityDate.CaducityDate : undefined,
+            categories: product.Value.Categories.map(CategoryID => CategoryID.Id),
+            discount: product.Value.Discount ? product.Value.Discount.Id : undefined,
         };
         return Result.success(response, 200);
     }
