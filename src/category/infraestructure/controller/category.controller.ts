@@ -12,6 +12,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
 import { UseGuards } from '@nestjs/common';
 
+
 @ApiTags('Category')
 // @ApiBearerAuth('JWT-auth')
 @Controller('category')

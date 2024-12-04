@@ -29,10 +29,9 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
         comboORM.weight = domain.Weight.Weight;
         comboORM.measurement = domain.Measurement.Measurement;
         comboORM.stock = domain.Stock.Stock;
-        if (domain.CaducityDate) {comboORM.caducityDate = domain.CaducityDate.CaducityDate;}
+        comboORM.caducityDate = domain.CaducityDate ? domain.CaducityDate.CaducityDate : new Date('2050-01-01');
         comboORM.categories = domain.Categories.map(category => category.Id);
-        if( domain.Discount ){comboORM.discount = domain.Discount.Id}
-        
+        comboORM.discount = domain.Discount ? domain.Discount.Id : "";
         return comboORM;
     }
 
