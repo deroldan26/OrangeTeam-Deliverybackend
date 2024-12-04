@@ -15,9 +15,10 @@ export class ProductEntity {
     })
     description: string
     @Column({
-        type: 'varchar',
+        type: 'json',
+        nullable: true
     })
-    image: string
+    images: string[]
     @Column({
         type: 'float',
     })
@@ -31,11 +32,23 @@ export class ProductEntity {
     })
     weight: number
     @Column({
+        type: 'varchar',
+        nullable: true
+    })
+    measurement: string;
+
+    @Column({
         type: 'integer',
     })
     stock: number
-    @Column({
-        type: 'varchar',
-    })
-    category: string
+
+    @Column({ type: 'date', nullable: true})
+    caducityDate: Date | null;
+
+    @Column({ type: 'json'  })
+    categories: string[];
+
+    @Column( {type: 'varchar', 
+        nullable: true})
+    discount: string;
 }

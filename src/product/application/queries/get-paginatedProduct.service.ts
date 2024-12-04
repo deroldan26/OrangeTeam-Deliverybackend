@@ -22,17 +22,22 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 id: product.Id.Id,
                 name: product.Name.Name,
                 description: product.Description.Description,
-                image: product.Image.Image,
+                images: product.Images.map(image => image.Image),
                 price: product.Price.Price,
                 currency: product.Currency.Currency,
                 weight: product.Weight.Weight,
+                measurement: product.Measurement.Measurement,
                 stock: product.Stock.Stock,
-                category: product.Category.Name
+                categories: product.Categories.map(category => category.Id),
+                caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : new Date('2050/01/01'),
+                discount: product.Discount ? product.Discount.Id : ""
             }))
         }
 
         for (let i = 0; i < response.products.length; i++) {
-            response.products[i].image = await urlGenerator.generateUrl(response.products[i].image);
+            response.products[i].images = await Promise.all(
+                response.products[i].images.map(async (image) => await urlGenerator.generateUrl(image))
+            ); 
         }
         
         return Result.success(response,200);

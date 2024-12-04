@@ -8,17 +8,21 @@ import { RabbitmqModule } from './core/infrastructure/events/rabbitmq/rabbitmq.m
 import { MessagingService } from './core/infrastructure/events/rabbitmq/messaging.service';
 import { RabbitMQConsumerService } from './core/infrastructure/events/rabbitmq/rabbitmq-consumer.service';
 import { EmailModule } from './core/infrastructure/emailsender/email.module';
+import { AuthModule } from './auth/infraestructure/auth.module';
+import { AuthController } from './auth/infraestructure/controller/auth.controller';
+import { UserController } from './user/infrastructure/controller/user.controller';
 import { DiscountController } from './discount/infraestructure/controller/discount.controller';
 import { OrderController } from './order/infrastructure/controller/order.controller';
-
 
 @Module({
   imports: [
     ConfigModule.forRoot({isGlobal: true}),
     RabbitmqModule,
-    EmailModule
+    EmailModule,
+    AuthModule
   ],
-  controllers: [ProductController, ComboController, CategoryController, OrderController, DiscountController, RabbitMQConsumerService],
+
+  controllers: [ProductController, ComboController, CategoryController,DiscountController, AuthController, OrderController, UserController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,

@@ -17,7 +17,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     
   async findProductById(id: string): Promise<Result<Product>> {
     try {
-      var product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).where('Product.id = :id',{id}).getOne()
+      var product = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.images','Product.price','Product.currency','Product.weight','Product.measurement','Product.stock','Product.categories','Product.caducityDate','Product.discount']).where('Product.id = :id',{id}).getOne()
       const getProduct = await this.productMapper.fromPersistenceToDomain(product);
       return Result.success<Product>(getProduct, 200)
     } catch (error) {
@@ -27,7 +27,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
 
   async findPaginatedProducts(page: number, take: number, name?: string, category?: string): Promise<Result<Product[]>>{
     try {
-      const query = this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category'])
+      const query = this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.images','Product.price','Product.currency','Product.weight','Product.measurement','Product.stock','Product.categories','Product.caducityDate','Product.discount']);
       if(name){
         query.where('Product.name LIKE :name',{name: `%${name}%`});
       }

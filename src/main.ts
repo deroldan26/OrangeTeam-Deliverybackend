@@ -25,6 +25,14 @@ async function bootstrap() {
     .setTitle('Go Dely API')
     .setDescription('Delivery app backend done with DDD.')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT', // Opcional, especifica el formato
+      },
+      'JWT-auth', // Nombre del esquema
+    )
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
 

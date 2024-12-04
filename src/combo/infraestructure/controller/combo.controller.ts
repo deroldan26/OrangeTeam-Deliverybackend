@@ -14,8 +14,12 @@ import { CategoryValidatorService } from 'src/category/application/services/cate
 import { CategoryPostgresRepository } from 'src/category/infraestructure/repositories/postgres/category.repository';
 import { DiscountValidatorService } from 'src/discount/application/services/discount-validator.services';
 import { DiscountPostgresRepository } from 'src/discount/infraestructure/repositories/postgres/discount.repository';
+import { UseGuards } from '@nestjs/common';
+import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiTags('Combo')
+@ApiBearerAuth('JWT-auth')
 @Controller('combo')
 export class ComboController {
   private readonly comboRepository: ComboPostgresRepository;
@@ -34,12 +38,14 @@ export class ComboController {
     }
   }
 
+  //@UseGuards(JwtAuthGuard)
   @Post()
   async createCombo(@Body() createComboDto: CreateComboDto) {
     const service = new createComboService(this.comboRepository, this.uuidCreator, this.productValidator, this.categoryValidator, this.discountValidator);
     return await service.execute(createComboDto);
   }
 
+  //@UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getComboByIdService(this.comboRepository)
@@ -47,6 +53,7 @@ export class ComboController {
     return response;
   }
 
+  //@UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedCombo(@Query(ValidationPipe) query: FindPaginatedComboDto) {
     // const {page, take} = query;

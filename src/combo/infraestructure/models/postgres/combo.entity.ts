@@ -24,17 +24,17 @@ export class ComboEntity {
     @Column({ type: 'json' })
     products: string[];
 
-    @Column('integer')
+    @Column({type: 'integer'})
     weight: number;
 
-    @Column('varchar')
+    @Column({type: 'varchar'})
     measurement: string;
 
-    @Column('integer')
+    @Column({type: 'integer'})
     stock: number;
 
-    @Column({ type: 'date', nullable: true})
-    caducityDate: Date;
+    @Column({ type: 'date', nullable: true })
+    caducityDate: Date | null;
 
     @Column({ type: 'json' })
     categories: string[];

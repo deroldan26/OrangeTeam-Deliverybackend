@@ -32,7 +32,6 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
         comboORM.caducityDate = domain.CaducityDate ? domain.CaducityDate.CaducityDate : new Date('2050-01-01');
         comboORM.categories = domain.Categories.map(category => category.Id);
         comboORM.discount = domain.Discount ? domain.Discount.Id : "";
-        
         return comboORM;
     }
 
@@ -48,9 +47,9 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
             new ComboWeight(persistence.weight),
             new ComboMeasurement(persistence.measurement),
             new ComboStock(persistence.stock),
-            persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : new ComboCaducityDate(new Date('2050-01-01')), 
+            persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : null, 
             persistence.categories.map(categoryId => new CategoryID(categoryId)),
-            persistence.discount ? new DiscountID(persistence.discount) : new DiscountID(""),
+            persistence.discount ? new DiscountID(persistence.discount) : null, 
         );
     }
 }
