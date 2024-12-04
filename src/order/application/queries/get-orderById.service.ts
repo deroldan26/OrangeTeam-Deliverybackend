@@ -22,7 +22,6 @@ export class getOrderByIdService implements IApplicationService<GetOrderByIdServ
         const order: Result<Order> = await this.orderRepository.findOrderById(data.id);
         const products: Result<Product[]> = await this.orderProductRepository.findOrderProductById(data.id);
         const combos: Result<Combo[]> = await this.orderComboRepository.findOrderComboById(data.id);
-        console.log(order.Value)
         if(!order.isSuccess()) {
             return Result.fail( order.Error, order.StatusCode, order.Message )
         }

@@ -14,6 +14,9 @@ export interface UpdateOrderServiceEntryDto{
     address?: string
     products?: ProductEntryDto[];
     combos?: ComboEntryDto[];
+    paymentMethod?: string
+    currency?: string
+    total?: number
     report?: string;
-    receivedDate?: Date;
+    receivedDate?: string;
 }
