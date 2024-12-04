@@ -21,7 +21,6 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
       const getProduct = await this.productMapper.fromPersistenceToDomain(product);
       return Result.success<Product>(getProduct, 200)
     } catch (error) {
-      console.log(error.message);
       return Result.fail<Product>(new Error(error.message), error.code, error.message);
     }
   }

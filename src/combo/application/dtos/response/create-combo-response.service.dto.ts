@@ -4,6 +4,12 @@ export interface CreateComboServiceResponseDto {
     specialPrice: number;
     currency: string;
     description: string;
-    comboImage: string;
+    comboImages: string[];
     products: string[]; 
+    weight: number;
+    measurement: string;
+    stock: number;
+    caducityDate?: Date;
+    categories: string[];
+    discount?: string;
 }
