@@ -30,9 +30,9 @@ export class getProductByIdService implements IApplicationService<GetProductById
             weight: product.Value.Weight.Weight,
             measurement: product.Value.Measurement.Measurement,
             stock: product.Value.Stock.Stock,
-            caducityDate: product.Value.CaducityDate ? product.Value.CaducityDate.CaducityDate : undefined,
+            caducityDate: product.Value.CaducityDate ? product.Value.CaducityDate.CaducityDate : new Date('2050/01/01'),
             categories: product.Value.Categories.map(CategoryID => CategoryID.Id),
-            discount: product.Value.Discount ? product.Value.Discount.Id : undefined,
+            discount: product.Value.Discount ? product.Value.Discount.Id : "",
         };
         return Result.success(response, 200);
     }

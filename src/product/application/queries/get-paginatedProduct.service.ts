@@ -29,8 +29,8 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
                 measurement: product.Measurement.Measurement,
                 stock: product.Stock.Stock,
                 categories: product.Categories.map(category => category.Id),
-                caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : undefined,
-                discount: product.Discount ? product.Discount.Id : undefined
+                caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : new Date('2050/01/01'),
+                discount: product.Discount ? product.Discount.Id : ""
             }))
         }
 

@@ -27,10 +27,9 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
       productORM.weight = domain.Weight.Weight
       productORM.measurement = domain.Measurement.Measurement;
       productORM.stock = domain.Stock.Stock;
-      if (domain.CaducityDate) {productORM.caducityDate = domain.CaducityDate.CaducityDate;}
+      productORM.caducityDate = domain.CaducityDate ? domain.CaducityDate.CaducityDate : new Date('2050-01-01');
       productORM.categories = domain.Categories.map(category => category.Id);
-      if( domain.Discount ){productORM.discount = domain.Discount.Id}
-      
+      productORM.discount = domain.Discount ? domain.Discount.Id : "";
       return productORM;
     }
     async fromPersistenceToDomain(persistence: ProductEntity): Promise<Product> {
@@ -45,8 +44,8 @@ export class ProductMapper implements IMapper<Product, ProductEntity> {
         new ProductMeasuerement(persistence.measurement),
         new ProductStock(persistence.stock),       
         persistence.categories.map(categoryId => new CategoryID(categoryId)),
-        persistence.caducityDate ? new ProductCaducityDate(persistence.caducityDate) : undefined,
-        persistence.discount ? new DiscountID(persistence.discount) : undefined, 
+        persistence.caducityDate ? new ProductCaducityDate(persistence.caducityDate) : new ProductCaducityDate(new Date('2050/01/01')),
+        persistence.discount ? new DiscountID(persistence.discount) : new DiscountID(""), 
       );
     }
   }

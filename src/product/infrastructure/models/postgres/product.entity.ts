@@ -41,16 +41,11 @@ export class ProductEntity {
         type: 'integer',
     })
     stock: number
-    @Column({
-        type: 'varchar',
-    })
-    category: string
 
-    @Column({ type: 'date', 
-        nullable: true})
+    @Column({ type: 'date', nullable: true})
     caducityDate: Date | null;
 
-    @Column({ type: 'json', nullable: true })
+    @Column({ type: 'json'  })
     categories: string[];
 
     @Column( {type: 'varchar', 

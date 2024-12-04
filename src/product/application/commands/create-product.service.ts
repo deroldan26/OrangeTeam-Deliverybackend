@@ -50,7 +50,7 @@ export class createProductService implements IApplicationService<CreateProductSe
         const imageUrlGenerator = new ImageUrlGenerator();
         const imageIDs = await Promise.all(data.images.map(image => imageUrlGenerator.UploadImage(image)));
         const productImages = imageIDs.map(imageID => new ProductImage(imageID));
-        const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : undefined;
+        const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : "";
         const product = new Product(
             new ProductID( await this.idGenerator.generateId()), 
             new ProductName(data.name),
@@ -62,7 +62,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             new ProductMeasuerement(data.measurement),
             new ProductStock(data.stock),
             validationCategoryResult.Value,
-            data.caducityDate ? new ProductCaducityDate(data.caducityDate) : undefined,
+            data.caducityDate ? new ProductCaducityDate(data.caducityDate) : new ProductCaducityDate(new Date('2050/01/01')),
             discount
         );
         const result = await this.productRepository.saveProductAggregate(product);
@@ -79,7 +79,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             weight: product.Weight.Weight,
             measurement: product.Measurement.Measurement,
             stock: product.Stock.Stock,
-            caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : undefined,
+            caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : new Date('2050/01/01'),
             categories: product.Categories.map(category => category.Id),
             discount
         };

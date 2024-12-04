@@ -112,8 +112,10 @@ export class Product extends AggregateRoot<ProductID>{
             this.price = event.price;
             this.currency = event.currency;
             this.weight = event.weight;
+            this.measurement = event.measurement;
             this.stock = event.stock;
             this.categories = event.categories;
+            this.discount = event.discount;
           }
     }
     protected checkValidState (): void{
