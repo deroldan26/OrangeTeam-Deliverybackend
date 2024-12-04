@@ -6,8 +6,6 @@ import { OrderAddress } from "src/order/domain/value-objects/order.address";
 import { OrderStatus } from "src/order/domain/value-objects/order.status";
 import { OrderCreatedDate } from "src/order/domain/value-objects/order.created.date";
 import { OrderReceivedDate } from "src/order/domain/value-objects/order.received.date";
-import { Product } from "src/order/domain/entities/product";
-import { Combo } from "src/order/domain/entities/combo";
 import { PaymentMethod } from "src/order/domain/entities/paymentMethod";
 import { OrderPaymentMethodID } from "src/order/domain/value-objects/order.payment.method.id";
 import { OrderPaymentMethod } from "src/order/domain/value-objects/order.payment.method";
@@ -19,10 +17,8 @@ import { OrderReportDescription } from "src/order/domain/value-objects/order.rep
 import { OrderReportDate } from "src/order/domain/value-objects/order.report.date";
 import { OrderProductEntity } from "../models/order.products.entity";
 import { OrderComboEntity } from "../models/order.combos.entity";
-import { OrderProductID } from "src/order/domain/value-objects/order.product.id";
-import { OrderProductQuantity } from "src/order/domain/value-objects/order.product.quantity";
-import { OrderComboID } from "src/order/domain/value-objects/order.combo.id";
-import { OrderComboQuantity } from "src/order/domain/value-objects/order.combo.quantity";
+import { Product } from "src/order/domain/entities/product";
+import { Combo } from "src/order/domain/entities/combo";
 
 export class OrderMapper implements IMapper<Order, OrderEntity> {
 
@@ -74,20 +70,9 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         orderORM.report.description = domain.Report.ReportDescription().ReportDescription;
         orderORM.report.reportDate = domain.Report.ReportDate().ReportDate;
         orderORM.receivedDate = domain.ReceivedDate.ReceivedDate;
-        console.log("orderORM:************")
-        console.log(orderORM)
         return orderORM;
     }
     async fromPersistenceToDomain(persistence: OrderEntity): Promise<Order> {
-        //const products = persistence.products.map(product => new Product(product.Id, product.ProductQuantity()));
-        //const combos = persistence.combos.map(combo => new Combo(combo.Id, combo.ComboQuantity()));
-        console.log("order mapper entry:************")
-        // const products = persistence.products.map(product => {
-        //     return new Product(new OrderProductID(product.id), new OrderProductQuantity(product.quantity), new OrderID(product.order.orderId));
-        // });
-        // const combos = persistence.combos.map(combo => {
-        //     return new Combo(new OrderComboID(combo.id), new OrderComboQuantity(combo.quantity), new OrderID(combo.order.orderId));
-        // });
         const paymentMethod = new PaymentMethod(new OrderPaymentMethodID(persistence.paymentMethod.id),new OrderPaymentMethod(persistence.paymentMethod.paymentMethodName),new OrderCurrency(persistence.paymentMethod.currency),new OrderTotalAmount(persistence.paymentMethod.amount));
         const report = new OrderReport(new OrderReportID(persistence.report.id),new OrderReportDescription(persistence.report.description),new OrderReportDate(persistence.report.reportDate));
         return new Order(new OrderID(persistence.orderId), 
@@ -98,6 +83,20 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                 //  combos,
                 [],
                 [], 
+                 paymentMethod, 
+                 report, 
+                 new OrderReceivedDate(persistence.receivedDate));
+    }
+
+    async fromPersistenceToDomainOrder(persistence: OrderEntity, products:Product[], combos:Combo[]): Promise<Order> {
+        const paymentMethod = new PaymentMethod(new OrderPaymentMethodID(persistence.paymentMethod.id),new OrderPaymentMethod(persistence.paymentMethod.paymentMethodName),new OrderCurrency(persistence.paymentMethod.currency),new OrderTotalAmount(persistence.paymentMethod.amount));
+        const report = new OrderReport(new OrderReportID(persistence.report.id),new OrderReportDescription(persistence.report.description),new OrderReportDate(persistence.report.reportDate));
+        return new Order(new OrderID(persistence.orderId), 
+                 new OrderCreatedDate(persistence.createdDate), 
+                 new OrderStatus(persistence.status), 
+                 new OrderAddress(persistence.address), 
+                 products, 
+                 combos, 
                  paymentMethod, 
                  report, 
                  new OrderReceivedDate(persistence.receivedDate));

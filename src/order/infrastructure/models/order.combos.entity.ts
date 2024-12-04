@@ -3,9 +3,15 @@ import { OrderEntity } from './order.entity';
 
 @Entity('OrderCombo')
 export class OrderComboEntity {
+    
     @PrimaryGeneratedColumn(
         'uuid'
     )
+    entityId: string
+
+    @Column({ 
+        type: 'uuid' 
+    })
     id: string;
 
     @Column({ 

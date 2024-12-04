@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Inject, Param, Post } from "@nestjs/common";
+import { Body, Controller, Get, Inject, Param, Patch, Post, Query, ValidationPipe } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { UuidGenerator } from "src/core/infrastructure/id.generator.ts/uuid-generator";
 import { OrderPostgresRepository } from "../repositories/postgres/order.repository";
@@ -15,6 +15,9 @@ import { ReportPostgresRepository } from "../repositories/postgres/report.reposi
 import { getOrderByIdService } from "src/order/application/queries/get-orderById.service";
 import { OrderProductPostgresRepository } from "../repositories/postgres/products.repository";
 import { OrderComboPostgresRepository } from "../repositories/postgres/combos.repository";
+import { FindPaginatedOrderDto } from "../dto/find-paginated-order.dto";
+import { GetPaginatedOrderService } from "src/order/application/queries/get-paginatedOrder.service";
+import { updateOrderService } from "src/order/application/commands/update-order.service";
 
 
 @ApiTags('Order')
@@ -49,15 +52,15 @@ export class OrderController{
         return response;
     }
 
-    // @Get()
-    // async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedOrderDto) {
-    //     const {page, take, state} = query;
-    //     const service = new GetPaginatedOrderService(this.orderRepository);
-    //     return (await service.execute({page, take, state})).Value;
-    // }
+    @Get()
+    async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto) {
+        const {page, take, status} = query;
+        const service = new GetPaginatedOrderService(this.orderRepository);
+        return (await service.execute({page, take, status})).Value;
+    }
 
     // @Patch(':id')
-    // async update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
+    // async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
     //     const service = new updateOrderService(this.orderRepository, this.messagingService);
     //     var response = await service.execute({id: id, ...updateOrderDto});
     //     return response;

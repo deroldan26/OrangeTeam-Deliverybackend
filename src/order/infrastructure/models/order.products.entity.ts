@@ -6,6 +6,11 @@ export class OrderProductEntity {
     @PrimaryGeneratedColumn(
         'uuid'
     )
+    entityId: string
+
+    @Column({ 
+        type: 'uuid' 
+    })
     id: string;
 
     @Column({ 

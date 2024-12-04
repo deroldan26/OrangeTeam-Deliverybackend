@@ -1,5 +1,5 @@
 import { IApplicationService } from "src/core/application/service/application-service.interface";
-import { GetOrderByIdServiceEntryDto } from "../dtos/entry/get-orderById-enrty.service.dto";
+import { GetOrderByIdServiceEntryDto } from "../dtos/entry/get-orderById-entry.service.dto";
 import { GetOrderByIdServiceResponseDto } from "../dtos/response/get-order-response.service.dto";
 import { Result } from "src/core/domain/result-handler/result";
 import { IOrderRepository } from "src/order/domain/repositories/order-repositories.interface";

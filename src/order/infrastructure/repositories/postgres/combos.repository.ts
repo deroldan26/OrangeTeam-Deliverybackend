@@ -16,12 +16,10 @@ export class OrderComboPostgresRepository extends Repository<ComboORM> implement
     
     async findOrderComboById(id: string): Promise<Result<Combo[]>> {
         try {
-            console.log("findOrderComboById")
             var orderCombos = await this.createQueryBuilder('OrderCombo')
                 .select(['OrderCombo.id','OrderCombo.quantity','OrderCombo.orderId'])
                 .where('OrderCombo.orderId = :id',{id})
                 .getMany()
-            console.log("Select de la BD combos: ",orderCombos)
             const combos: Combo[] = [];
             for (const orderCombo of orderCombos) {
                 const product = await this.comboMapper.fromPersistenceToDomain(orderCombo);

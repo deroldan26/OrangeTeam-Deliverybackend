@@ -12,6 +12,8 @@ import { IOrderProductsRepository } from "src/order/domain/repositories/order-pr
 import { IOrderCombosRepository } from "src/order/domain/repositories/order-combos-repositories.interface";
 import { OrderProductPostgresRepository } from "./products.repository";
 import { OrderComboPostgresRepository } from "./combos.repository";
+import { Product } from "src/order/domain/entities/product";
+import { Combo } from "src/order/domain/entities/combo";
 
 export class OrderPostgresRepository extends Repository<OrderORM> implements IOrderRepository{
     private readonly orderMapper: OrderMapper;
@@ -31,7 +33,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
 
     async findOrderById(id: string): Promise<Result<Order>> {
         try {
-            console.log("findOrderById")
             var order = await this.createQueryBuilder('Order')
             .leftJoinAndSelect('Order.paymentMethod', 'paymentMethod')
             .leftJoinAndSelect('Order.report', 'report')
@@ -49,13 +50,11 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'report.description',
                 'report.reportDate'
             ]).where('Order.orderId = :id',{id}).getOne()
+            if(!order) 
+                return Result.fail<Order>(new Error('Order not found'), 404, 'Order not found');
             var products = await this.orderProductRepository.findOrderProductById(order.orderId);
-            console.log("Entra al findOrderComboById")
             var combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
-            console.log("Select de la BD combos: ",combos)
-            const getOrder = await this.orderMapper.fromPersistenceToDomain(order);
-            const updatedOrder = { ...getOrder, Products: products.Value, Combos: combos.Value };
-            console.log("UpdatedOrder:************", updatedOrder)
+            const getOrder = await this.orderMapper.fromPersistenceToDomainOrder(order,products.Value,combos.Value);
             return Result.success<Order>(getOrder, 200)
         } catch (error) {
             return Result.fail<Order>(new Error(error.message), error.code, error.message);
@@ -66,7 +65,7 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
         try {
             
         } catch (error) {
-            //return Result.fail<Order>(new Error(error.message), error.code, error.message);
+            return Result.fail<Order[]>(new Error(error.message), error.code, error.message);
         }
         throw new Error("Method not implemented.");
     }
@@ -74,15 +73,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
     async saveOrderAggregate(order: Order): Promise<Result<Order>> {
         try {
             const newOrder = await this.orderMapper.fromDomainToPersistence(order);
-            console.log("NewOrder:************")
-            console.log(newOrder.products)
-            console.log(newOrder.combos)
-            // if (Array.isArray(newOrder.products)) {
-            //     newOrder.products = JSON.stringify(newOrder.products);
-            // }
-            // if (Array.isArray(newOrder.combos)) {
-            //     newOrder.combos = JSON.stringify(newOrder.combos);
-            // }
             await this.save(newOrder);
             return Result.success<Order>(order, 200);
         } catch (error) {
