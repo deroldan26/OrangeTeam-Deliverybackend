@@ -19,7 +19,7 @@ import { CategoryPostgresRepository } from '../../../category/infraestructure/re
 import { DiscountPostgresRepository } from '../../../discount/infraestructure/repositories/postgres/discount.repository';
 
 @ApiTags('Product')
-// @ApiBearerAuth('JWT-auth')
+@ApiBearerAuth('JWT-auth')
 @Controller('product')
 export class ProductController {
   private readonly productRepository: ProductPostgresRepository;
