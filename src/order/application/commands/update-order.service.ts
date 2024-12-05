@@ -44,9 +44,7 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
     ) {}
 
     async execute(data: UpdateOrderServiceEntryDto): Promise<Result<UpdateOrderServiceResponseDto>> {
-        console.log("Update Order Service: ", data);
         const result = await this.orderRepository.findOrderById(data.id);
-        console.log("Me traje la orden: ",result.Value.UserID);
         if (!result.isSuccess()){
             return Result.fail<UpdateOrderServiceResponseDto>(result.Error, result.StatusCode, result.Message)
         }

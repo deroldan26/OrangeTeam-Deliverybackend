@@ -44,7 +44,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
 
     async findOrderById(id: string): Promise<Result<Order>> {
         try {
-            console.log("Se intenta Find: ", id);
             var order = await this.createQueryBuilder('Order')
             .leftJoinAndSelect('Order.paymentMethod', 'paymentMethod')
             .leftJoinAndSelect('Order.report', 'report')
@@ -67,7 +66,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'report.description',
                 'report.reportDate'
             ]).where('Order.orderId = :id',{id}).getOne()
-            console.log("Se trajo la orden: ", order);
             if(!order) 
                 return Result.fail<Order>(new Error('Order not found'), 404, 'Order not found');
             var products = await this.orderProductRepository.findOrderProductById(order.orderId);
@@ -76,7 +74,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
             const getOrder = await this.orderMapper.fromPersistenceToDomainOrder(order,products.Value,combos.Value);
             return Result.success<Order>(getOrder, 200)
         } catch (error) {
-            console.log("Fallo el findOrderById: ")
             return Result.fail<Order>(new Error(error.message), error.code, error.message);
         }
     }
@@ -92,31 +89,39 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'Order.status',
                 'Order.address',
                 'Order.receivedDate',
+                'Order.cancelledDate',
+                'Order.shippedDate',
+                'Order.beingProcessedDate',
+                'Order.indications',
+                'Order.userId',
                 'paymentMethod.id',
                 'paymentMethod.amount',
                 'paymentMethod.currency',
                 'paymentMethod.paymentMethodName',
                 'report.id',
                 'report.description',
-                'report.reportDate',
+                'report.reportDate'
             ]);
 
         if (status) {
             query.andWhere('Order.status LIKE :status', { status: `%${status}%` });
         }
         if (user) {
-            query.andWhere('Order.user = :user', { user });
+            query.andWhere('Order.userId = :user', { user });
         }
 
         const orders = await query.skip((page - 1) * take).take(take).getMany();
-
+        let response: Order[] = [];
         // Fetch related products and combos for each order
         for (const order of orders) {
             const products = await this.orderProductRepository.findOrderProductById(order.orderId);
             const combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
-            order.products = await this.orderProductMapper.fromDomainToPersistenceMany(products.Value);
-            order.combos = await this.orderComboMapper.fromDomainToPersistenceMany(combos.Value);
+            //order.products = await this.orderProductMapper.fromDomainToPersistenceMany(products.Value);
+            //order.combos = await this.orderComboMapper.fromDomainToPersistenceMany(combos.Value);
+            response.push(await this.orderMapper.fromPersistenceToDomainOrder(order, products.Value, combos.Value));
         }
+
+        return Result.success<Order[]>(response, 200);
         
         } catch (error) {
             return Result.fail<Order[]>(new Error(error.message), error.code, error.message);
