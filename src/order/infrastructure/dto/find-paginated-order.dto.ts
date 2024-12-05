@@ -7,6 +7,10 @@ export class FindPaginatedOrderDto {
     @IsOptional()
     @IsString()
     status?: string;
+
+    @IsOptional()
+    @IsString()
+    user?: string;
     
     @IsInt()
     @Min(1)

@@ -1,11 +1,19 @@
+export interface ProductResponseDto {
+    id: string;
+    quantity: number;
+}
+
+export interface ComboResponseDto {
+    id: string;
+    quantity: number;
+}
+
 export interface CreateOrderServiceResponseDto {
     // id: string
-    // name: string
-    // description: string
-    // image: string
-    // price: number
+    // address: string
+    // products: ProductResponseDto[]
+    // combos: ComboResponseDto[]
+    // paymentMethod: string
     // currency: string
-    // weight: number
-    // stock: number
-    // category: string
+    // total: number
 }

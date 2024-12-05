@@ -15,4 +15,5 @@ export interface CreateOrderServiceEntryDto{
     paymentMethod: string
     currency: string
     total: number
+    userId: string
 }

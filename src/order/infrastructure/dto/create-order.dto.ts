@@ -33,6 +33,9 @@ export class CreateOrderDto{
     combos: ComboDto[];
 
     @IsString()
+    userId: string;
+
+    @IsString()
     @MinLength(6)
     paymentMethod: string;
 

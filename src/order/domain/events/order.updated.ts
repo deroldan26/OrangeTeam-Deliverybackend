@@ -8,6 +8,11 @@ import { OrderStatus } from "../value-objects/order.status";
 import { OrderReceivedDate } from "../value-objects/order.received.date";
 import { Product } from "../entities/product";
 import { Combo } from "../entities/combo";
+import { OrderCancelledDate } from "../value-objects/order.cancelled.date";
+import { OrderShippedDate } from "../value-objects/order.shipped.date";
+import { OrderBeingProcessedDate } from "../value-objects/order.being.processed.date";
+import { OrderIndications } from "../value-objects/order.indications";
+import { OrderUserID } from "../value-objects/order.user.id";
 
 export class orderUpdatedEvent extends DomainEvent{
     protected constructor(
@@ -18,12 +23,17 @@ export class orderUpdatedEvent extends DomainEvent{
         public products: Product[],
         public combos: Combo[],
         public paymentMethod: PaymentMethod,
+        public userId: OrderUserID,
         public report?: OrderReport,
-        public receivedDate?: OrderReceivedDate
+        public receivedDate?: OrderReceivedDate,
+        public cancelledDate?: OrderCancelledDate,
+        public shippedDate?: OrderShippedDate,
+        public beingProcessedDate?: OrderBeingProcessedDate,
+        public indications?: OrderIndications
     ){
         super()
     }
-    static create(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, report?: OrderReport, receivedDate?: OrderReceivedDate): orderUpdatedEvent{
-        return new orderUpdatedEvent(id, createdDate, status, address, products, combos, paymentMethod, report, receivedDate);
+    static create(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId: OrderUserID, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?:OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications): orderUpdatedEvent{
+        return new orderUpdatedEvent(id, createdDate, status, address, products, combos, paymentMethod, userId, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications);
     }
 }

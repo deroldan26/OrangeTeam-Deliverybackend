@@ -15,6 +15,15 @@ export class OrderProductMapper implements IMapper<Product, OrderProductEntity> 
         productORM.orderId = domain.ProductOrder().Id
         return productORM;
     }
+
+    async fromDomainToPersistenceMany(domain: Product[]): Promise<OrderProductEntity[]> {
+        const productsORM: OrderProductEntity[] = [];
+        for (const product of domain) {
+            productsORM.push(await this.fromDomainToPersistence(product));
+        }
+        return productsORM;
+    }
+
     async fromPersistenceToDomain(persistence: OrderProductEntity): Promise<Product> {
         return new Product(new OrderProductID(persistence.id), 
             new OrderProductQuantity(persistence.quantity),

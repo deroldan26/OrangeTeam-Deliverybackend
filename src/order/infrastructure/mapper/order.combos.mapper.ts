@@ -14,6 +14,15 @@ export class OrderComboMapper implements IMapper<Combo, OrderComboEntity> {
         comboORM.orderId = domain.ComboOrder().Id
         return comboORM;
     }
+
+    async fromDomainToPersistenceMany(domain: Combo[]): Promise<OrderComboEntity[]> {
+        const combosORM: OrderComboEntity[] = [];
+        for (const combo of domain) {
+            combosORM.push(await this.fromDomainToPersistence(combo));
+        }
+        return combosORM;
+    }
+
     async fromPersistenceToDomain(persistence: OrderComboEntity): Promise<Combo> {
         return new Combo(new OrderComboID(persistence.id), 
             new OrderComboQuantity(persistence.quantity),

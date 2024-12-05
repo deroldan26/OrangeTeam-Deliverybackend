@@ -19,6 +19,11 @@ import { OrderProductEntity } from "../models/order.products.entity";
 import { OrderComboEntity } from "../models/order.combos.entity";
 import { Product } from "src/order/domain/entities/product";
 import { Combo } from "src/order/domain/entities/combo";
+import { OrderUserID } from "src/order/domain/value-objects/order.user.id";
+import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancelled.date";
+import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
+import { OrderIndications } from "src/order/domain/value-objects/order.indications";
+import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
 
 export class OrderMapper implements IMapper<Order, OrderEntity> {
 
@@ -66,10 +71,19 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         orderORM.paymentMethod.paymentMethodName = domain.PaymentMethod.PaymentMethod().PaymentMethod;
         orderORM.paymentMethod.currency = domain.PaymentMethod.Currency().Currency;
         orderORM.paymentMethod.amount = domain.PaymentMethod.Amount().TotalAmount;
+        orderORM.userId = domain.UserID.UserId;
         orderORM.report.id = domain.Report.Id.ReportId;
         orderORM.report.description = domain.Report.ReportDescription().ReportDescription;
         orderORM.report.reportDate = domain.Report.ReportDate().ReportDate;
-        orderORM.receivedDate = domain.ReceivedDate.ReceivedDate;
+        if(domain.ReceivedDate.ReceivedDate) orderORM.receivedDate = domain.ReceivedDate.ReceivedDate;
+        else orderORM.receivedDate = null;
+        if(domain.CancelledDate.CancelledDate) orderORM.cancelledDate = domain.CancelledDate.CancelledDate;
+        else orderORM.cancelledDate = null;
+        if(domain.ShippedDate.ShippedDate) orderORM.shippedDate = domain.ShippedDate.ShippedDate;
+        else orderORM.shippedDate = null;
+        if(domain.BeingProcessedDate.BeingProcessedDate) orderORM.beingProcessedDate = domain.BeingProcessedDate.BeingProcessedDate;
+        else orderORM.beingProcessedDate = null;
+        orderORM.indications = domain.Indications.Indications;
         return orderORM;
     }
     async fromPersistenceToDomain(persistence: OrderEntity): Promise<Order> {
@@ -83,9 +97,14 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                 //  combos,
                 [],
                 [], 
-                 paymentMethod, 
+                 paymentMethod,
+                 new OrderUserID(persistence.userId), 
                  report, 
-                 new OrderReceivedDate(persistence.receivedDate));
+                 new OrderReceivedDate(persistence.receivedDate),
+                 new OrderCancelledDate(persistence.cancelledDate),
+                 new OrderShippedDate(persistence.shippedDate),
+                 new OrderBeingProcessedDate(persistence.beingProcessedDate),
+                 new OrderIndications(persistence.indications));
     }
 
     async fromPersistenceToDomainOrder(persistence: OrderEntity, products:Product[], combos:Combo[]): Promise<Order> {
@@ -98,7 +117,12 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                  products, 
                  combos, 
                  paymentMethod, 
+                 new OrderUserID(persistence.userId),
                  report, 
-                 new OrderReceivedDate(persistence.receivedDate));
+                 new OrderReceivedDate(persistence.receivedDate),
+                 new OrderCancelledDate(persistence.cancelledDate),
+                 new OrderShippedDate(persistence.shippedDate),
+                 new OrderBeingProcessedDate(persistence.beingProcessedDate),
+                 new OrderIndications(persistence.indications));
     }
   }

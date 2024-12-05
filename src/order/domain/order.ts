@@ -11,17 +11,27 @@ import { unvalidOrderException } from "./exceptions/unvalid.order";
 import { DomainEvent } from "src/core/domain/domain.event";
 import { Product } from "./entities/product";
 import { Combo } from "./entities/combo";
+import { OrderCancelledDate } from "./value-objects/order.cancelled.date";
+import { OrderShippedDate } from "./value-objects/order.shipped.date";
+import { OrderBeingProcessedDate } from "./value-objects/order.being.processed.date";
+import { OrderIndications } from "./value-objects/order.indications";
+import { OrderUserID } from "./value-objects/order.user.id";
 
 export class Order extends AggregateRoot<OrderID> {
     
+    private userId: OrderUserID;
     private createdDate: OrderCreatedDate;
     private status: OrderStatus;
     private address: OrderAddress;
+    private indications?: OrderIndications;
     private products: Product[];
     private combos: Combo[];
     private paymentMethod: PaymentMethod;
     private report?: OrderReport;
     private receivedDate?: OrderReceivedDate;
+    private cancelledDate?: OrderCancelledDate;
+    private shippedDate?: OrderShippedDate;
+    private beingProcessedDate?: OrderBeingProcessedDate;
 
     get CreatedDate (): OrderCreatedDate{
         return this.createdDate;
@@ -55,6 +65,26 @@ export class Order extends AggregateRoot<OrderID> {
         return this.receivedDate;
     }
 
+    get CancelledDate (): OrderCancelledDate{
+        return this.cancelledDate;
+    }
+
+    get ShippedDate (): OrderShippedDate{
+        return this.shippedDate;
+    }
+
+    get BeingProcessedDate (): OrderBeingProcessedDate{
+        return this.beingProcessedDate;
+    }
+
+    get Indications (): OrderIndications{
+        return this.indications;
+    }
+
+    get UserID (): OrderUserID{
+        return this.userId;
+    }
+
     ChangeStatus(status: OrderStatus): void{
         this.status = status;
     }
@@ -75,6 +105,10 @@ export class Order extends AggregateRoot<OrderID> {
         this.paymentMethod = paymentMethod;
     }
 
+    ChangeUserID(userId: OrderUserID): void{
+        this.userId = userId;
+    }
+
     ChangeReport(report: OrderReport): void{
         this.report = report;
     }
@@ -83,8 +117,24 @@ export class Order extends AggregateRoot<OrderID> {
         this.receivedDate = receivedDate;
     }
 
-    constructor(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, report?: OrderReport, receivedDate?: OrderReceivedDate){
-        const orderCreated = orderCreatedEvent.create(id, createdDate, status, address, products, combos, paymentMethod, report, receivedDate);
+    ChangeCancelledDate(cancelledDate: OrderCancelledDate): void{
+        this.cancelledDate = cancelledDate;
+    }
+
+    ChangeShippedDate(shippedDate: OrderShippedDate): void{
+        this.shippedDate = shippedDate;
+    }
+
+    ChangeBeingProcessedDate(beingProcessedDate: OrderBeingProcessedDate): void{
+        this.beingProcessedDate = beingProcessedDate;
+    }
+
+    ChangeIndications(indications: OrderIndications): void{
+        this.indications = indications;
+    }
+
+    constructor(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId: OrderUserID, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?: OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications){
+        const orderCreated = orderCreatedEvent.create(id, createdDate, status, address, products, combos, paymentMethod, userId, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications);
         super(id, orderCreated);
     }
 
@@ -96,8 +146,13 @@ export class Order extends AggregateRoot<OrderID> {
             this.products = event.products;
             this.combos = event.combos;
             this.paymentMethod = event.paymentMethod;
+            this.userId = event.userId;
             this.report = event.report;
             this.receivedDate = event.receivedDate;
+            this.cancelledDate = event.cancelledDate;
+            this.shippedDate = event.shippedDate;
+            this.beingProcessedDate = event.beingProcessedDate;
+            this.indications = event.indications;
         }
     }
 

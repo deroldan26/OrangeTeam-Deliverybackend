@@ -59,9 +59,9 @@ export class OrderController{
     @UseGuards(JwtAuthGuard)
     @Get()
     async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto) {
-        const {page, take, status} = query;
-        const service = new GetPaginatedOrderService(this.orderRepository);
-        return (await service.execute({page, take, status})).Value;
+        const {page, take, status, user} = query;
+        const service = new GetPaginatedOrderService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
+        return (await service.execute({page, take, status, user})).Value;
     }
 
     @UseGuards(JwtAuthGuard)
