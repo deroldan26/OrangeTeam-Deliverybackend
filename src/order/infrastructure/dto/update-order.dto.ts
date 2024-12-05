@@ -16,4 +16,20 @@ export class UpdateOrderDto extends PartialType(CreateOrderDto) {
     @IsString()
     @IsOptional()
     receivedDate: string;
+
+    @IsString()
+    @IsOptional()
+    cancelledDate: string;
+
+    @IsString()
+    @IsOptional()
+    shippedDate: string;
+
+    @IsString()
+    @IsOptional()
+    beingProcessedDate: string;
+
+    @IsString()
+    @IsOptional()
+    indications: string;
 }

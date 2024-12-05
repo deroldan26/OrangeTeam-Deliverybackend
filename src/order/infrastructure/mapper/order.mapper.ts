@@ -108,6 +108,7 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
     }
 
     async fromPersistenceToDomainOrder(persistence: OrderEntity, products:Product[], combos:Combo[]): Promise<Order> {
+        console.log("Persistence to Domain: ", persistence);
         const paymentMethod = new PaymentMethod(new OrderPaymentMethodID(persistence.paymentMethod.id),new OrderPaymentMethod(persistence.paymentMethod.paymentMethodName),new OrderCurrency(persistence.paymentMethod.currency),new OrderTotalAmount(persistence.paymentMethod.amount));
         const report = new OrderReport(new OrderReportID(persistence.report.id),new OrderReportDescription(persistence.report.description),new OrderReportDate(persistence.report.reportDate));
         return new Order(new OrderID(persistence.orderId), 

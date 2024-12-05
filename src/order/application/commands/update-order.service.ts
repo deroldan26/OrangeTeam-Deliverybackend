@@ -27,6 +27,10 @@ import { IPaymentRepository } from "src/order/domain/repositories/payment-reposi
 import { IReportRepository } from "src/order/domain/repositories/report-repositories.interface";
 import { IOrderProductsRepository } from "src/order/domain/repositories/order-products-repositories.interface";
 import { IOrderCombosRepository } from "src/order/domain/repositories/order-combos-repositories.interface";
+import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancelled.date";
+import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
+import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
+import { OrderIndications } from "src/order/domain/value-objects/order.indications";
 
 export class updateOrderService implements IApplicationService<UpdateOrderServiceEntryDto, UpdateOrderServiceResponseDto>{
     
@@ -42,7 +46,7 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
     async execute(data: UpdateOrderServiceEntryDto): Promise<Result<UpdateOrderServiceResponseDto>> {
         console.log("Update Order Service: ", data);
         const result = await this.orderRepository.findOrderById(data.id);
-        console.log("Me traje la orden: ",result.Value);
+        console.log("Me traje la orden: ",result.Value.UserID);
         if (!result.isSuccess()){
             return Result.fail<UpdateOrderServiceResponseDto>(result.Error, result.StatusCode, result.Message)
         }
@@ -72,7 +76,12 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             result.Value.ChangeReport(new OrderReport(new OrderReportID(result.Value.Report.Id.ReportId), new OrderReportDescription(data.report), new OrderReportDate(new Date())));
             await this.reportRepository.saveReportEntity(result.Value.Report);
         }
-            if(data.receivedDate) result.Value.ChangeReceivedDate(new OrderReceivedDate(new Date()));
+        if(data.receivedDate) result.Value.ChangeReceivedDate(new OrderReceivedDate(new Date()));
+        if(data.status === 'DELIVERED') result.Value.ChangeReceivedDate(new OrderReceivedDate(new Date()));
+        if(data.status === 'CANCELLED') result.Value.ChangeCancelledDate(new OrderCancelledDate(new Date()));
+        if(data.status === 'SHIPPED') result.Value.ChangeShippedDate(new OrderShippedDate(new Date()));
+        if(data.status === 'BEING PROCESSED') result.Value.ChangeBeingProcessedDate(new OrderBeingProcessedDate(new Date()));
+        if(data.indications) result.Value.ChangeIndications(new OrderIndications(data.indications));
 
         const update = await this.orderRepository.saveOrderAggregate(result.Value);
         if (!update.isSuccess()){
@@ -87,10 +96,15 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             products: update.Value.Products,
             combos: update.Value.Combos,
             paymentMethod: update.Value.PaymentMethod,
+            userId: update.Value.UserID,
             report: update.Value.Report,
-            receivedDate: update.Value.ReceivedDate
+            receivedDate: update.Value.ReceivedDate,
+            cancelledDate: update.Value.CancelledDate,
+            shippedDate: update.Value.ShippedDate,
+            beingProcessedDate: update.Value.BeingProcessedDate,
+            indications: update.Value.Indications.Indications
         };
-        await this.messagingService.sendMessage('orderUpdatedEvent', result.Value.pullDomainEvent());
+        await this.messagingService.sendMessage('orderUpdatedEvent', update.Value.pullDomainEvent());
         return Result.success<UpdateOrderServiceResponseDto>(response, 200);
     }
     
