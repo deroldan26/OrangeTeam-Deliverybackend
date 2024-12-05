@@ -14,7 +14,7 @@ import { UseGuards } from '@nestjs/common';
 
 
 @ApiTags('Category')
-// @ApiBearerAuth('JWT-auth')
+@ApiBearerAuth('JWT-auth')
 @Controller('category')
 export class CategoryController {
   private readonly categoryRepository: CategoryPostgresRepository;
@@ -24,13 +24,14 @@ export class CategoryController {
     this.categoryRepository = new CategoryPostgresRepository(this.dataSource);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     const service = new createCategoryService(this.categoryRepository, this.uuidCreator);
     return await service.execute(createCategoryDto);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOneCategory(@Param('id') id: string) {
     const service = new getCategoryByIdService(this.categoryRepository)
@@ -38,7 +39,7 @@ export class CategoryController {
     return response;
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedCategory(@Query(ValidationPipe) query: FindPaginatedCategoryDto) {
     const {page, take} = query;
