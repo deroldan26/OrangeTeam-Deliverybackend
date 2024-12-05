@@ -19,7 +19,7 @@ export class CreateUserDto {
   phone: string;
 
   @IsString()
-  @MinLength(6)
+  @MinLength(5)
   type: string;
 
 }
