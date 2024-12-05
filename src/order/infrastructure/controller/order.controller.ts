@@ -16,9 +16,13 @@ import { FindPaginatedOrderDto } from "../dto/find-paginated-order.dto";
 import { GetPaginatedOrderService } from "src/order/application/queries/get-paginatedOrder.service";
 import { updateOrderService } from "src/order/application/commands/update-order.service";
 import { UpdateOrderDto } from "../dto/update-order.dto";
+import { ApiBearerAuth } from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/auth/infraestructure/guard/guard.service";
+import { UseGuards } from "@nestjs/common";
 
 
 @ApiTags('Order')
+@ApiBearerAuth('JWT-auth')
 @Controller('order')
 export class OrderController{
     private readonly orderRepository: OrderPostgresRepository;
@@ -37,12 +41,14 @@ export class OrderController{
         this.orderComboProductRepository = new OrderComboPostgresRepository(this.dataSource);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Post()
     async createOrder(@Body() createOrderDto: CreateOrderDto) {
         const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
         return await service.execute(createOrderDto);
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get(':id')
     async findOne(@Param('id') id: string) {
         const service = new getOrderByIdService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
@@ -50,6 +56,7 @@ export class OrderController{
         return response;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto) {
         const {page, take, status} = query;
@@ -57,6 +64,7 @@ export class OrderController{
         return (await service.execute({page, take, status})).Value;
     }
 
+    @UseGuards(JwtAuthGuard)
     @Patch(':id')
     async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
         const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.messagingService);

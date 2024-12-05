@@ -6,9 +6,13 @@ import { DataSource } from "typeorm";
 import { CreateDiscountDto } from "../dto/create-discount.dto";
 import { createDiscountService } from "src/discount/application/commands/create-discount.service";
 import { getDiscountByIdService } from "src/discount/application/queries/get-discountById.service";
+import { ApiBearerAuth } from "@nestjs/swagger";
+import { JwtAuthGuard } from "src/auth/infraestructure/guard/guard.service";
+import { UseGuards } from "@nestjs/common";
 
 
 @ApiTags('Discount')
+@ApiBearerAuth('JWT-auth')
 @Controller('discount')
 export class DiscountController {
   private readonly discountRepository: DiscountPostgresRepository;
@@ -17,13 +21,15 @@ export class DiscountController {
     this.uuidCreator = new UuidGenerator();
     this.discountRepository = new DiscountPostgresRepository(this.dataSource);
   }
-
+  
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createDiscount(@Body() createDiscountDto: CreateDiscountDto) {
     const service = new createDiscountService(this.discountRepository, this.uuidCreator);
     return await service.execute(createDiscountDto);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOneCategory(@Param('id') id: string) {
     const service = new getDiscountByIdService(this.discountRepository)

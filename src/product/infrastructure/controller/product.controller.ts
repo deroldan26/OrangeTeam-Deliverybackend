@@ -36,14 +36,14 @@ export class ProductController {
     }
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService, this.categoryValidator, this.discountValidator);
     return await service.execute(createProductDto);
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     const service = new getProductByIdService(this.productRepository)
@@ -51,28 +51,11 @@ export class ProductController {
     return response;
   }
 
-  //@UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
     const {page, take, name, category} = query;
     const service = new GetPaginatedProductService(this.productRepository);
     return (await service.execute({page, take, name, category})).Value;
   }
-
-  // @Get('image/:id')
-  // async GetImage(@Param('id') id: string) {
-  //   const urlGenerator = new ImageUrlGenerator();
-  //   const url = await urlGenerator.generateUrl(id);
-  //   return url;
-  // }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateProductDto: UpdateProductDto) {
-  //   return this.productService.update(+id, updateProductDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.productService.remove(+id);
-  // }
 }

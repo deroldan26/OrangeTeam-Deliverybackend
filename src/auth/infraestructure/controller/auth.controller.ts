@@ -42,7 +42,7 @@ export class AuthController {
     var user_log = await service.execute({ email: loginDto.email });
 
     if (user_log == null || !user_log.isSuccess()) {
-      return { message: 'The email is not registered' };
+      return { message: 'Wrong Credencials' };
     }
 
     if (await this._bcryptService.compare(loginDto.password, user_log.Value.password)) {
@@ -61,7 +61,7 @@ export class AuthController {
       } 
       return { response };
     }
-    return { message: 'Wrong Password' };
+    return { message: 'Wrong Credencials' };
   }
 
 }
