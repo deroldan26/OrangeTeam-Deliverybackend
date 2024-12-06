@@ -70,7 +70,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 return Result.fail<Order>(new Error('Order not found'), 404, 'Order not found');
             var products = await this.orderProductRepository.findOrderProductById(order.orderId);
             var combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
-            console.log(products, combos);
             const getOrder = await this.orderMapper.fromPersistenceToDomainOrder(order,products.Value,combos.Value);
             return Result.success<Order>(getOrder, 200)
         } catch (error) {
@@ -112,12 +111,9 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
 
         const orders = await query.skip((page - 1) * take).take(take).getMany();
         let response: Order[] = [];
-        // Fetch related products and combos for each order
         for (const order of orders) {
             const products = await this.orderProductRepository.findOrderProductById(order.orderId);
             const combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
-            //order.products = await this.orderProductMapper.fromDomainToPersistenceMany(products.Value);
-            //order.combos = await this.orderComboMapper.fromDomainToPersistenceMany(combos.Value);
             response.push(await this.orderMapper.fromPersistenceToDomainOrder(order, products.Value, combos.Value));
         }
 
@@ -134,7 +130,6 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
             await this.save(newOrder);
             return Result.success<Order>(order, 200);
         } catch (error) {
-            console.log("no furula")
             return Result.fail<Order>(new Error(error.message), error.code, error.message);
         }
     }

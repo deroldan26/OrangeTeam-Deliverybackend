@@ -36,6 +36,7 @@ import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancell
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
 import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
 import { OrderIndications } from "src/order/domain/value-objects/order.indications";
+import { UserPostgresRepository } from "src/user/infrastructure/repositories/postgres/user.repository";
 
 export class createOrderService implements IApplicationService<CreateOrderServiceEntryDto, CreateOrderServiceResponseDto>{
     constructor(
@@ -76,8 +77,6 @@ export class createOrderService implements IApplicationService<CreateOrderServic
         await this.reportRepository.saveReportEntity(order.Report);
         await this.orderProductRepository.saveOrderProductEntity(order.Products);
         await this.orderComboProductRepository.saveOrderComboEntity(order.Combos);
-        console.log("Fecha de create",order.CreatedDate.CreatedDate)
-        console.log("Fecha de received",order.ReceivedDate.ReceivedDate)
         const result = await this.orderRepository.saveOrderAggregate(order);
         if ( !result.isSuccess() ){
             return Result.fail<CreateOrderServiceResponseDto>( result.Error, result.StatusCode, result.Message )
@@ -89,7 +88,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             address: order.Address.Address,
             products: order.Products,
             combos: order.Combos,
-            paymentMethod: order.PaymentMethod
+            paymentMethod: order.PaymentMethod,
+            userId: order.UserID.UserId,
         };
         await this.messagingService.sendMessage('orderCreatedEvent', order.pullDomainEvent());
         return Result.success<CreateOrderServiceResponseDto>(response, 200);

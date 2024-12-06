@@ -69,6 +69,7 @@ export class createProductService implements IApplicationService<CreateProductSe
         if ( !result.isSuccess() ){
             return Result.fail<CreateProductServiceResponseDto>( result.Error, result.StatusCode, result.Message )
         }
+        
         const response: CreateProductServiceResponseDto = {
             id: product.Id.Id,
             name: product.Name.Name,
@@ -81,7 +82,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             stock: product.Stock.Stock,
             caducityDate: product.CaducityDate ? product.CaducityDate.CaducityDate : new Date('2050/01/01'),
             categories: product.Categories.map(category => category.Id),
-            discount
+            discount: product.Discount.Id
         };
         await this.messagingService.sendMessage('productCreatedEvent', product.pullDomainEvent());
         return Result.success<CreateProductServiceResponseDto>(response, 200);

@@ -19,6 +19,7 @@ import { UpdateOrderDto } from "../dto/update-order.dto";
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/infraestructure/guard/guard.service";
 import { UseGuards } from "@nestjs/common";
+import { UserPostgresRepository } from "src/user/infrastructure/repositories/postgres/user.repository";
 
 
 @ApiTags('Order')
@@ -30,6 +31,7 @@ export class OrderController{
     private readonly reportRepository: ReportPostgresRepository;
     private readonly orderProductRepository: OrderProductPostgresRepository;
     private readonly orderComboProductRepository: OrderComboPostgresRepository;
+    private readonly userRepository: UserPostgresRepository;
     private readonly uuidCreator: UuidGenerator;
 
     constructor(@Inject('DataSource') private readonly dataSource: DataSource, private readonly messagingService: MessagingService<DomainEvent>) {

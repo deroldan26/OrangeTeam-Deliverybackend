@@ -32,8 +32,6 @@ export class OrderProductPostgresRepository extends Repository<ProductORM> imple
     }
     async saveOrderProductEntity(products: Product[]): Promise<Result<Product[]>> {
         try {
-            console.log("Guardando productos en BD",products)
-            // const newProducts = await Promise.all(products.map(product => this.productMapper.fromDomainToPersistence(product)));
             const newProducts = await Promise.all(products.map(async product => {
                 const mappedProduct = await this.productMapper.fromDomainToPersistence(product);
                 return mappedProduct;
