@@ -13,6 +13,7 @@ import { AuthController } from './auth/infraestructure/controller/auth.controlle
 import { UserController } from './user/infrastructure/controller/user.controller';
 import { DiscountController } from './discount/infraestructure/controller/discount.controller';
 import { OrderController } from './order/infrastructure/controller/order.controller';
+import { CuponController } from './cupon/infraestructure/controller/cupon.controller';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { OrderController } from './order/infrastructure/controller/order.control
     AuthModule
   ],
 
-  controllers: [ProductController, ComboController, CategoryController,DiscountController, AuthController, OrderController, UserController, RabbitMQConsumerService],
+  controllers: [ProductController, ComboController, CategoryController,DiscountController, AuthController, OrderController, UserController, CuponController, RabbitMQConsumerService],
   providers: [...DatabaseProvider, {
     provide: 'MessagingService',
     useClass: MessagingService,
