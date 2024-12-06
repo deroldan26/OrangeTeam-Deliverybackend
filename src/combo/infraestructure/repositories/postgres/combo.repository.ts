@@ -36,22 +36,19 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
                 const categoryFilter = JSON.stringify(filters.category);
                 combo.andWhere(`"Combo".categories::jsonb @> :categories::jsonb`, { categories: categoryFilter });
             }
-        
+            
             // Filtrar por nombre si se proporciona
             if (filters.name) {
                 combo.andWhere("Combo.name ILIKE :name", { name: `%${filters.name}%` });
             }
-        
             // Filtrar por precio si se proporciona
             if (filters.price) {
                 combo.andWhere("Combo.specialPrice <= :price", { price: filters.price });
             }
-
             // Filtrar por descuento si se proporciona
             if (filters.discount) {
                 combo.andWhere("Combo.discount = :discount", { discount: filters.discount });
             }
-
             combo.skip(skip).take(take);
             const combos = await combo.getMany();
             const response = await Promise.all(combos.map(combo => this.comboMapper.fromPersistenceToDomain(combo)));
