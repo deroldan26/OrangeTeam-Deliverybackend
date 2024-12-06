@@ -54,6 +54,7 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
 
             combo.skip(skip).take(take);
             const combos = await combo.getMany();
+            console.log("combo",combos);
             const response = await Promise.all(combos.map(combo => this.comboMapper.fromPersistenceToDomain(combo)));
             return Result.success<Combo[]>(response,200)
           } catch (error) {

@@ -26,7 +26,6 @@ export class PaymentMethodPostgresRepository extends Repository<PaymentORM> impl
     async savePaymentEntity(payment: PaymentMethod): Promise<Result<PaymentMethod>> {
         try {
             const newPayment = await this.paymentMapper.fromDomainToPersistence(payment);
-            console.log("Saving in repo",newPayment)
             await this.save(newPayment);
             return Result.success<PaymentMethod>(payment, 200);
         } catch (error) {
