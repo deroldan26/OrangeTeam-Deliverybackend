@@ -14,9 +14,18 @@ import { OrderProductPostgresRepository } from "./products.repository";
 import { OrderComboPostgresRepository } from "./combos.repository";
 import { Product } from "src/order/domain/entities/product";
 import { Combo } from "src/order/domain/entities/combo";
+import { OrderProductMapper } from "../../mapper/order.products.mapper";
+import { OrderComboMapper } from "../../mapper/order.combos.mapper";
+import { OrderProductID } from "src/order/domain/value-objects/order.product.id";
+import { OrderProductQuantity } from "src/order/domain/value-objects/order.product.quantity";
+import { OrderID } from "src/order/domain/value-objects/order.id";
+import { OrderComboQuantity } from "src/order/domain/value-objects/order.combo.quantity";
+import { OrderComboID } from "src/order/domain/value-objects/order.combo.id";
 
 export class OrderPostgresRepository extends Repository<OrderORM> implements IOrderRepository{
     private readonly orderMapper: OrderMapper;
+    private readonly orderProductMapper: OrderProductMapper;
+    private readonly orderComboMapper: OrderComboMapper;
     private readonly paymentMethodRepository: IPaymentRepository;
     private readonly reportRepository: IReportRepository;
     private readonly orderProductRepository: IOrderProductsRepository;
@@ -25,6 +34,8 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
     constructor(dataSource: DataSource){
         super(OrderORM, dataSource.createEntityManager());
         this.orderMapper = new OrderMapper();
+        this.orderProductMapper = new OrderProductMapper();
+        this.orderComboMapper = new OrderComboMapper();
         this.paymentMethodRepository = new PaymentMethodPostgresRepository(dataSource);
         this.reportRepository = new ReportPostgresRepository(dataSource);
         this.orderProductRepository = new OrderProductPostgresRepository(dataSource);
@@ -42,6 +53,11 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 'Order.status',
                 'Order.address',
                 'Order.receivedDate',
+                'Order.cancelledDate',
+                'Order.shippedDate',
+                'Order.beingProcessedDate',
+                'Order.indications',
+                'Order.userId',
                 'paymentMethod.id',
                 'paymentMethod.amount',
                 'paymentMethod.currency',
@@ -54,6 +70,7 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
                 return Result.fail<Order>(new Error('Order not found'), 404, 'Order not found');
             var products = await this.orderProductRepository.findOrderProductById(order.orderId);
             var combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
+            console.log(products, combos);
             const getOrder = await this.orderMapper.fromPersistenceToDomainOrder(order,products.Value,combos.Value);
             return Result.success<Order>(getOrder, 200)
         } catch (error) {
@@ -61,13 +78,54 @@ export class OrderPostgresRepository extends Repository<OrderORM> implements IOr
         }
     }
 
-    async findPaginatedOrders(page: number, take: number, status?: string): Promise<Result<Order[]>> {
+    async findPaginatedOrders(page: number, take: number, status?: string, user?:string): Promise<Result<Order[]>> {
         try {
-            
+            const query = this.createQueryBuilder('Order')
+            .leftJoinAndSelect('Order.paymentMethod', 'paymentMethod')
+            .leftJoinAndSelect('Order.report', 'report')
+            .select([
+                'Order.orderId',
+                'Order.createdDate',
+                'Order.status',
+                'Order.address',
+                'Order.receivedDate',
+                'Order.cancelledDate',
+                'Order.shippedDate',
+                'Order.beingProcessedDate',
+                'Order.indications',
+                'Order.userId',
+                'paymentMethod.id',
+                'paymentMethod.amount',
+                'paymentMethod.currency',
+                'paymentMethod.paymentMethodName',
+                'report.id',
+                'report.description',
+                'report.reportDate'
+            ]);
+
+        if (status) {
+            query.andWhere('Order.status LIKE :status', { status: `%${status}%` });
+        }
+        if (user) {
+            query.andWhere('Order.userId = :user', { user });
+        }
+
+        const orders = await query.skip((page - 1) * take).take(take).getMany();
+        let response: Order[] = [];
+        // Fetch related products and combos for each order
+        for (const order of orders) {
+            const products = await this.orderProductRepository.findOrderProductById(order.orderId);
+            const combos = await this.orderComboProductRepository.findOrderComboById(order.orderId);
+            //order.products = await this.orderProductMapper.fromDomainToPersistenceMany(products.Value);
+            //order.combos = await this.orderComboMapper.fromDomainToPersistenceMany(combos.Value);
+            response.push(await this.orderMapper.fromPersistenceToDomainOrder(order, products.Value, combos.Value));
+        }
+
+        return Result.success<Order[]>(response, 200);
+        
         } catch (error) {
             return Result.fail<Order[]>(new Error(error.message), error.code, error.message);
         }
-        throw new Error("Method not implemented.");
     }
 
     async saveOrderAggregate(order: Order): Promise<Result<Order>> {

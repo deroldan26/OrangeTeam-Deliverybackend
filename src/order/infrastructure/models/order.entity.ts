@@ -14,7 +14,7 @@ export class OrderEntity{
     orderId: string
 
     @Column({
-        type: 'date',
+        type: 'timestamp',
     })
     createdDate: Date
 
@@ -46,6 +46,11 @@ export class OrderEntity{
     })
     paymentMethod?: PaymentMethodEntity
 
+    @Column({
+        type: 'uuid',
+    })
+    userId: string
+
     @OneToOne(() => OrderReportEntity, {eager: true})
     @JoinColumn({
         name: 'reportId'
@@ -53,7 +58,27 @@ export class OrderEntity{
     report?: OrderReportEntity
 
     @Column({
-        type: 'date',
+        type: 'timestamp',
     })
     receivedDate?: Date
+
+    @Column({
+        type: 'timestamp',
+    })
+    cancelledDate?: Date
+
+    @Column({
+        type: 'timestamp',
+    })
+    shippedDate?: Date
+
+    @Column({
+        type: 'timestamp',
+    })
+    beingProcessedDate?: Date
+
+    @Column({
+        type: 'varchar',
+    })
+    indications?: string
 }

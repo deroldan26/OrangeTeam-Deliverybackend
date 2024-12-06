@@ -1,9 +1,9 @@
 import { ValueObject } from "../../../core/domain/value.object"
-import { unvalidOrderTotalAmountException } from "../exceptions/unvalid.order.total.amount"
+import { unvalidOrderReportDescriptionException } from "../exceptions/unvalid.order.report.description"
 
 export class OrderReportDescription implements ValueObject<OrderReportDescription> {
     constructor(private _description: string) {
-        if (_description.length < 0) throw new unvalidOrderTotalAmountException(`Report Description '${_description}' not valid`)
+        if (_description.length < 0) throw new unvalidOrderReportDescriptionException(`Report Description '${_description}' not valid`)
     }
     get ReportDescription() {
         return this._description

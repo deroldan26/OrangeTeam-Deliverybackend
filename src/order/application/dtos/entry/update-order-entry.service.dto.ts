@@ -19,4 +19,8 @@ export interface UpdateOrderServiceEntryDto{
     total?: number
     report?: string;
     receivedDate?: string;
+    cancelledDate?: string;
+    shippedDate?: string;
+    beingProcessedDate?: string; 
+    indications?: string;
 }

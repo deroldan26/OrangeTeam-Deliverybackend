@@ -31,7 +31,11 @@ import { IPaymentRepository } from "src/order/domain/repositories/payment-reposi
 import { IReportRepository } from "src/order/domain/repositories/report-repositories.interface";
 import { IOrderProductsRepository } from "src/order/domain/repositories/order-products-repositories.interface";
 import { IOrderCombosRepository } from "src/order/domain/repositories/order-combos-repositories.interface";
-
+import { OrderUserID } from "src/order/domain/value-objects/order.user.id";
+import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancelled.date";
+import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
+import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
+import { OrderIndications } from "src/order/domain/value-objects/order.indications";
 
 export class createOrderService implements IApplicationService<CreateOrderServiceEntryDto, CreateOrderServiceResponseDto>{
     constructor(
@@ -60,14 +64,20 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             products,
             combos,
             new PaymentMethod(new OrderPaymentMethodID(await this.idGenerator.generateId()), new OrderPaymentMethod(data.paymentMethod), new OrderCurrency(data.currency), new OrderTotalAmount(data.total)),
+            new OrderUserID(data.userId),
             new OrderReport(new OrderReportID(await this.idGenerator.generateId()), new OrderReportDescription("No Report submitted"), new OrderReportDate(new Date())),
-            new OrderReceivedDate(new Date())
+            new OrderReceivedDate(new Date()),
+            new OrderCancelledDate(new Date()),
+            new OrderShippedDate(new Date()),
+            new OrderBeingProcessedDate(new Date()),
+            new OrderIndications("No Indications")
         )
         await this.paymentRepository.savePaymentEntity(order.PaymentMethod);
         await this.reportRepository.saveReportEntity(order.Report);
         await this.orderProductRepository.saveOrderProductEntity(order.Products);
         await this.orderComboProductRepository.saveOrderComboEntity(order.Combos);
-        console.log("prueba",order.Combos, order.Products)
+        console.log("Fecha de create",order.CreatedDate.CreatedDate)
+        console.log("Fecha de received",order.ReceivedDate.ReceivedDate)
         const result = await this.orderRepository.saveOrderAggregate(order);
         if ( !result.isSuccess() ){
             return Result.fail<CreateOrderServiceResponseDto>( result.Error, result.StatusCode, result.Message )
