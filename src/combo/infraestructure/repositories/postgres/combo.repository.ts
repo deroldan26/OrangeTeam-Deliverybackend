@@ -48,7 +48,7 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
             }
 
             // Filtrar por descuento si se proporciona
-            if (filters.discount != "") {
+            if (filters.discount) {
                 combo.andWhere("Combo.discount = :discount", { discount: filters.discount });
             }
 
