@@ -1,4 +1,5 @@
-import { IsNumber, IsString, Min, MinLength } from 'class-validator';
+import { IsNumber, IsString, Min, MinLength, IsArray, IsDate, IsOptional } from 'class-validator';
+import { Transform } from 'class-transformer';
 
 export class CreateProductDto {
   @IsString()
@@ -9,9 +10,9 @@ export class CreateProductDto {
   @MinLength(10)
   description: string;
 
-  @IsString()
-  @MinLength(1)
-  image: string;
+  @IsArray()
+  @IsString({ each: true })
+  images: string[];
 
   @IsNumber()
   @Min(0)
@@ -25,11 +26,25 @@ export class CreateProductDto {
   @Min(0)
   weight: number;
 
+  @IsString()
+  @MinLength(1)
+  measurement: string;
+
   @IsNumber()
   @Min(0)
   stock: number;
 
+  @IsOptional()
+  @IsDate()
+  @Transform(({ value }) => value ? new Date(value) : value)
+  caducityDate?: Date;
+
+  @IsArray()
+  @IsString({ each: true })
+  categories: string[];
+  
   @IsString()
   @MinLength(1)
-  category: string;
+  @IsOptional()
+  discount?: string;
 }

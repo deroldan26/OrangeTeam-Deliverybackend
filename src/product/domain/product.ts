@@ -8,20 +8,27 @@ import { ProductImage } from "./value-objects/product.image";
 import { ProductCurrency } from "./value-objects/product.currency";
 import { ProductPrice } from "./value-objects/product.price";
 import { ProductWeight } from "./value-objects/product.weight";
+import { ProductMeasuerement } from "./value-objects/product.measurement";
+import { ProductCaducityDate } from "./value-objects/product.caducityDate";
 import { ProductID } from "./value-objects/product.id";
 import { ProductStock } from "./value-objects/product.stock";
 import { CategoryName } from "./value-objects/category.name";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
+import { CategoryID } from "src/category/domain/value-objects/category.id";
 
 export class Product extends AggregateRoot<ProductID>{
     
     private name: ProductName
     private description: ProductDescription
-    private image: ProductImage
+    private images: ProductImage[]
     private price: ProductPrice
     private currency: ProductCurrency
     private weight: ProductWeight
+    private measurement: ProductMeasuerement
     private stock: ProductStock
-    private category: CategoryName
+    private categories: CategoryID[]
+    private caducityDate?: ProductCaducityDate
+    private discount?: DiscountID
 
     get Name (): ProductName
     {
@@ -33,9 +40,9 @@ export class Product extends AggregateRoot<ProductID>{
         return this.description
     }
 
-    get Image (): ProductImage
+    get Images (): ProductImage[]
     {
-        return this.image
+        return this.images
     }
 
     get Price (): ProductPrice
@@ -53,19 +60,47 @@ export class Product extends AggregateRoot<ProductID>{
         return this.weight
     }
 
+    get Measurement (): ProductMeasuerement
+    {
+        return this.measurement
+    }
+
     get Stock (): ProductStock
     {
         return this.stock
     }
 
-    get Category (): CategoryName
+    get Categories (): CategoryID[]
     {
-        return this.category
+        return this.categories
+    }
+
+    get CaducityDate (): ProductCaducityDate
+    {
+        return this.caducityDate
     }
     
-    constructor(id: ProductID, name: ProductName, description: ProductDescription, image: ProductImage, price: ProductPrice, currency: ProductCurrency, weight: ProductWeight, stock: ProductStock, category: CategoryName){
-        const productCreated = productCreatedEvent.create(id, name, description, image, price, currency, weight, stock, category);
-        
+    get Discount(): DiscountID 
+    {
+        return this.discount;
+    }
+    
+    constructor(
+        id: ProductID, 
+        name: ProductName, 
+        description: ProductDescription, 
+        images: ProductImage[], 
+        price: ProductPrice, 
+        currency: ProductCurrency, 
+        weight: ProductWeight, 
+        measurement: ProductMeasuerement,
+        stock: ProductStock, 
+        categories: CategoryID[] = [], 
+        caducityDate?: ProductCaducityDate, 
+        discount?: DiscountID
+    )
+    {
+        const productCreated = productCreatedEvent.create(id, name, description, images, price, currency, weight, measurement, stock, categories, caducityDate, discount);
         super(id,productCreated);
     }
     
@@ -73,16 +108,18 @@ export class Product extends AggregateRoot<ProductID>{
         if (event instanceof productCreatedEvent) {
             this.name = event.name;
             this.description = event.description;
-            this.image = event.image;
+            this.images = event.images;
             this.price = event.price;
             this.currency = event.currency;
             this.weight = event.weight;
+            this.measurement = event.measurement;
             this.stock = event.stock;
-            this.category = event.category;
+            this.categories = event.categories;
+            this.discount = event.discount;
           }
     }
     protected checkValidState (): void{
-        if ( !this.name || !this.description || !this.image || !this.price || !this.currency || !this.weight || !this.stock || !this.category)
+        if ( !this.name || !this.description || !this.images || !this.price || !this.currency || !this.weight || !this.measurement || !this.stock || !this.categories)
             throw new unvalidProductException(`Product not valid`)
     }
 }

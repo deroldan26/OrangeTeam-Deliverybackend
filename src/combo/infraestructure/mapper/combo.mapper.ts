@@ -8,6 +8,12 @@ import { ComboImage } from '../../domain/value-objects/combo.image';
 import { ComboSpecialPrice } from "../../domain/value-objects/combo.specialPrice";
 import { ComboCurrency } from "../../domain/value-objects/combo.currency";
 import { ProductID } from "../../../product/domain/value-objects/product.id";
+import { ComboWeight } from "src/combo/domain/value-objects/combo.weight";
+import { ComboMeasurement } from "src/combo/domain/value-objects/combo.measurement";
+import { ComboStock } from "src/combo/domain/value-objects/combo.stock";
+import { ComboCaducityDate } from "src/combo/domain/value-objects/combo.caducityDate";
+import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { DiscountID } from "src/discount/domain/value-objects/discount.id";
 
 export class ComboMapper implements IMapper<Combo, ComboEntity> {
   
@@ -16,11 +22,16 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
         comboORM.id = domain.Id.Id;
         comboORM.name = domain.Name.Name;
         comboORM.description = domain.Description.Description;
-        comboORM.comboImage = domain.ComboImage.Image;
+        comboORM.comboImages = domain.ComboImages.map(image => image.Image)
         comboORM.specialPrice = domain.SpecialPrice.Price;
         comboORM.currency = domain.Currency.Currency;
         comboORM.products = domain.Products.map(product => product.Id);
-        
+        comboORM.weight = domain.Weight.Weight;
+        comboORM.measurement = domain.Measurement.Measurement;
+        comboORM.stock = domain.Stock.Stock;
+        comboORM.caducityDate = domain.CaducityDate ? domain.CaducityDate.CaducityDate : new Date('2050-01-01');
+        comboORM.categories = domain.Categories.map(category => category.Id);
+        comboORM.discount = domain.Discount ? domain.Discount.Id : "";
         return comboORM;
     }
 
@@ -29,10 +40,16 @@ export class ComboMapper implements IMapper<Combo, ComboEntity> {
             new ComboID(persistence.id),
             new ComboName(persistence.name),
             new ComboDescription(persistence.description),
-            new ComboImage(persistence.comboImage),
+            persistence.comboImages.map(imageUrl => new ComboImage(imageUrl)),
             new ComboSpecialPrice(persistence.specialPrice),
             new ComboCurrency(persistence.currency),
-            persistence.products.map(productId => new ProductID(productId))
+            persistence.products.map(productId => new ProductID(productId)),
+            new ComboWeight(persistence.weight),
+            new ComboMeasurement(persistence.measurement),
+            new ComboStock(persistence.stock),
+            persistence.caducityDate ? new ComboCaducityDate(persistence.caducityDate) : null, 
+            persistence.categories.map(categoryId => new CategoryID(categoryId)),
+            persistence.discount ? new DiscountID(persistence.discount) : null, 
         );
     }
 }

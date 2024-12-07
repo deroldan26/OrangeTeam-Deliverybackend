@@ -7,6 +7,7 @@ export class FindPaginatedProductDto {
     @IsOptional()
     @IsString()
     category?: string;
+    
     @IsOptional()
     @IsString()
     name?: string;
