@@ -31,9 +31,11 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
       if(name){
         query.where('Product.name LIKE :name',{name: `%${name}%`});
       }
-      if(category){
-        query.where('Product.category = :category',{category});
-      }
+      if (category) {
+        // Convertir filtros de categorías a formato JSON
+        const categoryFilter = JSON.stringify(category);
+        query.andWhere(`"Product".categories::jsonb @> :categories::jsonb`, { categories: categoryFilter });
+    }
       const skip = page * take - take;
       query.skip(skip).take(take);
       //const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).skip(skip).take(take).getMany();
