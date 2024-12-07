@@ -42,6 +42,30 @@ export class User extends AggregateRoot<UserID>{
         return this.type
     }
     
+    ChangeName(name: UserName): void
+    {
+        this.name = name;
+    }
+
+    ChangeEmail(email: UserEmail): void
+    {
+        this.email = email;
+    }
+
+    ChangePhone(phone: UserPhone): void
+    {
+        this.phone = phone;
+    }
+
+    ChangePassword(password: UserPassword): void
+    {
+        this.password = password;
+    }
+
+    ChangeType(type: UserType): void
+    {
+        this.type = type;
+    }
 
     constructor(id: UserID, email: UserEmail, name: UserName, password: UserPassword, phone: UserPhone, type: UserType){
         const userCreated = userCreatedEvent.create(id, email, name, password, phone, type);

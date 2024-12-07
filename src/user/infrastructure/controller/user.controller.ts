@@ -12,6 +12,9 @@ import { DomainEvent } from '../../../core/domain/domain.event';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
 import { UseGuards } from '@nestjs/common';
+import { UpdateUserService } from 'src/user/application/commands/update-order.service';
+import { UpdateUserDto } from '../dto/update-user.dto';
+import { BcryptService } from 'src/core/infrastructure/bcrypt/bcrypt.service';
 
 @ApiTags('User')
 @ApiBearerAuth('JWT-auth')
@@ -19,10 +22,12 @@ import { UseGuards } from '@nestjs/common';
 export class UserController {
   private readonly userRepository: UserPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
+  private readonly bcryptService: BcryptService;
   
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
     this.userRepository = new UserPostgresRepository(this.dataSource);
+    this.bcryptService = new BcryptService();
   }
 
   @UseGuards(JwtAuthGuard)
@@ -45,6 +50,14 @@ export class UserController {
   async GetUserByEmail(@Param('email') email: string) {
     const service = new getUserByEmailService(this.userRepository)
     var response = await service.execute({email:email})
+    return response;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id')
+  async updateOrder(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+    const service = new UpdateUserService(this.userRepository, this.bcryptService);
+    var response = await service.execute({id: id, ...updateUserDto});
     return response;
   }
 
