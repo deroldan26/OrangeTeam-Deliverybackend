@@ -45,7 +45,6 @@ export class UserController {
     return response;
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('byEmail/:email')
   async GetUserByEmail(@Param('email') email: string) {
     const service = new getUserByEmailService(this.userRepository)
