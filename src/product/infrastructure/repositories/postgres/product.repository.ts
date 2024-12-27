@@ -29,7 +29,7 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     try {
       const query = this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.images','Product.price','Product.currency','Product.weight','Product.measurement','Product.stock','Product.categories','Product.caducityDate','Product.discount']);
       if(name){
-        query.where('Product.name LIKE :name',{name: `%${name}%`});
+        query.where('Product.name ILIKE :name',{name: `%${name}%`});
       }
       if (category) {
         // Convertir filtros de categorías a formato JSON
