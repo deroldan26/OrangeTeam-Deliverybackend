@@ -17,6 +17,8 @@ import { CategoryValidatorService } from '../../../category/application/services
 import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
 import { CategoryPostgresRepository } from '../../../category/infraestructure/repositories/postgres/category.repository';
 import { DiscountPostgresRepository } from '../../../discount/infraestructure/repositories/postgres/discount.repository';
+import { IImageHandler } from 'src/core/application/image.handler/image.handler';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
 
 @ApiTags('Product')
 @ApiBearerAuth('JWT-auth')
@@ -26,11 +28,13 @@ export class ProductController {
   private readonly uuidCreator: UuidGenerator;
   private readonly categoryValidator: CategoryValidatorService;
   private readonly discountValidator?: DiscountValidatorService;
+  private readonly imageHandler: IImageHandler;
   
   constructor(@Inject('DataSource') private readonly dataSource: DataSource, private readonly messagingService: MessagingService<DomainEvent>) {
     this.uuidCreator = new UuidGenerator();
     this.productRepository = new ProductPostgresRepository(this.dataSource);
     this.categoryValidator = new CategoryValidatorService(new CategoryPostgresRepository(this.dataSource));
+    this.imageHandler = new ImageUrlGenerator();
     if (dataSource.getRepository(DiscountValidatorService)) {
       this.discountValidator = new DiscountValidatorService(new DiscountPostgresRepository(this.dataSource));
     }
@@ -39,14 +43,14 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createProduct(@Body() createProductDto: CreateProductDto) {
-    const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService, this.categoryValidator, this.discountValidator);
+    const service = new createProductService(this.productRepository, this.uuidCreator, this.imageHandler, this.messagingService, this.categoryValidator, this.discountValidator);
     return await service.execute(createProductDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const service = new getProductByIdService(this.productRepository)
+    const service = new getProductByIdService(this.productRepository, this.imageHandler);
     var response = await service.execute({id:id})
     return response;
   }
@@ -55,7 +59,7 @@ export class ProductController {
   @Get()
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
     const {page, take, name, category} = query;
-    const service = new GetPaginatedProductService(this.productRepository);
+    const service = new GetPaginatedProductService(this.productRepository, this.imageHandler);
     return (await service.execute({page, take, name, category})).Value;
   }
 }

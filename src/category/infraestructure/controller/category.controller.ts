@@ -11,6 +11,7 @@ import { getCategoryByIdService } from 'src/category/application/queries/get-cat
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
 import { UseGuards } from '@nestjs/common';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
 
 
 @ApiTags('Category')
@@ -19,6 +20,7 @@ import { UseGuards } from '@nestjs/common';
 export class CategoryController {
   private readonly categoryRepository: CategoryPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
+  private readonly imageHandler: ImageUrlGenerator;
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
     this.categoryRepository = new CategoryPostgresRepository(this.dataSource);
@@ -27,14 +29,14 @@ export class CategoryController {
   @UseGuards(JwtAuthGuard)
   @Post()
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
-    const service = new createCategoryService(this.categoryRepository, this.uuidCreator);
+    const service = new createCategoryService(this.categoryRepository, this.uuidCreator, this.imageHandler);
     return await service.execute(createCategoryDto);
   }
   
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOneCategory(@Param('id') id: string) {
-    const service = new getCategoryByIdService(this.categoryRepository)
+    const service = new getCategoryByIdService(this.categoryRepository, this.imageHandler)
     var response = await service.execute({id:id})
     return response;
   }
@@ -43,7 +45,7 @@ export class CategoryController {
   @Get()
   async findPaginatedCategory(@Query(ValidationPipe) query: FindPaginatedCategoryDto) {
     const {page, take} = query;
-    const service = new GetPaginatedCategoryService(this.categoryRepository);
+    const service = new GetPaginatedCategoryService(this.categoryRepository, this.imageHandler);
     return (await service.execute({page, take})).Value;
   }
 }

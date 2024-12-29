@@ -19,12 +19,14 @@ import { ComboMeasurement } from "src/combo/domain/value-objects/combo.measureme
 import { ComboStock } from "src/combo/domain/value-objects/combo.stock";
 import { ComboCaducityDate } from "src/combo/domain/value-objects/combo.caducityDate";
 import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class createComboService implements IApplicationService<CreateComboServiceEntryDto, CreateComboServiceResponseDto> {
 
     constructor(
         private readonly comboRepository: IComboRepository,
         private readonly idGenerator: IdGenerator<string> ,
+        private readonly imageHandler: IImageHandler,
         private readonly productValidator: ProductValidatorService,
         private readonly categoryValidator: CategoryValidatorService,
         private readonly discountValidator?: DiscountValidatorService
@@ -54,8 +56,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 }
             }
 
-            const imageUrlGenerator = new ImageUrlGenerator();
-            const imageIDs = await Promise.all(data.comboImages.map(image => imageUrlGenerator.UploadImage(image)));
+            const imageIDs = await Promise.all(data.comboImages.map(image => this.imageHandler.UploadImage(image)));
             const comboImages = imageIDs.map(imageID => new ComboImage(imageID));
             const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : "";
 

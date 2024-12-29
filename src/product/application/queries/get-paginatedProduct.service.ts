@@ -4,10 +4,13 @@ import { GetPaginatedProductServiceResponseDto } from "../dtos/response/get-pagi
 import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
 import { Result } from "../../../core/domain/result-handler/result";
 import { Product } from "../../../product/domain/product";
-import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class GetPaginatedProductService implements IApplicationService<GetPaginatedProductServiceEntryDto, GetPaginatedProductServiceResponseDto>{
-    constructor(private readonly productRepository: IProductRepository){}
+    constructor(
+        private readonly productRepository: IProductRepository,
+        private readonly imageHandler: IImageHandler
+    ){}
 
     async execute(data: GetPaginatedProductServiceEntryDto): Promise<Result<GetPaginatedProductServiceResponseDto>> {
         const product: Result<Product[]> = await this.productRepository.findPaginatedProducts(data.page,data.take,data.name,data.category);
@@ -16,7 +19,6 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
             return Result.fail(product.Error, product.StatusCode, product.Message);
         }
 
-        const urlGenerator = new ImageUrlGenerator();
         const response: GetPaginatedProductServiceResponseDto = {
             products: product.Value.map(product => ({
                 id: product.Id.Id,
@@ -36,7 +38,7 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
 
         for (let i = 0; i < response.products.length; i++) {
             response.products[i].images = await Promise.all(
-                response.products[i].images.map(async (image) => await urlGenerator.generateUrl(image))
+                response.products[i].images.map(async (image) => await this.imageHandler.generateImage(image))
             ); 
         }
         

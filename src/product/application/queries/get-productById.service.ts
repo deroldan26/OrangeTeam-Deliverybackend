@@ -4,12 +4,13 @@ import { GetProductByIdServiceResponseDto } from "../dtos/response/get-product-r
 import { IProductRepository } from "../../domain/repositories/product-repositories.interface";
 import { Result } from "../../../core/domain/result-handler/result";
 import { Product } from "../../../product/domain/product";
-import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class getProductByIdService implements IApplicationService<GetProductByIdServiceEntryDto, GetProductByIdServiceResponseDto>{
 
     constructor(
-        private readonly productRepository:IProductRepository
+        private readonly productRepository:IProductRepository,
+        private readonly imageHandler: IImageHandler
     ){}
     
     async execute(data: GetProductByIdServiceEntryDto): Promise<Result<GetProductByIdServiceResponseDto>> {
@@ -18,8 +19,8 @@ export class getProductByIdService implements IApplicationService<GetProductById
         if(!product.isSuccess()) {
             return Result.fail( product.Error, product.StatusCode, product.Message )
         }
-        const urlGenerator = new ImageUrlGenerator();
-        const urls = await Promise.all(product.Value.Images.map(image => urlGenerator.generateUrl(image.Image)));
+
+        const urls = await Promise.all(product.Value.Images.map(image => this.imageHandler.generateImage(image.Image)));
         const response: GetProductByIdServiceResponseDto = {
             id: product.Value.Id.Id,
             name: product.Value.Name.Name,

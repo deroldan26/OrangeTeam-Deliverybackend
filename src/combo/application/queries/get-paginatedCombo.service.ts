@@ -7,9 +7,13 @@ import { Product } from "../../../product/domain/product";
 import { Combo } from "../../../combo/domain/combo";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
 import { ComboID } from "src/combo/domain/value-objects/combo.id";
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class GetPaginatedComboService implements IApplicationService<GetPaginatedComboServiceEntryDto, GetPaginatedComboServiceResponseDto>{
-    constructor(private readonly comboRepository: IComboRepository){}
+    constructor(
+        private readonly comboRepository: IComboRepository,
+        private readonly imageHandler: IImageHandler
+    ){}
 
     async execute(data: GetPaginatedComboServiceEntryDto): Promise<Result<GetPaginatedComboServiceResponseDto>> {
         const { category, name, price, discount, page, take } = data;
@@ -19,7 +23,6 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
             return Result.fail(combo.Error, combo.StatusCode, combo.Message);
         }
 
-        const urlGenerator = new ImageUrlGenerator();
         const response: GetPaginatedComboServiceResponseDto = {
             combos: combo.Value.map(combo => ({
                 id: combo.Id.Id,
@@ -40,7 +43,7 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
 
         for (let i = 0; i < response.combos.length; i++) {
             response.combos[i].comboImages = await Promise.all(
-                response.combos[i].comboImages.map(async (image) => await urlGenerator.generateUrl(image))
+                response.combos[i].comboImages.map(async (image) => await this.imageHandler.generateImage(image))
             );    
         }
         
