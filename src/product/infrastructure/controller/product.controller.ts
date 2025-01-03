@@ -19,12 +19,18 @@ import { CategoryPostgresRepository } from '../../../category/infraestructure/re
 import { DiscountPostgresRepository } from '../../../discount/infraestructure/repositories/postgres/discount.repository';
 import { IImageHandler } from 'src/core/application/image.handler/image.handler';
 import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
+import { LoggerDecoratorService } from 'src/core/application/aspects/logger.decorator';
+import { PerformanceDecoratorService } from 'src/core/application/aspects/performance.decorator';
+import { AuditDecoratorService } from 'src/core/application/aspects/audit.decorator';
+import { Request } from '@nestjs/common';
+import { AuditPostgresRepository } from 'src/audit/infrastructure/repositories/postgres/audit.repository';
 
 @ApiTags('Product')
 @ApiBearerAuth('JWT-auth')
 @Controller('product')
 export class ProductController {
   private readonly productRepository: ProductPostgresRepository;
+  private readonly auditRepository: AuditPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
   private readonly categoryValidator: CategoryValidatorService;
   private readonly discountValidator?: DiscountValidatorService;
@@ -33,6 +39,7 @@ export class ProductController {
   constructor(@Inject('DataSource') private readonly dataSource: DataSource, private readonly messagingService: MessagingService<DomainEvent>) {
     this.uuidCreator = new UuidGenerator();
     this.productRepository = new ProductPostgresRepository(this.dataSource);
+    this.auditRepository = new AuditPostgresRepository(this.dataSource)
     this.categoryValidator = new CategoryValidatorService(new CategoryPostgresRepository(this.dataSource));
     this.imageHandler = new ImageUrlGenerator();
     if (dataSource.getRepository(DiscountValidatorService)) {
@@ -49,8 +56,10 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const service = new getProductByIdService(this.productRepository, this.imageHandler);
+  async findOne(@Param('id') id: string, @Request() req): Promise<any> { 
+    const user = req.user; // Aquí accedemos al payload del JWT 
+    const userId = user.userId; // Obtenemos el userId del payload) 
+    const service = new AuditDecoratorService (this.auditRepository, this.uuidCreator, userId, new LoggerDecoratorService(new PerformanceDecoratorService(new getProductByIdService(this.productRepository, this.imageHandler))));
     var response = await service.execute({id:id})
     return response;
   }
