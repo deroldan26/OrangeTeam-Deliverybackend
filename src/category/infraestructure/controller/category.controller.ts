@@ -24,6 +24,7 @@ export class CategoryController {
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
     this.categoryRepository = new CategoryPostgresRepository(this.dataSource);
+    this.imageHandler = new ImageUrlGenerator();
   }
 
   @UseGuards(JwtAuthGuard)
