@@ -9,6 +9,7 @@ export class AuditDecoratorService<D, R> implements IApplicationService <D, R>{
         private _auditRepository : IAuditRepository,
         private readonly idGenerator: IdGenerator<string>,
         private _userId : string,
+        private _opeation : string,
         private _service : IApplicationService<D, R>
     ) {}
 
@@ -20,7 +21,7 @@ export class AuditDecoratorService<D, R> implements IApplicationService <D, R>{
         entry.id = await this.idGenerator.generateId()
         entry.userId = this._userId
         entry.time = new Date()
-        entry.operation = this._service.constructor.name
+        entry.operation = this._opeation
         entry.data = [JSON.stringify(data)];
 
         await this._auditRepository.saveAuditEntry(entry);

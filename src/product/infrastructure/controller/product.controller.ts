@@ -22,6 +22,7 @@ import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/i
 import { LoggerDecoratorService } from 'src/core/application/aspects/logger.decorator';
 import { PerformanceDecoratorService } from 'src/core/application/aspects/performance.decorator';
 import { AuditDecoratorService } from 'src/core/application/aspects/audit.decorator';
+import { ExceptionDecoratorService } from 'src/core/application/aspects/exception.decorator';
 import { Request } from '@nestjs/common';
 import { AuditPostgresRepository } from 'src/audit/infrastructure/repositories/postgres/audit.repository';
 
@@ -59,10 +60,15 @@ export class ProductController {
   async findOne(@Param('id') id: string, @Request() req): Promise<any> { 
     const user = req.user; // Aquí accedemos al payload del JWT 
     const userId = user.userId; // Obtenemos el userId del payload) 
-    const service = new AuditDecoratorService (this.auditRepository, this.uuidCreator, userId, new LoggerDecoratorService(new PerformanceDecoratorService(new getProductByIdService(this.productRepository, this.imageHandler))));
+    const service = new ExceptionDecoratorService (
+      new AuditDecoratorService (
+        this.auditRepository, this.uuidCreator, userId, "getProductByIdService", new LoggerDecoratorService(
+          "getProductByIdService", new PerformanceDecoratorService(new getProductByIdService(
+            this.productRepository, this.imageHandler)))));
+            
     var response = await service.execute({id:id})
     return response;
-  }
+  } 
 
   @UseGuards(JwtAuthGuard)
   @Get()
