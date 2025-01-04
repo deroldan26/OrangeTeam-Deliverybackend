@@ -45,6 +45,7 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
 
     async execute(data: UpdateOrderServiceEntryDto): Promise<Result<UpdateOrderServiceResponseDto>> {
         const result = await this.orderRepository.findOrderById(data.id);
+        console.log("result:",result);
         if (!result.isSuccess()){
             return Result.fail<UpdateOrderServiceResponseDto>(result.Error, result.StatusCode, result.Message)
         }
@@ -102,6 +103,7 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             beingProcessedDate: update.Value.BeingProcessedDate,
             indications: update.Value.Indications.Indications
         };
+        console.log("actualizar order:",update.Value.pullDomainEvent());
         await this.messagingService.sendMessage('orderUpdatedEvent', update.Value.pullDomainEvent());
         return Result.success<UpdateOrderServiceResponseDto>(response, 200);
     }

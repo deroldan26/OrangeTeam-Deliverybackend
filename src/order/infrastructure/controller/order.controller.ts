@@ -41,12 +41,13 @@ export class OrderController{
         this.reportRepository = new ReportPostgresRepository(this.dataSource);
         this.orderProductRepository= new OrderProductPostgresRepository(this.dataSource);
         this.orderComboProductRepository = new OrderComboPostgresRepository(this.dataSource);
+        this.userRepository = new UserPostgresRepository(this.dataSource);
     }
 
     @UseGuards(JwtAuthGuard)
     @Post()
     async createOrder(@Body() createOrderDto: CreateOrderDto) {
-        const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
+        const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService, this.userRepository);
         return await service.execute(createOrderDto);
     }
 

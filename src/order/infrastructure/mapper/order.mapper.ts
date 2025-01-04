@@ -24,6 +24,8 @@ import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancell
 import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
 import { OrderIndications } from "src/order/domain/value-objects/order.indications";
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
+import { OrderUserEmail } from "src/order/domain/value-objects/order.user.email";
+import { OrderCuponID } from "src/order/domain/value-objects/order.cupon.id";
 
 export class OrderMapper implements IMapper<Order, OrderEntity> {
 
@@ -72,6 +74,7 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         orderORM.paymentMethod.currency = domain.PaymentMethod.Currency().Currency;
         orderORM.paymentMethod.amount = domain.PaymentMethod.Amount().TotalAmount;
         orderORM.userId = domain.UserID.UserId;
+        orderORM.userEmail = domain.UserEmail.Email;
         orderORM.report.id = domain.Report.Id.ReportId;
         orderORM.report.description = domain.Report.ReportDescription().ReportDescription;
         orderORM.report.reportDate = domain.Report.ReportDate().ReportDate;
@@ -84,6 +87,8 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         if(domain.BeingProcessedDate.BeingProcessedDate) orderORM.beingProcessedDate = domain.BeingProcessedDate.BeingProcessedDate;
         else orderORM.beingProcessedDate = null;
         orderORM.indications = domain.Indications.Indications;
+        if(domain.Cupon.CuponId) orderORM.cupon = domain.Cupon.CuponId;
+        else orderORM.cupon = "No Cupon";
         return orderORM;
     }
     async fromPersistenceToDomain(persistence: OrderEntity): Promise<Order> {
@@ -98,13 +103,15 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                 [],
                 [], 
                  paymentMethod,
-                 new OrderUserID(persistence.userId), 
+                 new OrderUserID(persistence.userId),
+                 new OrderUserEmail(persistence.userEmail), 
                  report, 
                  new OrderReceivedDate(persistence.receivedDate),
                  new OrderCancelledDate(persistence.cancelledDate),
                  new OrderShippedDate(persistence.shippedDate),
                  new OrderBeingProcessedDate(persistence.beingProcessedDate),
-                 new OrderIndications(persistence.indications));
+                 new OrderIndications(persistence.indications),
+                 new OrderCuponID(persistence.cupon));
     }
 
     async fromPersistenceToDomainOrder(persistence: OrderEntity, products:Product[], combos:Combo[]): Promise<Order> {
@@ -118,11 +125,13 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                  combos, 
                  paymentMethod, 
                  new OrderUserID(persistence.userId),
+                 new OrderUserEmail(persistence.userEmail),
                  report, 
                  new OrderReceivedDate(persistence.receivedDate),
                  new OrderCancelledDate(persistence.cancelledDate),
                  new OrderShippedDate(persistence.shippedDate),
                  new OrderBeingProcessedDate(persistence.beingProcessedDate),
-                 new OrderIndications(persistence.indications));
+                 new OrderIndications(persistence.indications),
+                 new OrderCuponID(persistence.cupon));
     }
   }
