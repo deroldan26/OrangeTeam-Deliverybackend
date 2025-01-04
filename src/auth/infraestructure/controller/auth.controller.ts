@@ -46,7 +46,7 @@ export class AuthController {
     }
 
     if (await this._bcryptService.compare(loginDto.password, user_log.Value.password)) {
-      const payload = { email: loginDto.email};
+      const payload = { email: loginDto.email, userId: user_log.Value.id };
       const token = this._jwtService.generateToken(payload);
       const response: LoginResponseDto = {
         user: {
