@@ -1,4 +1,4 @@
-import { cloudinary } from '../cloudinary/cloudinary.js';
+import { cloudinary } from '../cloudinary/cloudinary';
 import { IImageHandler } from '../../application/image.handler/image.handler.js';
 
 export class ImageUrlGenerator implements IImageHandler {

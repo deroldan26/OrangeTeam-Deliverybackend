@@ -58,14 +58,14 @@ export class ProductController {
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string, @Request() req): Promise<any> { 
-    const user = req.user; // Aquí accedemos al payload del JWT 
-    const userId = user.userId; // Obtenemos el userId del payload) 
+    const user = req.user; 
+    const userId = user.userId; 
     const service = new ExceptionDecoratorService (
       new AuditDecoratorService (
         this.auditRepository, this.uuidCreator, userId, "getProductByIdService", new LoggerDecoratorService(
           "getProductByIdService", new PerformanceDecoratorService(new getProductByIdService(
             this.productRepository, this.imageHandler)))));
-            
+
     var response = await service.execute({id:id})
     return response;
   } 
