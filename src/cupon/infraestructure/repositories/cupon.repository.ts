@@ -15,7 +15,7 @@ export class CuponPostgresRepository extends Repository<CuponORM> implements ICu
 
     async findCuponById(id: string): Promise<Result<Cupon>>{
         try {
-            var cupon = await this.createQueryBuilder('Cupon').select(['Cupon.id','Cupon.name','Cupon.description','Cupon.expireDate','Cupon.startDate','Cupon.value']).where('Cupon.id = :id',{id}).getOne()
+            var cupon = await this.createQueryBuilder('Cupon').select(['Cupon.id','Cupon.name','Cupon.description','Cupon.expireDate','Cupon.startDate','Cupon.value']).where('Cupon.id = :id',{id}).getOne();
             const getDiscount = await this.cuponMapper.fromPersistenceToDomain(cupon);
             return Result.success<Cupon>(getDiscount, 200)
           } catch (error) {
