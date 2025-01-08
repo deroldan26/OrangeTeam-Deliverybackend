@@ -2,8 +2,8 @@ export interface GetComboByIdServiceResponseDto {
     id: string;
     name: string;
     description: string;
-    comboImages: string[];
-    specialPrice: number;
+    images: string[];
+    price: number;
     currency: string;
     weight: number;
     measurement: string;

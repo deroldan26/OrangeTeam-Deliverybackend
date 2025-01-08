@@ -8,7 +8,7 @@ export class CreateComboDto {
 
     @IsNumber()
     @Min(0)
-    specialPrice: number;
+    price: number;
 
     @IsString()
     @MinLength(1)
@@ -20,7 +20,7 @@ export class CreateComboDto {
 
     @IsArray()
     @IsString({ each: true })
-    comboImages: string[];
+    images: string[];
 
     @IsArray()
     @IsString({ each: true })
