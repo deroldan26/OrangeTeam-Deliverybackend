@@ -25,9 +25,9 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
           }
     }
 
-    async findPaginatedCombos(page: number, take: number, filters: { category?: string[]; name?: string; price?: number; discount?: string }): Promise<Result<Combo[]>>{ 
+    async findPaginatedCombos(page: number, perpage: number, filters: { category?: string[]; name?: string; price?: number; discount?: string }): Promise<Result<Combo[]>>{ 
         try {
-            const skip = page * take - take;
+            const skip = page * perpage - perpage;
             var combo = await this.createQueryBuilder('Combo').select(['Combo.id','Combo.name','Combo.specialPrice','Combo.currency','Combo.description','Combo.comboImages','Combo.products','Combo.weight','Combo.measurement','Combo.stock','Combo.caducityDate','Combo.categories','Combo.discount']);
             
             // Filtrar por categorías si se proporcionan
@@ -49,7 +49,7 @@ export class ComboPostgresRepository extends Repository<ComboORM> implements ICo
             if (filters.discount) {
                 combo.andWhere("Combo.discount = :discount", { discount: filters.discount });
             }
-            combo.skip(skip).take(take);
+            combo.skip(skip).take(perpage);
             const combos = await combo.getMany();
             console.log("combo",combos);
             const response = await Promise.all(combos.map(combo => this.comboMapper.fromPersistenceToDomain(combo)));
