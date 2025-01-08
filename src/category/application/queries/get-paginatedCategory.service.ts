@@ -14,7 +14,7 @@ export class GetPaginatedCategoryService implements IApplicationService<GetPagin
     ){}
 
     async execute(data: GetPaginatedCategoryServiceEntryDto): Promise<Result<GetPaginatedCategoryServiceResponseDto>> {
-        const category: Result<Category[]> = await this.categoryRepository.findPaginatedCategory(data.page,data.take);
+        const category: Result<Category[]> = await this.categoryRepository.findPaginatedCategory(data.page,data.perpage);
 
         if(!category.isSuccess){
             return Result.fail(category.Error, category.StatusCode, category.Message);

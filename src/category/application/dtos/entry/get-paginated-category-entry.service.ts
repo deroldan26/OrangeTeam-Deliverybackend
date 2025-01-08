@@ -1,4 +1,4 @@
 export interface GetPaginatedCategoryServiceEntryDto{
     page: number;
-    take: number;
+    perpage: number;
 }

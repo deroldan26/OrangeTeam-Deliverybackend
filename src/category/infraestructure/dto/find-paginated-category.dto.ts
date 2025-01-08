@@ -13,5 +13,5 @@ export class FindPaginatedCategoryDto {
     @IsInt()
     @Min(1)
     @Type(() => Number)
-    take: number = 10;
+    perpage: number = 10;
   }

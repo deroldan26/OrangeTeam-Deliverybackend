@@ -28,25 +28,25 @@ export class CategoryController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createCategory(@Body() createCategoryDto: CreateCategoryDto) {
     const service = new createCategoryService(this.categoryRepository, this.uuidCreator, this.imageHandler);
     return await service.execute(createCategoryDto);
   }
   
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('one/:id')
   async findOneCategory(@Param('id') id: string) {
     const service = new getCategoryByIdService(this.categoryRepository, this.imageHandler)
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('many')
   async findPaginatedCategory(@Query(ValidationPipe) query: FindPaginatedCategoryDto) {
-    const {page, take} = query;
+    const {page, perpage} = query;
     const service = new GetPaginatedCategoryService(this.categoryRepository, this.imageHandler);
-    return (await service.execute({page, take})).Value;
+    return (await service.execute({page, perpage})).Value;
   }
 }
