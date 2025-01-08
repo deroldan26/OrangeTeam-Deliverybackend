@@ -16,8 +16,8 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
     ){}
 
     async execute(data: GetPaginatedComboServiceEntryDto): Promise<Result<GetPaginatedComboServiceResponseDto>> {
-        const { category, name, price, discount, page, take } = data;
-        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.take,{ category, name, price, discount});
+        const { category, name, price, discount, page, perpage } = data;
+        const combo: Result<Combo[]> = await this.comboRepository.findPaginatedCombos(data.page,data.perpage,{ category, name, price, discount});
         console.log(combo);
         if(!combo.isSuccess){
             return Result.fail(combo.Error, combo.StatusCode, combo.Message);
