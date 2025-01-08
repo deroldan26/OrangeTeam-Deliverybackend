@@ -9,12 +9,15 @@ import { UserPassword } from "src/user/domain/value-objects/user.password";
 import { UserPhone } from "src/user/domain/value-objects/user.phone";
 import { UserType } from "src/user/domain/value-objects/user.type";
 import { BcryptService } from "src/core/infrastructure/bcrypt/bcrypt.service";
+import { UserImage } from "src/user/domain/value-objects/user.image";
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class UpdateUserService implements IApplicationService<UpdateUserServiceEntryDto, UpdateUserServiceResponseDto>{
 
     constructor(
         private readonly userRepository:IUserRepository,
-        private readonly bcryptService: BcryptService
+        private readonly bcryptService: BcryptService,
+        private readonly imageHandler: IImageHandler
     ) {}
 
     async execute(data: UpdateUserServiceEntryDto): Promise<Result<UpdateUserServiceResponseDto>> {
@@ -33,6 +36,11 @@ export class UpdateUserService implements IApplicationService<UpdateUserServiceE
             result.Value.ChangePassword(new UserPassword(data.password));
         }
 
+        if(data.image){
+            const url = await this.imageHandler.UploadImage(data.image);
+            result.Value.ChangeImage(new UserImage(url));
+        }
+
         const update = await this.userRepository.saveUserAggregate(result.Value);
         if (!update.isSuccess()){
             return Result.fail<UpdateUserServiceResponseDto>(update.Error, update.StatusCode, update.Message)
@@ -44,7 +52,8 @@ export class UpdateUserService implements IApplicationService<UpdateUserServiceE
             email: result.Value.Email.Email,
             password: result.Value.Password.Password,
             phone: result.Value.Phone.Phone,
-            type: result.Value.Type.Type
+            type: result.Value.Type.Type,
+            image: result.Value.Image.Image
         }
 
         return Result.success<UpdateUserServiceResponseDto>(response, 200);

@@ -4,12 +4,13 @@ import { GetUserServiceResponseDto } from "../dtos/response/get-user-response.se
 import { IUserRepository } from "../../domain/repositories/user-repositories.interface";
 import { Result } from "../../../core/domain/result-handler/result";
 import { User } from "../../../user/domain/user";
-import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class getUserByIdService implements IApplicationService<GetUserByIdServiceEntryDto, GetUserServiceResponseDto>{
 
     constructor(
-        private readonly userRepository:IUserRepository
+        private readonly userRepository:IUserRepository,
+        private readonly imageHandler: IImageHandler
     ){}
     
     async execute(data: GetUserByIdServiceEntryDto): Promise<Result<GetUserServiceResponseDto>> {
@@ -18,14 +19,15 @@ export class getUserByIdService implements IApplicationService<GetUserByIdServic
         if(!user.isSuccess()) {
             return Result.fail( user.Error, user.StatusCode, user.Message )
         }
-
+        const url = await this.imageHandler.generateImage(user.Value.Image.Image);
         const response: GetUserServiceResponseDto = {
             id: user.Value.Id.Id,
             name: user.Value.Name.Name,
             email: user.Value.Email.Email,
             password: user.Value.Password.Password,
             phone: user.Value.Phone.Phone,
-            type: user.Value.Type.Type
+            type: user.Value.Type.Type,
+            image: url
         };
         return Result.success(response, 200);
     }
