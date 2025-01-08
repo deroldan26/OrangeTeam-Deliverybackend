@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsArray, IsNumber, IsString, Min, MinLength, ValidateNested } from "class-validator";
+import { IsArray, IsNumber, IsString, Min, MinLength, ValidateNested, IsOptional } from "class-validator";
 
 class ProductDto {
     @IsString()
@@ -33,6 +33,7 @@ export class CreateOrderDto{
     combos: ComboDto[];
 
     @IsString()
+    @IsOptional()
     userId: string;
 
     @IsString()

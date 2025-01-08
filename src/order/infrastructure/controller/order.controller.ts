@@ -20,6 +20,7 @@ import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/infraestructure/guard/guard.service";
 import { UseGuards } from "@nestjs/common";
 import { UserPostgresRepository } from "src/user/infrastructure/repositories/postgres/user.repository";
+import { Request } from "@nestjs/common";
 
 
 @ApiTags('Order')
@@ -45,7 +46,10 @@ export class OrderController{
 
     @UseGuards(JwtAuthGuard)
     @Post()
-    async createOrder(@Body() createOrderDto: CreateOrderDto) {
+    async createOrder(@Body() createOrderDto: CreateOrderDto,  @Request() req) {
+        const user = req.user;
+        const userId = user.userId;
+        createOrderDto.userId = userId;
         const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
         return await service.execute(createOrderDto);
     }
@@ -60,8 +64,10 @@ export class OrderController{
 
     @UseGuards(JwtAuthGuard)
     @Get()
-    async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto) {
-        const {page, take, status, user} = query;
+    async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto, @Request() req) {
+        const user_token = req.user;
+        const user = user_token.userId;
+        const {page, take, status} = query;
         const service = new GetPaginatedOrderService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
         return (await service.execute({page, take, status, user})).Value;
     }
