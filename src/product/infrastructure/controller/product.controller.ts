@@ -49,14 +49,14 @@ export class ProductController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createProduct(@Body() createProductDto: CreateProductDto) {
     const service = new createProductService(this.productRepository, this.uuidCreator, this.imageHandler, this.messagingService, this.categoryValidator, this.discountValidator);
     return await service.execute(createProductDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('one/:id')
   async findOne(@Param('id') id: string, @Request() req): Promise<any> { 
     const user = req.user; 
     const userId = user.userId; 
@@ -67,14 +67,14 @@ export class ProductController {
             this.productRepository, this.imageHandler)))));
 
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
   } 
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('many')
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
-    const {page, take, name, category} = query;
+    const {page, perpage, name, category} = query;
     const service = new GetPaginatedProductService(this.productRepository, this.imageHandler);
-    return (await service.execute({page, take, name, category})).Value;
+    return (await service.execute({page, perpage, name, category})).Value;
   }
 }

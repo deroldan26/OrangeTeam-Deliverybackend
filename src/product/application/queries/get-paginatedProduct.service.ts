@@ -13,7 +13,7 @@ export class GetPaginatedProductService implements IApplicationService<GetPagina
     ){}
 
     async execute(data: GetPaginatedProductServiceEntryDto): Promise<Result<GetPaginatedProductServiceResponseDto>> {
-        const product: Result<Product[]> = await this.productRepository.findPaginatedProducts(data.page,data.take,data.name,data.category);
+        const product: Result<Product[]> = await this.productRepository.findPaginatedProducts(data.page,data.perpage,data.name,data.category);
 
         if(!product.isSuccess){
             return Result.fail(product.Error, product.StatusCode, product.Message);
