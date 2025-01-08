@@ -28,10 +28,10 @@ export class getComboByIdService implements IApplicationService<GetComboByIdServ
         const response: GetComboByIdServiceResponseDto = {
             id: combo.Value.Id.Id,
             name: combo.Value.Name.Name,
-            specialPrice: combo.Value.SpecialPrice.Price,
+            price: combo.Value.SpecialPrice.Price,
             currency: combo.Value.Currency.Currency,
             description: combo.Value.Description.Description,
-            comboImages: urls,           
+            images: urls,           
             products: combo.Value.Products.map(ProductID => ProductID.Id),
             weight: combo.Value.Weight.Weight,
             measurement: combo.Value.Measurement.Measurement,

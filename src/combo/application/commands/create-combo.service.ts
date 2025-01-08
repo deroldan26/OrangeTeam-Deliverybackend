@@ -56,7 +56,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 }
             }
 
-            const imageIDs = await Promise.all(data.comboImages.map(image => this.imageHandler.UploadImage(image)));
+            const imageIDs = await Promise.all(data.images.map(image => this.imageHandler.UploadImage(image)));
             const comboImages = imageIDs.map(imageID => new ComboImage(imageID));
             const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : "";
 
@@ -65,7 +65,7 @@ export class createComboService implements IApplicationService<CreateComboServic
                 new ComboName(data.name),
                 new ComboDescription(data.description),
                 comboImages,
-                new ComboSpecialPrice(data.specialPrice),
+                new ComboSpecialPrice(data.price),
                 new ComboCurrency(data.currency),
                 validationProductResult.Value,
                 new ComboWeight(data.weight),
@@ -84,10 +84,10 @@ export class createComboService implements IApplicationService<CreateComboServic
             const response: CreateComboServiceResponseDto = {
                 id: combo.Id.Id,
                 name: combo.Name.Name,
-                specialPrice: combo.SpecialPrice.Price,
+                price: combo.SpecialPrice.Price,
                 currency: combo.Currency.Currency,
                 description: combo.Description.Description,
-                comboImages: combo.ComboImages.map(image => image.Image),
+                images: combo.ComboImages.map(image => image.Image),
                 products: combo.Products.map(product => product.Id),
                 weight: combo.Weight.Weight,
                 measurement: combo.Measurement.Measurement,

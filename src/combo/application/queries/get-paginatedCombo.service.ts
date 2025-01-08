@@ -27,10 +27,10 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
             combos: combo.Value.map(combo => ({
                 id: combo.Id.Id,
                 name: combo.Name.Name,
-                specialPrice: combo.SpecialPrice.Price,
+                price: combo.SpecialPrice.Price,
                 currency: combo.Currency.Currency,
                 description: combo.Description.Description,
-                comboImages: combo.ComboImages.map(image => image.Image),
+                images: combo.ComboImages.map(image => image.Image),
                 products: combo.Products.map(ComboID => ComboID.Id),
                 weight: combo.Weight.Weight,
                 measurement: combo.Measurement.Measurement,
@@ -42,8 +42,8 @@ export class GetPaginatedComboService implements IApplicationService<GetPaginate
         }
 
         for (let i = 0; i < response.combos.length; i++) {
-            response.combos[i].comboImages = await Promise.all(
-                response.combos[i].comboImages.map(async (image) => await this.imageHandler.generateImage(image))
+            response.combos[i].images = await Promise.all(
+                response.combos[i].images.map(async (image) => await this.imageHandler.generateImage(image))
             );    
         }
         
