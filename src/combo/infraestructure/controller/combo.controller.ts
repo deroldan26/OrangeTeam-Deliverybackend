@@ -61,6 +61,6 @@ export class ComboController {
   async findPaginatedCombo(@Query(ValidationPipe) query: FindPaginatedComboDto) {
     const { page, perpage, category, name, price, discount} = query;
     const service = new GetPaginatedComboService(this.comboRepository, this.imageHandler);
-    return (await service.execute({ page, perpage, category, name, price, discount })).Value;
+    return (await service.execute({ page, perpage, category, name, price, discount })).Value.combos;
   }
 }
