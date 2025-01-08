@@ -23,17 +23,17 @@ export class CuponController {
   }
   
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createDiscount(@Body() createCuponDto: CreateCuponDto) {
     const service = new createCuponService(this.cuponRepository, this.uuidCreator);
     return await service.execute(createCuponDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('one/:id')
   async findOneCategory(@Param('id') id: string) {
     const service = new getCuponByIdService(this.cuponRepository)
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
   }
 }
