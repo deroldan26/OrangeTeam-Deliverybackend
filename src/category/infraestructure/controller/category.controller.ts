@@ -47,6 +47,6 @@ export class CategoryController {
   async findPaginatedCategory(@Query(ValidationPipe) query: FindPaginatedCategoryDto) {
     const {page, perpage} = query;
     const service = new GetPaginatedCategoryService(this.categoryRepository, this.imageHandler);
-    return (await service.execute({page, perpage})).Value;
+    return (await service.execute({page, perpage})).Value.categories;
   }
 }
