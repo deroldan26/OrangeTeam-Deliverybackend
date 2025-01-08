@@ -1,4 +1,5 @@
 import { Type } from "class-transformer";
+
 import { IsArray, IsNumber, IsString, Min, MinLength, ValidateNested, IsOptional } from "class-validator";
 
 class ProductDto {
@@ -47,4 +48,8 @@ export class CreateOrderDto{
     @IsNumber()
     @Min(0)
     total: number;
+
+    @IsString()
+    @IsOptional()
+    cupon?: string;
 }

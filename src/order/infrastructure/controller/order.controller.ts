@@ -42,6 +42,7 @@ export class OrderController{
         this.reportRepository = new ReportPostgresRepository(this.dataSource);
         this.orderProductRepository= new OrderProductPostgresRepository(this.dataSource);
         this.orderComboProductRepository = new OrderComboPostgresRepository(this.dataSource);
+        this.userRepository = new UserPostgresRepository(this.dataSource);
     }
 
     @UseGuards(JwtAuthGuard)

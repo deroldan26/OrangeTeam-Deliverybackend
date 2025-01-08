@@ -51,6 +51,11 @@ export class OrderEntity{
     })
     userId: string
 
+    @Column({
+        type: 'varchar'
+    })
+    userEmail: string
+
     @OneToOne(() => OrderReportEntity, {eager: true})
     @JoinColumn({
         name: 'reportId'
@@ -81,4 +86,9 @@ export class OrderEntity{
         type: 'varchar',
     })
     indications?: string
+
+    @Column({
+        type: 'varchar',
+    })
+    cupon?: string
 }
