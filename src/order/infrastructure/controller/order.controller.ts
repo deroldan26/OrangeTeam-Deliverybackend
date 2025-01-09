@@ -61,7 +61,7 @@ export class OrderController{
         const service = new getOrderByIdService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
         var response = await service.execute({id:id})
         return response;
-    }
+    } 
 
     @UseGuards(JwtAuthGuard)
     @Get()

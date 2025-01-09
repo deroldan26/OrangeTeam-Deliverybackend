@@ -5,4 +5,5 @@ export interface UpdateUserServiceResponseDto{
     password?: string
     phone?: string
     type?: string
+    image?: string
 }
