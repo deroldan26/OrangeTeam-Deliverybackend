@@ -28,6 +28,16 @@ export class OrderEntity{
     })
     address: string
 
+    @Column({
+        type: 'numeric',
+    })
+    latitude: number
+
+    @Column({
+        type: 'numeric',
+    })
+    longitude: number
+
     @OneToMany(() => OrderProductEntity, 
         product => product.order, 
         { eager: true }

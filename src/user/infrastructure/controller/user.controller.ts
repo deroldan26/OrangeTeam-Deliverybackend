@@ -15,6 +15,8 @@ import { UseGuards } from '@nestjs/common';
 import { UpdateUserService } from 'src/user/application/commands/update-order.service';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { BcryptService } from 'src/core/infrastructure/bcrypt/bcrypt.service';
+import { IImageHandler } from 'src/core/application/image.handler/image.handler';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
 
 @ApiTags('User')
 @ApiBearerAuth('JWT-auth')
@@ -23,31 +25,33 @@ export class UserController {
   private readonly userRepository: UserPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
   private readonly bcryptService: BcryptService;
+  private readonly imageHandler: IImageHandler;
   
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
     this.userRepository = new UserPostgresRepository(this.dataSource);
     this.bcryptService = new BcryptService();
+    this.imageHandler = new ImageUrlGenerator();
   }
 
   @UseGuards(JwtAuthGuard)
   @Post()
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const service = new createUserService(this.userRepository, this.uuidCreator);
+    const service = new createUserService(this.userRepository, this.uuidCreator, this.imageHandler);
     return await service.execute(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Get(':id')
   async GetUserById(@Param('id') id: string) {
-    const service = new getUserByIdService(this.userRepository)
+    const service = new getUserByIdService(this.userRepository, this.imageHandler)
     var response = await service.execute({id:id})
     return response;
   }
 
   @Get('byEmail/:email')
   async GetUserByEmail(@Param('email') email: string) {
-    const service = new getUserByEmailService(this.userRepository)
+    const service = new getUserByEmailService(this.userRepository, this.imageHandler)
     var response = await service.execute({email:email})
     return response;
   }
@@ -55,7 +59,7 @@ export class UserController {
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async updateOrder(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    const service = new UpdateUserService(this.userRepository, this.bcryptService);
+    const service = new UpdateUserService(this.userRepository, this.bcryptService, this.imageHandler);
     var response = await service.execute({id: id, ...updateUserDto});
     return response;
   }

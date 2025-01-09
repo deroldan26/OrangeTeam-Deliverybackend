@@ -46,25 +46,25 @@ export class OrderController{
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post()
+    @Post('create')
     async createOrder(@Body() createOrderDto: CreateOrderDto,  @Request() req) {
         const user = req.user;
         const userId = user.userId;
         createOrderDto.userId = userId;
         const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService, this.userRepository);
-        return await service.execute(createOrderDto);
+        return (await service.execute(createOrderDto)).Value;
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get(':id')
+    @Get('one/:id')
     async findOne(@Param('id') id: string) {
         const service = new getOrderByIdService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
         var response = await service.execute({id:id})
-        return response;
-    }
+        return response.Value;
+    } 
 
     @UseGuards(JwtAuthGuard)
-    @Get()
+    @Get('many')
     async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto, @Request() req) {
         const user_token = req.user;
         const user = user_token.userId;
@@ -74,10 +74,10 @@ export class OrderController{
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch(':id')
+    @Patch('update/:id')
     async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
         const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.messagingService);
         var response = await service.execute({id: id, ...updateOrderDto});
-        return response;
+        return response.Value;
     }
 }

@@ -27,6 +27,8 @@ export interface GetOrderByIdServiceResponseDto {
     createdDate: Date
     status: string
     address: string
+    latitude: number
+    longitude: number
     products: ProductResponseDto[]
     combos: ComboResponseDto[]
     paymentMethod: PaymentResponseDto

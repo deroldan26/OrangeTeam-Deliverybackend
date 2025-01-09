@@ -39,6 +39,8 @@ import { OrderIndications } from "src/order/domain/value-objects/order.indicatio
 import { IUserRepository } from "src/user/domain/repositories/user-repositories.interface";
 import { OrderUserEmail } from "src/order/domain/value-objects/order.user.email";
 import { OrderCuponID } from "src/order/domain/value-objects/order.cupon.id";
+import { OrderLatitude } from "src/order/domain/value-objects/order.latitude";
+import { OrderLongitude } from "src/order/domain/value-objects/order.longitude";
 
 export class createOrderService implements IApplicationService<CreateOrderServiceEntryDto, CreateOrderServiceResponseDto>{
     constructor(
@@ -68,6 +70,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             new OrderCreatedDate(new Date()),
             new OrderStatus('CREATED'),
             new OrderAddress(data.address),
+            new OrderLatitude(data.latitude),
+            new OrderLongitude(data.longitude),
             products,
             combos,
             new PaymentMethod(new OrderPaymentMethodID(await this.idGenerator.generateId()), new OrderPaymentMethod(data.paymentMethod), new OrderCurrency(data.currency), new OrderTotalAmount(data.total)),
@@ -94,6 +98,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             createdDate: order.CreatedDate.CreatedDate,
             status: order.Status.Status,
             address: order.Address.Address,
+            latitude: order.Latitude.Latitude,
+            longitude: order.Longitude.Longitude,
             products: order.Products,
             combos: order.Combos,
             paymentMethod: order.PaymentMethod,

@@ -5,4 +5,5 @@ export interface UpdateUserServiceEntryDto{
     password?: string
     phone?: string
     type?: string
+    image?: string
 }

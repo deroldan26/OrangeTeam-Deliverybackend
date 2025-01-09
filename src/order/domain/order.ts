@@ -18,6 +18,8 @@ import { OrderIndications } from "./value-objects/order.indications";
 import { OrderUserID } from "./value-objects/order.user.id";
 import { OrderUserEmail } from "./value-objects/order.user.email";
 import { OrderCuponID } from "./value-objects/order.cupon.id";
+import { OrderLatitude } from "./value-objects/order.latitude";
+import { OrderLongitude } from "./value-objects/order.longitude";
 
 export class Order extends AggregateRoot<OrderID> {
     
@@ -26,6 +28,8 @@ export class Order extends AggregateRoot<OrderID> {
     private createdDate: OrderCreatedDate;
     private status: OrderStatus;
     private address: OrderAddress;
+    private latitude: OrderLatitude;
+    private longitude: OrderLongitude;
     private indications?: OrderIndications;
     private products: Product[];
     private combos: Combo[];
@@ -97,6 +101,14 @@ export class Order extends AggregateRoot<OrderID> {
         return this.cupon;
     }
 
+    get Latitude (): OrderLatitude{
+        return this.latitude;
+    }
+
+    get Longitude (): OrderLongitude{
+        return this.longitude;
+    }
+
     ChangeStatus(status: OrderStatus): void{
         this.status = status;
     }
@@ -153,8 +165,16 @@ export class Order extends AggregateRoot<OrderID> {
         this.indications = indications;
     }
 
-    constructor(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId: OrderUserID, userEmail: OrderUserEmail, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?: OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications, cupon?: OrderCuponID){
-        const orderCreated = orderCreatedEvent.create(id, createdDate, status, address, products, combos, paymentMethod, userId, userEmail, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications, cupon);
+    ChangeLatitude(latitude: OrderLatitude): void{
+        this.latitude = latitude;
+    }
+
+    ChangeLongitude(longitude: OrderLongitude): void{
+        this.longitude = longitude;
+    }
+
+    constructor(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, latitude: OrderLatitude, longitude: OrderLongitude, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId: OrderUserID, userEmail: OrderUserEmail, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?: OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications, cupon?: OrderCuponID){
+        const orderCreated = orderCreatedEvent.create(id, createdDate, status, address, latitude, longitude, products, combos, paymentMethod, userId, userEmail, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications, cupon);
         super(id, orderCreated);
     }
 
@@ -163,6 +183,8 @@ export class Order extends AggregateRoot<OrderID> {
             this.createdDate = event.createdDate;
             this.status = event.status;
             this.address = event.address;
+            this.latitude = event.latitude;
+            this.longitude = event.longitude;
             this.products = event.products;
             this.combos = event.combos;
             this.paymentMethod = event.paymentMethod;

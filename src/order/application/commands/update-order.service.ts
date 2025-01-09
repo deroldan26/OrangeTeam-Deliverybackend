@@ -31,6 +31,8 @@ import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancell
 import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
 import { OrderIndications } from "src/order/domain/value-objects/order.indications";
+import { OrderLatitude } from "src/order/domain/value-objects/order.latitude";
+import { OrderLongitude } from "src/order/domain/value-objects/order.longitude";
 
 export class updateOrderService implements IApplicationService<UpdateOrderServiceEntryDto, UpdateOrderServiceResponseDto>{
     
@@ -65,6 +67,8 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
         }
         if(data.status) result.Value.ChangeStatus(new OrderStatus(data.status));
         if(data.address) result.Value.ChangeAddress(new OrderAddress(data.address));
+        if(data.latitude) result.Value.ChangeLatitude(new OrderLatitude(data.latitude));
+        if(data.longitude) result.Value.ChangeLongitude(new OrderLongitude(data.longitude));
         if(data.products) result.Value.ChangeProducts(products);
         if(data.combos) result.Value.ChangeCombos(combos);
         if(data.paymentMethod) {
@@ -92,6 +96,8 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             createdDate: update.Value.CreatedDate.CreatedDate,
             status: update.Value.Status.Status,
             address: update.Value.Address.Address,
+            latitude: update.Value.Latitude.Latitude,
+            longitude: update.Value.Longitude.Longitude,
             products: update.Value.Products,
             combos: update.Value.Combos,
             paymentMethod: update.Value.PaymentMethod,
@@ -103,7 +109,6 @@ export class updateOrderService implements IApplicationService<UpdateOrderServic
             beingProcessedDate: update.Value.BeingProcessedDate,
             indications: update.Value.Indications.Indications
         };
-        console.log("actualizar order:",update.Value.pullDomainEvent());
         await this.messagingService.sendMessage('orderUpdatedEvent', update.Value.pullDomainEvent());
         return Result.success<UpdateOrderServiceResponseDto>(response, 200);
     }
