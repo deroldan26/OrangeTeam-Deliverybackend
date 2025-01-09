@@ -26,6 +26,8 @@ import { OrderIndications } from "src/order/domain/value-objects/order.indicatio
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
 import { OrderUserEmail } from "src/order/domain/value-objects/order.user.email";
 import { OrderCuponID } from "src/order/domain/value-objects/order.cupon.id";
+import { OrderLatitude } from "src/order/domain/value-objects/order.latitude";
+import { OrderLongitude } from "src/order/domain/value-objects/order.longitude";
 
 export class OrderMapper implements IMapper<Order, OrderEntity> {
 
@@ -69,6 +71,8 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         orderORM.createdDate = domain.CreatedDate.CreatedDate;
         orderORM.status = domain.Status.Status;
         orderORM.address = domain.Address.Address;
+        orderORM.latitude = domain.Latitude.Latitude;
+        orderORM.longitude = domain.Longitude.Longitude;
         orderORM.paymentMethod.id = domain.PaymentMethod.Id.PaymentMethodId;
         orderORM.paymentMethod.paymentMethodName = domain.PaymentMethod.PaymentMethod().PaymentMethod;
         orderORM.paymentMethod.currency = domain.PaymentMethod.Currency().Currency;
@@ -97,7 +101,9 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         return new Order(new OrderID(persistence.orderId), 
                  new OrderCreatedDate(persistence.createdDate), 
                  new OrderStatus(persistence.status), 
-                 new OrderAddress(persistence.address), 
+                 new OrderAddress(persistence.address),
+                 new OrderLatitude(persistence.latitude),
+                 new OrderLongitude(persistence.longitude), 
                 //  products, 
                 //  combos,
                 [],
@@ -121,6 +127,8 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
                  new OrderCreatedDate(persistence.createdDate), 
                  new OrderStatus(persistence.status), 
                  new OrderAddress(persistence.address), 
+                 new OrderLatitude(persistence.latitude),
+                 new OrderLongitude(persistence.longitude),
                  products, 
                  combos, 
                  paymentMethod, 

@@ -9,12 +9,14 @@ export interface ComboEntryDto {
 }
 
 export interface CreateOrderServiceEntryDto{
-    address: string
+    address: string;
+    latitude: number;
+    longitude: number;
     products: ProductEntryDto[];
     combos: ComboEntryDto[];
-    paymentMethod: string
-    currency: string
-    total: number
-    userId: string
-    cupon?: string
+    paymentMethod: string;
+    currency: string;
+    total: number;
+    userId: string;
+    cupon?: string;
 }

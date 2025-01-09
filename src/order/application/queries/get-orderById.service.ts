@@ -36,6 +36,8 @@ export class getOrderByIdService implements IApplicationService<GetOrderByIdServ
             createdDate: order.Value.CreatedDate.CreatedDate,
             status: order.Value.Status.Status,
             address: order.Value.Address.Address,
+            latitude: order.Value.Latitude.Latitude,
+            longitude: order.Value.Longitude.Longitude,
             products: products.Value.map(product => {
                 return {
                     id: product.Id.ProductId,

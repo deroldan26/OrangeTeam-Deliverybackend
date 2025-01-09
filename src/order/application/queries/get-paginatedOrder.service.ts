@@ -26,6 +26,8 @@ export class GetPaginatedOrderService implements IApplicationService<GetPaginate
                 createdDate: product.CreatedDate.CreatedDate,
                 status: product.Status.Status,
                 address: product.Address.Address,
+                latitude: product.Latitude.Latitude,
+                longitude: product.Longitude.Longitude,
                 receivedDate: product.ReceivedDate.ReceivedDate,
                 cancelledDate: product.CancelledDate.CancelledDate,
                 shippedDate: product.ShippedDate.ShippedDate,

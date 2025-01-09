@@ -23,6 +23,12 @@ export class CreateOrderDto{
     @MinLength(6)
     address: string;
 
+    @IsNumber()
+    latitude: number;
+
+    @IsNumber()
+    longitude: number;
+
     @IsArray()
     @ValidateNested({ each: true })
     @Type(() => ProductDto)

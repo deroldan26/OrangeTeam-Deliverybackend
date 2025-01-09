@@ -15,6 +15,8 @@ import { OrderIndications } from "../value-objects/order.indications";
 import { OrderUserID } from "../value-objects/order.user.id";
 import { OrderCuponID } from "../value-objects/order.cupon.id";
 import { OrderUserEmail } from "../value-objects/order.user.email";
+import { OrderLatitude } from "../value-objects/order.latitude";
+import { OrderLongitude } from "../value-objects/order.longitude";
 
 export class orderCreatedEvent extends DomainEvent{
     protected constructor(
@@ -22,6 +24,8 @@ export class orderCreatedEvent extends DomainEvent{
         public createdDate: OrderCreatedDate,
         public status: OrderStatus,
         public address: OrderAddress,
+        public latitude: OrderLatitude,
+        public longitude: OrderLongitude,
         public products: Product[],
         public combos: Combo[],
         public paymentMethod: PaymentMethod,
@@ -37,7 +41,7 @@ export class orderCreatedEvent extends DomainEvent{
     ){
         super()
     }
-    static create(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId:OrderUserID, userEmail: OrderUserEmail, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?: OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications, cupon?: OrderCuponID): orderCreatedEvent{
-        return new orderCreatedEvent(id, createdDate, status, address, products, combos, paymentMethod, userId, userEmail, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications, cupon);
+    static create(id: OrderID, createdDate: OrderCreatedDate, status: OrderStatus, address: OrderAddress, latitude: OrderLatitude, longitude: OrderLongitude, products: Product[], combos: Combo[], paymentMethod: PaymentMethod, userId:OrderUserID, userEmail: OrderUserEmail, report?: OrderReport, receivedDate?: OrderReceivedDate, cancelledDate?: OrderCancelledDate, shippedDate?: OrderShippedDate, beingProcessedDate?: OrderBeingProcessedDate, indications?: OrderIndications, cupon?: OrderCuponID): orderCreatedEvent{
+        return new orderCreatedEvent(id, createdDate, status, address, latitude, longitude,  products, combos, paymentMethod, userId, userEmail, report, receivedDate, cancelledDate, shippedDate, beingProcessedDate, indications, cupon);
     }
 }
