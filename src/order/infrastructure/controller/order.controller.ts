@@ -51,7 +51,7 @@ export class OrderController{
         const user = req.user;
         const userId = user.userId;
         createOrderDto.userId = userId;
-        const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
+        const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService, this.userRepository);
         return await service.execute(createOrderDto);
     }
 

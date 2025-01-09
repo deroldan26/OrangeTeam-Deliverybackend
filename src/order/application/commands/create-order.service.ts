@@ -60,7 +60,6 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity), orderId);
         }))
         const user = await this.userRepository.findUserById(data.userId);
-        console.log(user.Value.Email.Email);
         if(!data.cupon || data.cupon === "" || data.cupon === null || data.cupon === undefined){
             data.cupon = "No Cupon";
         }
