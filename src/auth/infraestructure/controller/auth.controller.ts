@@ -62,7 +62,7 @@ export class AuthController {
         },
         token: token
       } 
-      return { response };
+      return response;
     }
     return { message: 'Wrong Credencials' };
   }

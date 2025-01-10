@@ -26,7 +26,7 @@ export class CuponController {
   @Post('create')
   async createDiscount(@Body() createCuponDto: CreateCuponDto) {
     const service = new createCuponService(this.cuponRepository, this.uuidCreator);
-    return await service.execute(createCuponDto);
+    return (await service.execute(createCuponDto)).Value;
   }
 
   @UseGuards(JwtAuthGuard)
