@@ -3,5 +3,6 @@ import { Cupon } from '../cupon';
 
 export interface ICuponRepository {
   findCuponById(id: string): Promise<Result<Cupon>>;
+  findCuponByName(name: string): Promise<Result<Cupon>>;
   saveCuponAggregate(cupon: Cupon): Promise<Result<Cupon>>;
 }

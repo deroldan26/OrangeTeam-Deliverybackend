@@ -24,6 +24,10 @@ import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancell
 import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
 import { OrderIndications } from "src/order/domain/value-objects/order.indications";
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
+import { OrderUserEmail } from "src/order/domain/value-objects/order.user.email";
+import { OrderCuponID } from "src/order/domain/value-objects/order.cupon.id";
+import { OrderLatitude } from "src/order/domain/value-objects/order.latitude";
+import { OrderLongitude } from "src/order/domain/value-objects/order.longitude";
 
 export class OrderMapper implements IMapper<Order, OrderEntity> {
 
@@ -67,11 +71,14 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         orderORM.createdDate = domain.CreatedDate.CreatedDate;
         orderORM.status = domain.Status.Status;
         orderORM.address = domain.Address.Address;
+        orderORM.latitude = domain.Latitude.Latitude;
+        orderORM.longitude = domain.Longitude.Longitude;
         orderORM.paymentMethod.id = domain.PaymentMethod.Id.PaymentMethodId;
         orderORM.paymentMethod.paymentMethodName = domain.PaymentMethod.PaymentMethod().PaymentMethod;
         orderORM.paymentMethod.currency = domain.PaymentMethod.Currency().Currency;
         orderORM.paymentMethod.amount = domain.PaymentMethod.Amount().TotalAmount;
         orderORM.userId = domain.UserID.UserId;
+        orderORM.userEmail = domain.UserEmail.Email;
         orderORM.report.id = domain.Report.Id.ReportId;
         orderORM.report.description = domain.Report.ReportDescription().ReportDescription;
         orderORM.report.reportDate = domain.Report.ReportDate().ReportDate;
@@ -84,6 +91,8 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         if(domain.BeingProcessedDate.BeingProcessedDate) orderORM.beingProcessedDate = domain.BeingProcessedDate.BeingProcessedDate;
         else orderORM.beingProcessedDate = null;
         orderORM.indications = domain.Indications.Indications;
+        if(domain.Cupon.CuponId) orderORM.cupon = domain.Cupon.CuponId;
+        else orderORM.cupon = "No Cupon";
         return orderORM;
     }
     async fromPersistenceToDomain(persistence: OrderEntity): Promise<Order> {
@@ -92,37 +101,45 @@ export class OrderMapper implements IMapper<Order, OrderEntity> {
         return new Order(new OrderID(persistence.orderId), 
                  new OrderCreatedDate(persistence.createdDate), 
                  new OrderStatus(persistence.status), 
-                 new OrderAddress(persistence.address), 
+                 new OrderAddress(persistence.address),
+                 new OrderLatitude(persistence.latitude),
+                 new OrderLongitude(persistence.longitude), 
                 //  products, 
                 //  combos,
                 [],
                 [], 
                  paymentMethod,
-                 new OrderUserID(persistence.userId), 
+                 new OrderUserID(persistence.userId),
+                 new OrderUserEmail(persistence.userEmail), 
                  report, 
                  new OrderReceivedDate(persistence.receivedDate),
                  new OrderCancelledDate(persistence.cancelledDate),
                  new OrderShippedDate(persistence.shippedDate),
                  new OrderBeingProcessedDate(persistence.beingProcessedDate),
-                 new OrderIndications(persistence.indications));
+                 new OrderIndications(persistence.indications),
+                 new OrderCuponID(persistence.cupon));
     }
 
     async fromPersistenceToDomainOrder(persistence: OrderEntity, products:Product[], combos:Combo[]): Promise<Order> {
-        const paymentMethod = new PaymentMethod(new OrderPaymentMethodID(persistence.paymentMethod.id),new OrderPaymentMethod(persistence.paymentMethod.paymentMethodName),new OrderCurrency(persistence.paymentMethod.currency),new OrderTotalAmount(persistence.paymentMethod.amount));
+        const paymentMethod = new PaymentMethod(new OrderPaymentMethodID(persistence.paymentMethod.id),new OrderPaymentMethod(persistence.paymentMethod.paymentMethodName),new OrderCurrency(persistence.paymentMethod.currency),new OrderTotalAmount(Number(persistence.paymentMethod.amount)));
         const report = new OrderReport(new OrderReportID(persistence.report.id),new OrderReportDescription(persistence.report.description),new OrderReportDate(persistence.report.reportDate));
         return new Order(new OrderID(persistence.orderId), 
                  new OrderCreatedDate(persistence.createdDate), 
                  new OrderStatus(persistence.status), 
                  new OrderAddress(persistence.address), 
+                 new OrderLatitude(Number(persistence.latitude)),
+                 new OrderLongitude(Number(persistence.longitude)),
                  products, 
                  combos, 
                  paymentMethod, 
                  new OrderUserID(persistence.userId),
+                 new OrderUserEmail(persistence.userEmail),
                  report, 
                  new OrderReceivedDate(persistence.receivedDate),
                  new OrderCancelledDate(persistence.cancelledDate),
                  new OrderShippedDate(persistence.shippedDate),
                  new OrderBeingProcessedDate(persistence.beingProcessedDate),
-                 new OrderIndications(persistence.indications));
+                 new OrderIndications(persistence.indications),
+                 new OrderCuponID(persistence.cupon));
     }
   }

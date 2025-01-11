@@ -12,6 +12,15 @@ export class CuponPostgresRepository extends Repository<CuponORM> implements ICu
         super(CuponORM, dataSource.createEntityManager());
         this.cuponMapper = new CuponMapper();
     }
+    async findCuponByName(name: string): Promise<Result<Cupon>> {
+        try {
+            var cupon = await this.createQueryBuilder('Cupon').select(['Cupon.id','Cupon.name','Cupon.description','Cupon.expireDate','Cupon.startDate','Cupon.value']).where('Cupon.name = :name',{name}).getOne();
+            const getDiscount = await this.cuponMapper.fromPersistenceToDomain(cupon);
+            return Result.success<Cupon>(getDiscount, 200)
+          } catch (error) {
+            return Result.fail<Cupon>(new Error(error.message), error.code, error.message);
+        }
+    }
 
     async findCuponById(id: string): Promise<Result<Cupon>>{
         try {

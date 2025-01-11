@@ -1,4 +1,5 @@
 import { Type } from "class-transformer";
+
 import { IsArray, IsNumber, IsString, Min, MinLength, ValidateNested, IsOptional } from "class-validator";
 
 class ProductDto {
@@ -21,6 +22,12 @@ export class CreateOrderDto{
     @IsString()
     @MinLength(6)
     address: string;
+
+    @IsNumber()
+    latitude: number;
+
+    @IsNumber()
+    longitude: number;
 
     @IsArray()
     @ValidateNested({ each: true })
@@ -47,4 +54,8 @@ export class CreateOrderDto{
     @IsNumber()
     @Min(0)
     total: number;
+
+    @IsString()
+    @IsOptional()
+    cupon?: string;
 }

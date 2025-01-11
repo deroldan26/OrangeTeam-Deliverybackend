@@ -13,6 +13,7 @@ import { createUserService } from '../../../user/application/commands/create-use
 import { UuidGenerator } from '../../../core/infrastructure/id.generator.ts/uuid-generator';
 import { LoginResponseDto } from 'src/auth/application/dtos/response/login.response.dto';
 import { response } from 'express';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
 
 @ApiTags('Auth')
 @ApiBearerAuth('JWT-auth')
@@ -22,25 +23,26 @@ export class AuthController {
   private readonly _jwtService: JwtService;
   private readonly _bcryptService: BcryptService;
   private readonly uuidCreator: UuidGenerator;
+  private readonly imageHandler: ImageUrlGenerator;
 
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this._jwtService = new JwtService();
     this._bcryptService = new BcryptService();
     this.userRepository = new UserPostgresRepository(this.dataSource);
     this.uuidCreator = new UuidGenerator();
+    this.imageHandler = new ImageUrlGenerator();
   }
 
   @Post('register')
   async createUser(@Body() createUserDto: CreateUserDto) {
-    const service = new createUserService(this.userRepository, this.uuidCreator);
+    const service = new createUserService(this.userRepository, this.uuidCreator, this.imageHandler);
     return await service.execute(createUserDto);
   }
 
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    var service = new getUserByEmailService(this.userRepository);
+    var service = new getUserByEmailService(this.userRepository, this.imageHandler);
     var user_log = await service.execute({ email: loginDto.email });
-
     if (user_log == null || !user_log.isSuccess()) {
       return { message: 'Wrong Credencials' };
     }
@@ -55,13 +57,13 @@ export class AuthController {
           email: user_log.Value.email,
           password: user_log.Value.password,
           phone: user_log.Value.phone,
-          type: user_log.Value.type
+          type: user_log.Value.type,
+          image: user_log.Value.image
         },
         token: token
       } 
-      return { response };
+      return response;
     }
     return { message: 'Wrong Credencials' };
   }
-
 }
