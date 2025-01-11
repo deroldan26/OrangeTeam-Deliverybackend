@@ -20,7 +20,7 @@ import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/i
 
 @ApiTags('User')
 @ApiBearerAuth('JWT-auth')
-@Controller('User')
+@Controller('user')
 export class UserController {
   private readonly userRepository: UserPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
@@ -35,33 +35,33 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createUser(@Body() createUserDto: CreateUserDto) {
     const service = new createUserService(this.userRepository, this.uuidCreator, this.imageHandler);
-    return await service.execute(createUserDto);
+    return (await service.execute(createUserDto)).Value;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('one/:id')
   async GetUserById(@Param('id') id: string) {
     const service = new getUserByIdService(this.userRepository, this.imageHandler)
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
   }
 
   @Get('byEmail/:email')
   async GetUserByEmail(@Param('email') email: string) {
     const service = new getUserByEmailService(this.userRepository, this.imageHandler)
     var response = await service.execute({email:email})
-    return response;
+    return response.Value;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Patch(':id')
+  @Patch('update/:id')
   async updateOrder(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     const service = new UpdateUserService(this.userRepository, this.bcryptService, this.imageHandler);
     var response = await service.execute({id: id, ...updateUserDto});
-    return response;
+    return response.Value;
   }
 
 }

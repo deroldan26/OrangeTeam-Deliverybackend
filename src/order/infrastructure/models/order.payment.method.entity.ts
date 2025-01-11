@@ -8,7 +8,7 @@ export class PaymentMethodEntity {
     id: string;
 
     @Column({ 
-        type: 'integer' 
+        type: 'numeric' 
     })
     amount: number;
 

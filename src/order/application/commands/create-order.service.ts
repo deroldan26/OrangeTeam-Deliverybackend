@@ -36,7 +36,11 @@ import { OrderCancelledDate } from "src/order/domain/value-objects/order.cancell
 import { OrderBeingProcessedDate } from "src/order/domain/value-objects/order.being.processed.date";
 import { OrderShippedDate } from "src/order/domain/value-objects/order.shipped.date";
 import { OrderIndications } from "src/order/domain/value-objects/order.indications";
-import { UserPostgresRepository } from "src/user/infrastructure/repositories/postgres/user.repository";
+import { IUserRepository } from "src/user/domain/repositories/user-repositories.interface";
+import { OrderUserEmail } from "src/order/domain/value-objects/order.user.email";
+import { OrderCuponID } from "src/order/domain/value-objects/order.cupon.id";
+import { OrderLatitude } from "src/order/domain/value-objects/order.latitude";
+import { OrderLongitude } from "src/order/domain/value-objects/order.longitude";
 
 export class createOrderService implements IApplicationService<CreateOrderServiceEntryDto, CreateOrderServiceResponseDto>{
     constructor(
@@ -46,32 +50,40 @@ export class createOrderService implements IApplicationService<CreateOrderServic
         private readonly orderProductRepository: IOrderProductsRepository,
         private readonly orderComboProductRepository: IOrderCombosRepository,
         private readonly idGenerator: IdGenerator<string>,
-        private readonly messagingService: MessagingService<DomainEvent>,  
+        private readonly messagingService: MessagingService<DomainEvent>,
+        private readonly userRepository: IUserRepository
     ){}
     async execute(data: CreateOrderServiceEntryDto): Promise<Result<CreateOrderServiceResponseDto>> {
         const orderId = new OrderID( await this.idGenerator.generateId())
         const products = data.products.map(productData => {
             return new Product(new OrderProductID(productData.id), new OrderProductQuantity(productData.quantity), orderId);
         })
-
         const combos = await Promise.all(data.combos.map(async comboData => {
             return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity), orderId);
         }))
+        const user = await this.userRepository.findUserById(data.userId);
+        if(!data.cupon || data.cupon === "" || data.cupon === null || data.cupon === undefined){
+            data.cupon = "No Cupon";
+        }
         const order = new Order(
             orderId,
             new OrderCreatedDate(new Date()),
             new OrderStatus('CREATED'),
             new OrderAddress(data.address),
+            new OrderLatitude(data.latitude),
+            new OrderLongitude(data.longitude),
             products,
             combos,
             new PaymentMethod(new OrderPaymentMethodID(await this.idGenerator.generateId()), new OrderPaymentMethod(data.paymentMethod), new OrderCurrency(data.currency), new OrderTotalAmount(data.total)),
             new OrderUserID(data.userId),
+            new OrderUserEmail(user.Value.Email.Email),
             new OrderReport(new OrderReportID(await this.idGenerator.generateId()), new OrderReportDescription("No Report submitted"), new OrderReportDate(new Date())),
             new OrderReceivedDate(new Date()),
             new OrderCancelledDate(new Date()),
             new OrderShippedDate(new Date()),
             new OrderBeingProcessedDate(new Date()),
-            new OrderIndications("No Indications")
+            new OrderIndications("No Indications"),
+            new OrderCuponID(data.cupon)
         )
         await this.paymentRepository.savePaymentEntity(order.PaymentMethod);
         await this.reportRepository.saveReportEntity(order.Report);
@@ -86,6 +98,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             createdDate: order.CreatedDate.CreatedDate,
             status: order.Status.Status,
             address: order.Address.Address,
+            latitude: order.Latitude.Latitude,
+            longitude: order.Longitude.Longitude,
             products: order.Products,
             combos: order.Combos,
             paymentMethod: order.PaymentMethod,
