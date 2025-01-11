@@ -43,7 +43,7 @@ export class AuthController {
   async login(@Body() loginDto: LoginDto) {
     var service = new getUserByEmailService(this.userRepository, this.imageHandler);
     var user_log = await service.execute({ email: loginDto.email });
-
+    
     if (user_log == null || !user_log.isSuccess()) {
       return { message: 'Wrong Credencials' };
     }
