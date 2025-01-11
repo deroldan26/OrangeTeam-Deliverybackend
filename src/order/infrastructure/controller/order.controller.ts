@@ -70,7 +70,7 @@ export class OrderController{
         const user = user_token.userId;
         const {page, take, status} = query;
         const service = new GetPaginatedOrderService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
-        return (await service.execute({page, take, status, user})).Value;
+        return (await service.execute({page, take, status, user})).Value.orders;
     }
 
     @UseGuards(JwtAuthGuard)

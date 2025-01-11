@@ -28,19 +28,6 @@ export class GetPaginatedOrderService implements IApplicationService<GetPaginate
                 address: product.Address.Address,
                 latitude: product.Latitude.Latitude,
                 longitude: product.Longitude.Longitude,
-                receivedDate: product.ReceivedDate.ReceivedDate,
-                cancelledDate: product.CancelledDate.CancelledDate,
-                shippedDate: product.ShippedDate.ShippedDate,
-                beingProcessedDate: product.BeingProcessedDate.BeingProcessedDate,
-                indications: product.Indications.Indications,
-                userId: product.UserID.UserId,
-                paymentMethod: {
-                    id: product.PaymentMethod.Id.PaymentMethodId,
-                    paymentMethod: product.PaymentMethod.PaymentMethod,
-                    currency: product.PaymentMethod.Currency,
-                    total: product.PaymentMethod.Amount
-                },
-                report: product.Report.Id,
                 products: product.Products.map(product => ({
                     id: product.Id.ProductId,
                     quantity: product.ProductQuantity().ProductQuantity
@@ -48,7 +35,22 @@ export class GetPaginatedOrderService implements IApplicationService<GetPaginate
                 combos: product.Combos.map(combo => ({
                     id: combo.Id.ComboId,
                     quantity: combo.ComboQuantity().ProductQuantity
-                }))
+                })),
+                paymentMethod: {
+                    id: product.PaymentMethod.Id.PaymentMethodId,
+                    paymentMethod: product.PaymentMethod.PaymentMethod().PaymentMethod,
+                    currency: product.PaymentMethod.Currency().Currency,
+                    total: product.PaymentMethod.Amount().TotalAmount
+                },
+                report: {
+                    id: product.Report.Id.ReportId,
+                    description: product.Report.ReportDescription().ReportDescription,
+                    reportDate: product.Report.ReportDate().ReportDate
+                },
+                receivedDate: product.ReceivedDate.ReceivedDate,
+                cancelledDate: product.CancelledDate.CancelledDate,
+                shippedDate: product.ShippedDate.ShippedDate,
+                beingProcessedDate: product.BeingProcessedDate.BeingProcessedDate
             }))
         }
         return Result.success<GetPaginatedOrderServiceResponseDto>(response, 200);
