@@ -34,4 +34,7 @@ export interface GetOrderByIdServiceResponseDto {
     paymentMethod: PaymentResponseDto
     report: ReportResponseDto
     receivedDate: Date
+    cancelledDate: Date
+    shippedDate: Date
+    beingProcessedDate: Date
 }
