@@ -18,5 +18,6 @@ export interface CreateOrderServiceEntryDto{
     currency: string;
     total: number;
     userId: string;
-    cupon?: string;
+    cupon_code?: string;
+    indications?: string;
 }
