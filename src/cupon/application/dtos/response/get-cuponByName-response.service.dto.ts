@@ -1,8 +1,8 @@
 export interface GetCuponByNameServiceResponseDto {
     id: string;
-    name: string;
-    value: number;
+    code: string;
+    amount: number;
     description: string;
-    expireDate: Date;
+    expiration_date: Date;
     startDate: Date;
 }
