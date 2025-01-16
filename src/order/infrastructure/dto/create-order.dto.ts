@@ -44,7 +44,7 @@ export class CreateOrderDto{
     userId: string;
 
     @IsString()
-    @MinLength(6)
+    @MinLength(4)
     paymentMethod: string;
 
     @IsString()
