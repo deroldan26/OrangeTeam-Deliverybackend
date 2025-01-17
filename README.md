@@ -16,6 +16,10 @@ Explicacion de esto
 
 ## 📋Documentación de la aplicación📋
 
+Modelo de dominios de la aplicación: 
+
+Modelo Hexagonal de la aplicación:
+
 ## 🚧Instalación del proyecto🚧
 
 Installation of dependencies
@@ -57,3 +61,14 @@ Explicacion de esto
 ## 👨🏽‍🎓Autores👨🏽‍💼
 
 Fotico de nosotros
+
+<p align="center">
+  <img src="images/DavidRoldan.jpg" width="100" alt="Developer 1" />
+  <img src="path/to/developer2.jpg" width="100" alt="Developer 2" />
+  <img src="path/to/developer3.jpg" width="100" alt="Developer 3" />
+</p>
+<p align="center">
+  <strong>Developer 1 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+  <strong>Developer 2 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+  <strong>Developer 3 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
+</p>
