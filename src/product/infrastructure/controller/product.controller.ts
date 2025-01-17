@@ -23,8 +23,9 @@ import { LoggerDecoratorService } from 'src/core/application/aspects/logger.deco
 import { PerformanceDecoratorService } from 'src/core/application/aspects/performance.decorator';
 import { AuditDecoratorService } from 'src/core/application/aspects/audit.decorator';
 import { ExceptionDecoratorService } from 'src/core/application/aspects/exception.decorator';
-import { Request } from '@nestjs/common';
 import { AuditPostgresRepository } from 'src/audit/infrastructure/repositories/postgres/audit.repository';
+import { Request } from '@nestjs/common';
+
 
 @ApiTags('Product')
 @ApiBearerAuth('JWT-auth')
