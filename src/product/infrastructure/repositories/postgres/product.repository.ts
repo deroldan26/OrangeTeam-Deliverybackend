@@ -25,17 +25,22 @@ export class ProductPostgresRepository extends Repository<ProductORM> implements
     }
   }
 
-  async findPaginatedProducts(page: number, take: number, name?: string, category?: string): Promise<Result<Product[]>>{
+  async findPaginatedProducts(page: number, perpage: number, name?: string, category?: string, price?: number, discount?: number): Promise<Result<Product[]>>{
     try {
       const query = this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.images','Product.price','Product.currency','Product.weight','Product.measurement','Product.stock','Product.categories','Product.caducityDate','Product.discount']);
       if(name){
-        query.where('Product.name LIKE :name',{name: `%${name}%`});
+        query.where('Product.name ILIKE :name',{name: `%${name}%`});
       }
-      if(category){
-        query.where('Product.category = :category',{category});
+      if (category) {
+        // Convertir filtros de categorías a formato JSON
+        const categoryFilter = JSON.stringify(category);
+        query.andWhere(`"Product".categories::jsonb @> :categories::jsonb`, { categories: categoryFilter });
       }
-      const skip = page * take - take;
-      query.skip(skip).take(take);
+      if (price) {
+        query.andWhere('Product.price <= :price', { price });
+      }
+      const skip = page * perpage - perpage;
+      query.skip(skip).take(perpage);
       //const products = await this.createQueryBuilder('Product').select(['Product.id','Product.name','Product.description','Product.image','Product.price','Product.currency','Product.weight','Product.stock','Product.category']).skip(skip).take(take).getMany();
       const products = await query.getMany();
       const response = await Promise.all(products.map(product => this.productMapper.fromPersistenceToDomain(product)));

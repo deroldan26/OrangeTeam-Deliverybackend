@@ -5,11 +5,13 @@ import { ICategoryRepository } from "src/category/domain/repositories/category-r
 import { Result } from "src/core/domain/result-handler/result";
 import { Category } from "src/category/domain/category";
 import { ImageUrlGenerator } from "src/core/infrastructure/image.url.generator/image.url.generator";
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class getCategoryByIdService implements IApplicationService<GetCategoryByIdServiceEntryDto, GetCategoryByIdServiceResponseDto>{
 
     constructor(
-        private readonly categoryRepository: ICategoryRepository
+        private readonly categoryRepository: ICategoryRepository,
+        private readonly imageHandler: IImageHandler
     ){}
     
     async execute(data: GetCategoryByIdServiceEntryDto): Promise<Result<GetCategoryByIdServiceResponseDto>> {
@@ -19,7 +21,7 @@ export class getCategoryByIdService implements IApplicationService<GetCategoryBy
             return Result.fail( category.Error, category.StatusCode, category.Message )
         }
         const urlGenerator = new ImageUrlGenerator();
-        const url = await urlGenerator.generateUrl(category.Value.Image.Image);
+        const url = await this.imageHandler.generateImage(category.Value.Image.Image);
         const response: GetCategoryByIdServiceResponseDto = {
             id: category.Value.Id.Id,
             name: category.Value.Name.Name,

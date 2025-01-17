@@ -3,7 +3,7 @@ import { unvalidOrderLatitudeException } from "../exceptions/unvalid.order.latit
 
 export class OrderLatitude implements ValueObject<OrderLatitude> {
     constructor(private _latitude: number) {
-        if (_latitude < 0) throw new unvalidOrderLatitudeException(`Latitude '${_latitude}' not valid`)
+        if (_latitude === null) throw new unvalidOrderLatitudeException(`Latitude '${_latitude}' not valid`)
     }
     get Latitude() {
         return this._latitude

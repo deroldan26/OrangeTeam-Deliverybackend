@@ -9,17 +9,19 @@ import { CategoryID } from "../../domain/value-objects/category.id";
 import { CategoryName } from "../../domain/value-objects/category.name";
 import { CategoryImage } from "../../domain/value-objects/category.image";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class createCategoryService implements IApplicationService<CreateCategoryServiceEntryDto, CreateCategoryServiceResponseDto> {
 
     constructor(
         private readonly categoryRepository: ICategoryRepository,
-        private readonly idGenerator: IdGenerator<string> 
+        private readonly idGenerator: IdGenerator<string>,
+        private readonly imageHandler: IImageHandler
     ) {}
 
     async execute(data: CreateCategoryServiceEntryDto): Promise<Result<CreateCategoryServiceResponseDto>> {
         const imageUrlGenerator = new ImageUrlGenerator();
-        const imageID = await imageUrlGenerator.UploadImage(data.image);
+        const imageID = await this.imageHandler.UploadImage(data.image);
         
         const category = new Category(
             new CategoryID(await this.idGenerator.generateId()),

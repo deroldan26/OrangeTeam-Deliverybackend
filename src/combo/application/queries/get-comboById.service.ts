@@ -8,11 +8,13 @@ import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.genera
 import { Combo } from "src/combo/domain/combo";
 import { ProductID } from "src/product/domain/value-objects/product.id";
 import { CategoryID } from "src/category/domain/value-objects/category.id";
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 
 export class getComboByIdService implements IApplicationService<GetComboByIdServiceEntryDto, GetComboByIdServiceResponseDto>{
 
     constructor(
-        private readonly comboRepository:IComboRepository
+        private readonly comboRepository:IComboRepository,
+        private readonly imageHandler: IImageHandler
     ){}
     
     async execute(data: GetComboByIdServiceEntryDto): Promise<Result<GetComboByIdServiceResponseDto>> {
@@ -21,15 +23,15 @@ export class getComboByIdService implements IApplicationService<GetComboByIdServ
         if(!combo.isSuccess()) {
             return Result.fail( combo.Error, combo.StatusCode, combo.Message )
         }
-        const urlGenerator = new ImageUrlGenerator();
-        const urls = await Promise.all(combo.Value.ComboImages.map(image => urlGenerator.generateUrl(image.Image)));
+
+        const urls = await Promise.all(combo.Value.ComboImages.map(image => this.imageHandler.generateImage(image.Image)));
         const response: GetComboByIdServiceResponseDto = {
             id: combo.Value.Id.Id,
             name: combo.Value.Name.Name,
-            specialPrice: combo.Value.SpecialPrice.Price,
+            price: combo.Value.SpecialPrice.Price,
             currency: combo.Value.Currency.Currency,
             description: combo.Value.Description.Description,
-            comboImages: urls,           
+            images: urls,           
             products: combo.Value.Products.map(ProductID => ProductID.Id),
             weight: combo.Value.Weight.Weight,
             measurement: combo.Value.Measurement.Measurement,

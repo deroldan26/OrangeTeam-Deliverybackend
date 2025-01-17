@@ -13,7 +13,7 @@ export class FindPaginatedComboDto {
     @IsInt()
     @Min(1)
     @Type(() => Number)
-    take: number = 10;
+    perpage: number = 10;
 
     @IsOptional()
     @Transform(({ value }) => (typeof value === 'string' ? [value] : value))

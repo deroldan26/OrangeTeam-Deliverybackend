@@ -3,7 +3,7 @@ import { unvalidOrderLongitudeException } from "../exceptions/unvalid.order.long
 
 export class OrderLongitude implements ValueObject<OrderLongitude> {
     constructor(private _longitude: number) {
-        if (_longitude < 0) throw new unvalidOrderLongitudeException(`Longitude '${_longitude}' not valid`)
+        if (_longitude === null) throw new unvalidOrderLongitudeException(`Longitude '${_longitude}' not valid`)
     }
     get Longitude() {
         return this._longitude

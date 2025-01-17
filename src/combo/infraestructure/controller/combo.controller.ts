@@ -17,19 +17,22 @@ import { DiscountPostgresRepository } from 'src/discount/infraestructure/reposit
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../auth/infraestructure/guard/guard.service';
 import { ApiBearerAuth } from '@nestjs/swagger';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
 
-@ApiTags('Combo')
+@ApiTags('Bundle')
 @ApiBearerAuth('JWT-auth')
-@Controller('combo')
+@Controller('bundle')
 export class ComboController {
   private readonly comboRepository: ComboPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
+  private readonly imageHandler: ImageUrlGenerator;
   private readonly productValidator: ProductValidatorService;
   private readonly categoryValidator: CategoryValidatorService;
   private readonly discountValidator?: DiscountValidatorService
 
   constructor(@Inject('DataSource') private readonly dataSource: DataSource) {
     this.uuidCreator = new UuidGenerator();
+    this.imageHandler = new ImageUrlGenerator();
     this.comboRepository = new ComboPostgresRepository(this.dataSource);
     this.productValidator = new ProductValidatorService(new ProductPostgresRepository(this.dataSource));
     this.categoryValidator = new CategoryValidatorService(new CategoryPostgresRepository(this.dataSource));
@@ -39,26 +42,25 @@ export class ComboController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createCombo(@Body() createComboDto: CreateComboDto) {
-    const service = new createComboService(this.comboRepository, this.uuidCreator, this.productValidator, this.categoryValidator, this.discountValidator);
+    const service = new createComboService(this.comboRepository, this.uuidCreator, this.imageHandler, this.productValidator, this.categoryValidator, this.discountValidator);
     return await service.execute(createComboDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
+  @Get('one/:id')
   async findOne(@Param('id') id: string) {
-    const service = new getComboByIdService(this.comboRepository)
+    const service = new getComboByIdService(this.comboRepository, this.imageHandler)
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
   }
-
+  
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('many')
   async findPaginatedCombo(@Query(ValidationPipe) query: FindPaginatedComboDto) {
-    // const {page, take} = query;
-    const { page, take, category, name, price, discount} = query;
-    const service = new GetPaginatedComboService(this.comboRepository);
-    return (await service.execute({ page, take, category, name, price, discount })).Value;
+    const { page, perpage, category, name, price, discount} = query;
+    const service = new GetPaginatedComboService(this.comboRepository, this.imageHandler);
+    return (await service.execute({ page, perpage, category, name, price, discount })).Value.combos;
   }
 }

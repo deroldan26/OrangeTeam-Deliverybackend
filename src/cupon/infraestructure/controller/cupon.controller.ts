@@ -9,6 +9,7 @@ import { getCuponByIdService } from "src/cupon/application/queries/get-cuponById
 import { ApiBearerAuth } from "@nestjs/swagger";
 import { JwtAuthGuard } from "src/auth/infraestructure/guard/guard.service";
 import { UseGuards } from "@nestjs/common";
+import { getCuponByNameService } from "src/cupon/application/queries/get-cuponByName.service";
 
 
 @ApiTags('Cupon')
@@ -23,17 +24,25 @@ export class CuponController {
   }
   
   @UseGuards(JwtAuthGuard)
-  @Post()
-  async createDiscount(@Body() createCuponDto: CreateCuponDto) {
+  @Post('create')
+  async createCupon(@Body() createCuponDto: CreateCuponDto) {
     const service = new createCuponService(this.cuponRepository, this.uuidCreator);
-    return await service.execute(createCuponDto);
+    return (await service.execute(createCuponDto)).Value;
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async findOneCategory(@Param('id') id: string) {
+  @Get('one/:id')
+  async findOneCuponById(@Param('id') id: string) {
     const service = new getCuponByIdService(this.cuponRepository)
     var response = await service.execute({id:id})
-    return response;
+    return response.Value;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('one/by/:name')
+  async findOneCuponByName(@Param('name') name: string) {
+    const service = new getCuponByNameService(this.cuponRepository)
+    var response = await service.execute({name:name})
+    return response.Value;
   }
 }

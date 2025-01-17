@@ -1,6 +1,6 @@
 export interface GetPaginatedProductServiceEntryDto{
     page: number;
-    take: number;
+    perpage: number;
     category?: string;
     name?: string;
 }

@@ -17,45 +17,64 @@ import { CategoryValidatorService } from '../../../category/application/services
 import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
 import { CategoryPostgresRepository } from '../../../category/infraestructure/repositories/postgres/category.repository';
 import { DiscountPostgresRepository } from '../../../discount/infraestructure/repositories/postgres/discount.repository';
+import { IImageHandler } from 'src/core/application/image.handler/image.handler';
+import { ImageUrlGenerator } from 'src/core/infrastructure/image.url.generator/image.url.generator';
+import { LoggerDecoratorService } from 'src/core/application/aspects/logger.decorator';
+import { PerformanceDecoratorService } from 'src/core/application/aspects/performance.decorator';
+import { AuditDecoratorService } from 'src/core/application/aspects/audit.decorator';
+import { ExceptionDecoratorService } from 'src/core/application/aspects/exception.decorator';
+import { Request } from '@nestjs/common';
+import { AuditPostgresRepository } from 'src/audit/infrastructure/repositories/postgres/audit.repository';
 
 @ApiTags('Product')
 @ApiBearerAuth('JWT-auth')
 @Controller('product')
 export class ProductController {
   private readonly productRepository: ProductPostgresRepository;
+  private readonly auditRepository: AuditPostgresRepository;
   private readonly uuidCreator: UuidGenerator;
   private readonly categoryValidator: CategoryValidatorService;
   private readonly discountValidator?: DiscountValidatorService;
+  private readonly imageHandler: IImageHandler;
   
   constructor(@Inject('DataSource') private readonly dataSource: DataSource, private readonly messagingService: MessagingService<DomainEvent>) {
     this.uuidCreator = new UuidGenerator();
     this.productRepository = new ProductPostgresRepository(this.dataSource);
+    this.auditRepository = new AuditPostgresRepository(this.dataSource)
     this.categoryValidator = new CategoryValidatorService(new CategoryPostgresRepository(this.dataSource));
+    this.imageHandler = new ImageUrlGenerator();
     if (dataSource.getRepository(DiscountValidatorService)) {
       this.discountValidator = new DiscountValidatorService(new DiscountPostgresRepository(this.dataSource));
     }
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post()
+  @Post('create')
   async createProduct(@Body() createProductDto: CreateProductDto) {
-    const service = new createProductService(this.productRepository, this.uuidCreator, this.messagingService, this.categoryValidator, this.discountValidator);
+    const service = new createProductService(this.productRepository, this.uuidCreator, this.imageHandler, this.messagingService, this.categoryValidator, this.discountValidator);
     return await service.execute(createProductDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    const service = new getProductByIdService(this.productRepository)
+  @Get('one/:id')
+  async findOne(@Param('id') id: string, @Request() req): Promise<any> { 
+    const user = req.user; 
+    const userId = user.userId; 
+    const service = new ExceptionDecoratorService (
+      new AuditDecoratorService (
+        this.auditRepository, this.uuidCreator, userId, "getProductByIdService", new LoggerDecoratorService(
+          "getProductByIdService", new PerformanceDecoratorService(new getProductByIdService(
+            this.productRepository, this.imageHandler)))));
+
     var response = await service.execute({id:id})
-    return response;
-  }
+    return response.Value;
+  } 
 
   @UseGuards(JwtAuthGuard)
-  @Get()
+  @Get('many')
   async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
-    const {page, take, name, category} = query;
-    const service = new GetPaginatedProductService(this.productRepository);
-    return (await service.execute({page, take, name, category})).Value;
+    const {page, perpage, name, category} = query;
+    const service = new GetPaginatedProductService(this.productRepository, this.imageHandler);
+    return (await service.execute({page, perpage, name, category})).Value.products;
   }
 }

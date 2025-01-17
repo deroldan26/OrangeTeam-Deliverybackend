@@ -24,10 +24,10 @@ export class CategoryPostgresRepository extends Repository<CategoryORM> implemen
           }
     }
 
-    async findPaginatedCategory(page: number, take: number): Promise<Result<Category[]>>{
+    async findPaginatedCategory(page: number, perpage: number): Promise<Result<Category[]>>{
         try {
-            const skip = page * take - take;
-            const category = await this.createQueryBuilder('Category').select(['Category.id','Category.name','Category.image']).skip(skip).take(take).getMany();
+            const skip = page * perpage - perpage;
+            const category = await this.createQueryBuilder('Category').select(['Category.id','Category.name','Category.image']).skip(skip).take(perpage).getMany();
             const response = await Promise.all(category.map(category => this.categoryMapper.fromPersistenceToDomain(category)));
             return Result.success<Category[]>(response,200)
           } catch (error) {

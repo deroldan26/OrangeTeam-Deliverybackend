@@ -36,6 +36,8 @@ export class getOrderByIdService implements IApplicationService<GetOrderByIdServ
             createdDate: order.Value.CreatedDate.CreatedDate,
             status: order.Value.Status.Status,
             address: order.Value.Address.Address,
+            latitude: order.Value.Latitude.Latitude,
+            longitude: order.Value.Longitude.Longitude,
             products: products.Value.map(product => {
                 return {
                     id: product.Id.ProductId,
@@ -59,7 +61,10 @@ export class getOrderByIdService implements IApplicationService<GetOrderByIdServ
                 description: order.Value.Report.ReportDescription().ReportDescription,
                 reportDate: order.Value.Report.ReportDate().ReportDate
             },
-            receivedDate: order.Value.ReceivedDate.ReceivedDate
+            receivedDate: order.Value.ReceivedDate.ReceivedDate,
+            cancelledDate: order.Value.CancelledDate.CancelledDate,
+            shippedDate: order.Value.ShippedDate.ShippedDate,
+            beingProcessedDate: order.Value.BeingProcessedDate.BeingProcessedDate
         }
         return Result.success(response, 200);
     }

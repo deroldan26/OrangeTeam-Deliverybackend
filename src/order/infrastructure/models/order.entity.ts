@@ -28,6 +28,16 @@ export class OrderEntity{
     })
     address: string
 
+    @Column({
+        type: 'numeric',
+    })
+    latitude: number
+
+    @Column({
+        type: 'numeric',
+    })
+    longitude: number
+
     @OneToMany(() => OrderProductEntity, 
         product => product.order, 
         { eager: true }
@@ -50,6 +60,11 @@ export class OrderEntity{
         type: 'uuid',
     })
     userId: string
+
+    @Column({
+        type: 'varchar'
+    })
+    userEmail: string
 
     @OneToOne(() => OrderReportEntity, {eager: true})
     @JoinColumn({
@@ -81,4 +96,9 @@ export class OrderEntity{
         type: 'varchar',
     })
     indications?: string
+
+    @Column({
+        type: 'varchar',
+    })
+    cupon?: string
 }

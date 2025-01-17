@@ -1,9 +1,9 @@
 export interface CreateComboServiceEntryDto {
     name: string;
-    specialPrice: number;
+    price: number;
     currency: string;
     description: string;
-    comboImages: string[];
+    images: string[];
     products: string[];
     weight: number;
     measurement: string;

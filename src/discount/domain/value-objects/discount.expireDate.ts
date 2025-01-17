@@ -4,7 +4,9 @@ import { ValueObject } from "../../../core/domain/value.object";
 export class DiscountExpireDate implements ValueObject<DiscountExpireDate> {
   constructor(private _expireDate: Date) {
     const now = new Date();
-    if (_expireDate <= now) {
+    const pastLimit = new Date(now.getFullYear() - 100, now.getMonth(), now.getDate());
+    const futureLimit = new Date(now.getFullYear() + 100, now.getMonth(), now.getDate());
+    if (_expireDate < pastLimit || _expireDate > futureLimit) {
       throw new unvalidDiscountExpireDateException(`Expire date '${_expireDate.toISOString()}' is not valid.`);
     }
   }

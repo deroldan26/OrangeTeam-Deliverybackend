@@ -15,6 +15,7 @@ import { ProductWeight } from "../../domain/value-objects/product.weight";
 import { ProductStock } from "src/product/domain/value-objects/product.stock";
 import { CategoryName } from "src/product/domain/value-objects/category.name";
 import { ImageUrlGenerator } from '../../../core/infrastructure/image.url.generator/image.url.generator';
+import { IImageHandler } from "src/core/application/image.handler/image.handler";
 import { DomainEvent } from "../../../core/domain/domain.event";
 import { MessagingService } from "../../../core/infrastructure/events/rabbitmq/messaging.service";
 import { DiscountValidatorService } from '../../../discount/application/services/discount-validator.services';
@@ -26,6 +27,7 @@ export class createProductService implements IApplicationService<CreateProductSe
     constructor(
         private readonly productRepository:IProductRepository,
         private readonly idGenerator: IdGenerator<string>,
+        private readonly imageHandler: IImageHandler,
         private readonly messagingService: MessagingService<DomainEvent>,   
         private readonly categoryValidator: CategoryValidatorService,
         private readonly discountValidator?: DiscountValidatorService
@@ -47,8 +49,7 @@ export class createProductService implements IApplicationService<CreateProductSe
             }
         }
 
-        const imageUrlGenerator = new ImageUrlGenerator();
-        const imageIDs = await Promise.all(data.images.map(image => imageUrlGenerator.UploadImage(image)));
+        const imageIDs = await Promise.all(data.images.map(image => this.imageHandler.UploadImage(image)));
         const productImages = imageIDs.map(imageID => new ProductImage(imageID));
         const discount = data.discount && validationDiscountResult?.Value ? validationDiscountResult.Value : "";
         const product = new Product(

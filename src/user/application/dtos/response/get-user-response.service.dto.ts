@@ -6,4 +6,5 @@ export interface GetUserServiceResponseDto {
     password: string
     phone: string
     type: string
+    image: string
 }

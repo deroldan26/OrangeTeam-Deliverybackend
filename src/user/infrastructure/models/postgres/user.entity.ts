@@ -28,4 +28,9 @@ export class UserEntity {
         nullable: true
     })
     type: string
+    @Column({
+        type: 'varchar',
+        nullable: true
+    })
+    image: string
 }

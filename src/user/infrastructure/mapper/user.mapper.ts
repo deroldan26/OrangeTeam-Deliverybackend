@@ -7,6 +7,7 @@ import { UserName } from "../../domain/value-objects/user.name";
 import { UserPassword } from "../../domain/value-objects/user.password";
 import { UserPhone } from "../../domain/value-objects/user.phone";
 import { UserType } from "../../domain/value-objects/user.type";
+import { UserImage } from "../../domain/value-objects/user.image";
 
 export class UserMapper implements IMapper<User, UserEntity> {
     async fromDomainToPersistence(domain: User): Promise<UserEntity> {
@@ -17,6 +18,7 @@ export class UserMapper implements IMapper<User, UserEntity> {
         userORM.password = domain.Password.Password;
         userORM.phone = domain.Phone.Phone;
         userORM.type = domain.Type.Type;
+        userORM.image = domain.Image.Image;
 
         return userORM;
     }
@@ -27,6 +29,7 @@ export class UserMapper implements IMapper<User, UserEntity> {
             new UserName(persistence.name),
             new UserPassword(persistence.password),
             new UserPhone(persistence.phone),
-            new UserType(persistence.type));
+            new UserType(persistence.type),
+            new UserImage(persistence.image));
     }
 }

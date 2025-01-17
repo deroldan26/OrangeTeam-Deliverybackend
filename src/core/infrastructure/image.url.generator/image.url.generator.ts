@@ -1,8 +1,9 @@
-import { cloudinary } from '../cloudinary/cloudinary.js';
+import { cloudinary } from '../cloudinary/cloudinary';
+import { IImageHandler } from '../../application/image.handler/image.handler.js';
 
-export class ImageUrlGenerator {
+export class ImageUrlGenerator implements IImageHandler {
 
-  public async generateUrl(id: string): Promise<string> {
+  public async generateImage(id: string): Promise<string> {
     const url = cloudinary.url(id)
     return url; 
   }

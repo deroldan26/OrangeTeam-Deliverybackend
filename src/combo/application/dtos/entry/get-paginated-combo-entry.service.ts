@@ -4,5 +4,5 @@ export interface GetPaginatedComboServiceEntryDto{
     price?: number;
     discount?: string;
     page: number;
-    take: number;
+    perpage: number;
 }

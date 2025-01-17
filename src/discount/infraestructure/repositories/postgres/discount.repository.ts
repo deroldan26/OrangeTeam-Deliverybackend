@@ -25,6 +25,17 @@ export class DiscountPostgresRepository extends Repository<DiscountORM> implemen
           }
     }
 
+    async findPaginatedDiscount(page: number, perpage: number): Promise<Result<Discount[]>> {
+        try {
+            const discounts = await this.createQueryBuilder('Discount').select(['Discount.id','Discount.name','Discount.description','Discount.expireDate','Discount.initDate','Discount.percentage'])
+            .skip(page).take(perpage).getMany();
+            const response = await Promise.all(discounts.map(discount => this.discountMapper.fromPersistenceToDomain(discount)));
+            return Result.success<Discount[]>(response, 200);
+        } catch (error) {
+            return Result.fail<Discount[]>(new Error(error.message), error.code, error.message);
+        }
+    }
+
     async saveDiscountAggregate(discount: Discount): Promise<Result<Discount>>
     {
         try {

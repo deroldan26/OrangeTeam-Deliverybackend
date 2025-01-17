@@ -6,6 +6,7 @@ import { UserName } from "./value-objects/user.name";
 import { UserPassword } from "./value-objects/user.password";
 import { UserPhone } from "./value-objects/user.phone";
 import { UserType } from "./value-objects/user.type";
+import { UserImage } from "./value-objects/user.image";
 import { userCreatedEvent } from "./events/user.created";
 import { unvalidUserException } from "./exceptions/unvalid.user";
 
@@ -16,6 +17,7 @@ export class User extends AggregateRoot<UserID>{
     private password: UserPassword
     private phone: UserPhone
     private type: UserType
+    private image: UserImage
 
     get Email (): UserEmail
     {
@@ -41,10 +43,44 @@ export class User extends AggregateRoot<UserID>{
     {
         return this.type
     }
-    
 
-    constructor(id: UserID, email: UserEmail, name: UserName, password: UserPassword, phone: UserPhone, type: UserType){
-        const userCreated = userCreatedEvent.create(id, email, name, password, phone, type);
+    get Image (): UserImage
+    {
+        return this.image
+    }
+    
+    ChangeName(name: UserName): void
+    {
+        this.name = name;
+    }
+
+    ChangeEmail(email: UserEmail): void
+    {
+        this.email = email;
+    }
+
+    ChangePhone(phone: UserPhone): void
+    {
+        this.phone = phone;
+    }
+
+    ChangePassword(password: UserPassword): void
+    {
+        this.password = password;
+    }
+
+    ChangeType(type: UserType): void
+    {
+        this.type = type;
+    }
+
+    ChangeImage(image: UserImage): void
+    {
+        this.image = image;
+    }
+
+    constructor(id: UserID, email: UserEmail, name: UserName, password: UserPassword, phone: UserPhone, type: UserType, image: UserImage){
+        const userCreated = userCreatedEvent.create(id, email, name, password, phone, type, image);
         
         super(id,userCreated);
     }
@@ -56,10 +92,11 @@ export class User extends AggregateRoot<UserID>{
             this.password = event.password
             this.phone = event.phone
             this.type = event.type
-          }
+            this.image = event.image
+        }
     }
     protected checkValidState (): void{
-        if ( !this.email || !this.name || !this.password || !this.phone || !this.type)
+        if ( !this.email || !this.name || !this.password || !this.phone || !this.type || !this.image)
             throw new unvalidUserException(`User not valid`)
     }
 }
