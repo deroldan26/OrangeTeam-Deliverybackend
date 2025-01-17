@@ -58,19 +58,19 @@ $ npm run test:cov
 ## 💻Aportes de los desarrolladores💻
 
 **David Roldán**
-- Aporte a
-- Aporte b
-- Aporte c
+- **Capa de dominio:** Creación de la todas las clases e interfaces base de los patrones tácticos de DDD, además de diseñar e implementar los agregados de producto y orden.
+- **Capa de aplicación:** Creación de la todas las clases e interfaces base para los servicios de aplicación y DTOs, además de diseñar e implementar los servicios en producto y orden.
+- **Capa de infraestructura:** Creación de la todas las clases e interfaces base para los controladores de infraestructura, incluyendo entidades ORM, repositorios, controladores, DTOs y mappers, además del diseño e implementación de los servicios de infraestructura para producto y orden. Adicionalmente, se diseño e implementó microservicios para la gestión de eventos de dominio usando RabbitMQ y envio de correos.
 
 **Romel Gonzáles**
-- Aporte a
-- Aporte b
-- Aporte c
+- **Capa de dominio:** Implementacíon de los patrones tácticos de DDD para los modulos de cupón, categoría y parcialmente de combo.
+- **Capa de aplicación:** Implementación de los aspectos de Logueo, auditoria, desempeño y excepciones. Además se implementaron los servicios de aplicación para los modulos de cupón, usuario, categoría y parcialmente de combo.
+- **Capa de infraestructura:** Implementación del módulo de autenticación usando JWT, implementación de Cloudinary para el almacenamiento de contenido audiovisual y diseño e implementación de los test unitarios usando Jest. Adicionalmente, se implementaron los servicios de infraestructura para los modulos de cupón, usuario, categoría y parcialmente de combo.
 
 **Cristhian Mendes**
-- Aporte a
-- Aporte b
-- Aporte c
+- **Capa de dominio:** Implementacíon de los patrones tácticos de DDD para los modulos de descuento y parcialmente de combo.
+- **Capa de aplicación:** Diseño e implementación de servicios de aplicación para la validacion de data en los modulos de Categoría, producto y descuento, además de la implementación de los servicios de aplicación para los modulos de descuento y parcialmente de combo.
+- **Capa de infraestructura:** Implementación de los servicios de infraestructura para los módulos de descuento y parcialmente de combo.
 
 ## 👨🏽‍🎓Autores👨🏽‍💼
 
