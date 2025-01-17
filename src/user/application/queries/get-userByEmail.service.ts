@@ -19,7 +19,7 @@ export class getUserByEmailService implements IApplicationService<GetUserByEmail
         if(user == null || !user.isSuccess()) {
             return Result.fail( user.Error, user.StatusCode, user.Message )
         }
-        console.log(user.Value.Id.Id)
+ 
         const url = await this.imageHandler.generateImage(user.Value.Image.Image);
         const response: GetUserServiceResponseDto = {
             id: user.Value.Id.Id,

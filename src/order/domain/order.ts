@@ -1,4 +1,4 @@
-import { AggregateRoot } from "src/core/domain/aggregate.root";
+import { AggregateRoot } from "../../core/domain/aggregate.root"
 import { OrderID } from "./value-objects/order.id";
 import { OrderCreatedDate } from "./value-objects/order.created.date";
 import { OrderStatus } from "./value-objects/order.status";

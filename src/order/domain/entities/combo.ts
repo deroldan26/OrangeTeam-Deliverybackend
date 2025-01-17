@@ -1,4 +1,4 @@
-import { Entity } from "src/core/domain/entity";
+import { Entity } from "../../../core/domain/entity";
 import { OrderComboID } from "../value-objects/order.combo.id";
 import { OrderComboQuantity } from "../value-objects/order.combo.quantity";
 import { OrderID } from "../value-objects/order.id";
