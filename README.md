@@ -16,9 +16,8 @@ Explicacion de esto
 
 ## 📋Documentación de la aplicación📋
 
-Modelo de dominios de la aplicación: 
-
-Modelo Hexagonal de la aplicación:
+- [Modelo de dominios de la aplicación](documentation/modelo_de_dominios.pdf)
+- [Modelo Hexagonal de la aplicación](documentation/modelo_hexagonal.pdf)
 
 ## 🚧Instalación del proyecto🚧
 
