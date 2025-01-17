@@ -1,4 +1,4 @@
-import { Entity } from "src/core/domain/entity";
+import { Entity } from "../../../../src/core/domain/entity";
 import { OrderProductID } from "../value-objects/order.product.id";
 import { OrderProductQuantity } from "../value-objects/order.product.quantity";
 import { OrderID } from "../value-objects/order.id";
