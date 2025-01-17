@@ -2,19 +2,19 @@
   <img src="documentation/godelylogo.jpg" width="120" alt="GoDely Logo" />
 </p>
 
-<h1 align="center">Bienvenido al repositorio de GoDely</h1>
+<h1 align="center">🚚Bienvenido al repositorio de GoDely App - Backend🚚</h1>
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Backend de una app de delivery realizado en Nestjs.
 
-## Project setup
+## 🚧Project setup🚧
 
 ```bash
 $ npm install
 ```
 
-## Compile and run the project
+Compile and run the project
 
 ```bash
 # development
@@ -27,7 +27,7 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
-## Run tests
+Run tests
 
 ```bash
 # unit tests
