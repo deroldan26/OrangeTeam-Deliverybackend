@@ -67,17 +67,17 @@ Fotico de nosotros
     <td align="center">
       <img src="images/DavidRoldan.jpg" width="100" alt="David Roldán" />
       <br>
-      <strong>David Roldán</strong>
+      <a href="https://github.com/deroldan26"><strong>David Roldán</strong></a>
     </td>
     <td align="center">
       <img src="images/CristhianMendes.jpg" width="100" alt="Developer 2" />
       <br>
-      <strong>Cristhian Mendes</strong>
+      <a href="https://github.com/Cris27M"><strong>Cristhian Mendes</strong></a>
     </td>
     <td align="center">
       <img src="images/RomelGonzales.jpg" width="100" alt="Developer 3" />
       <br>
-      <strong>Romel Gonzales</strong>
+      <a href="https://github.com/romelgonzalez1"><strong>Romel Gonzáles</strong></a>
     </td>
   </tr>
 </table>
