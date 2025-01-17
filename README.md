@@ -74,8 +74,6 @@ $ npm run test:cov
 
 ## 👨🏽‍🎓Autores👨🏽‍💼
 
-Fotico de nosotros
-
 <table align="center">
   <tr>
     <td align="center">

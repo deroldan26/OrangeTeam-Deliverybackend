@@ -92,7 +92,7 @@ export class OrderController{
             this.auditRepository, this.uuidCreator, user, "GetPaginatedOrderService", new LoggerDecoratorService(
                 "GetPaginatedOrderService", new PerformanceDecoratorService(new GetPaginatedOrderService(
                     this.orderRepository, this.orderProductRepository, this.orderComboProductRepository)))));
-        return (await service.execute({page, take, status, user})).Value;
+        return (await service.execute({page, take, status, user})).Value.orders;
     }
 
     @UseGuards(JwtAuthGuard)
