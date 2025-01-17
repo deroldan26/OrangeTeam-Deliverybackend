@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://drive.google.com/file/d/1MBCO_gIJ4K-ovjzvj5WZogtunoClt42T/view?usp=sharing" width="120" alt="GoDely Logo" />
+  <img src="[https://drive.google.com/file/d/1MBCO_gIJ4K-ovjzvj5WZogtunoClt42T/view?usp=sharing](https://drive.google.com/file/d/1MBCO_gIJ4K-ovjzvj5WZogtunoClt42T/view?usp=sharing)" width="120" alt="GoDely Logo" />
 </p>
 
 [circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
