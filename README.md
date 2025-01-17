@@ -8,9 +8,9 @@ Backend de la aplicación de delivery GoDely realizado en Nestjs.
 
 ## 📐Arquitectura de la aplicación📏
 
-- <u>Arquitectura Hexagonal</u>: La arquitectura hexagonal, a la que también se le conoce como arquitectura de puertos y adaptadores, es una arquitectura de software que se basa en la idea de aislar la lógica comercial central de las preocupaciones externas, por medio de la separación de la aplicación en componentes débilmente acoplados.
-- <u>Diseño Orientado al Dominio (DDD)</u>: DDD es una aproximación holística al diseño de software que pone en el centro el Domain; es decir, el dominio o problema de negocio. DDD define el Ubiquitous Language como la jerga que los expertos de negocio emplean de manera natural para articular y para definir su problema de negocio.
-- <u>Programación Orientada a Aspectos (AOP)</u>: AOP es un paradigma de programación que basa su filosofía en tratar las obligaciones transversales de nuestros programas como módulos separados (aspectos) para lograr una correcta separación de responsabilidades. Una obligación transversal es aquella que se repite en varias partes de un programa independientemente de si las secciones en las que aparece tienen relación directa.
+- **Arquitectura Hexagonal**: La arquitectura hexagonal, a la que también se le conoce como arquitectura de puertos y adaptadores, es una arquitectura de software que se basa en la idea de aislar la lógica comercial central de las preocupaciones externas, por medio de la separación de la aplicación en componentes débilmente acoplados.
+- **Diseño Orientado al Dominio (DDD)**: DDD es una aproximación holística al diseño de software que pone en el centro el Domain; es decir, el dominio o problema de negocio. DDD define el Ubiquitous Language como la jerga que los expertos de negocio emplean de manera natural para articular y para definir su problema de negocio.
+- **Programación Orientada a Aspectos (AOP)**: AOP es un paradigma de programación que basa su filosofía en tratar las obligaciones transversales de nuestros programas como módulos separados (aspectos) para lograr una correcta separación de responsabilidades. Una obligación transversal es aquella que se repite en varias partes de un programa independientemente de si las secciones en las que aparece tienen relación directa.
 
 ## 🛠Tecnologías usadas🛠
 
