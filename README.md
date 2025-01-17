@@ -57,7 +57,20 @@ $ npm run test:cov
 
 ## 💻Aportes de los desarrolladores💻
 
-Explicacion de esto
+**David Roldán**
+- Aporte a
+- Aporte b
+- Aporte c
+
+**Romel Gonzáles**
+- Aporte a
+- Aporte b
+- Aporte c
+
+**Cristhian Mendes**
+- Aporte a
+- Aporte b
+- Aporte c
 
 ## 👨🏽‍🎓Autores👨🏽‍💼
 
