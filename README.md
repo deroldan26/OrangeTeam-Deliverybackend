@@ -12,7 +12,7 @@ Explicacion de esto
 
 ## 🛠Tecnologías usadas🛠
 
-[![Tecnologias](https://skillicons.dev/icons?i=postgres,nestjs,email,rabbitmq)](https://skillicons.dev)
+[![Tecnologias](https://skillicons.dev/icons?i=postgres,nestjs,gmail,rabbitmq)](https://skillicons.dev)
 
 ## 📋Documentación de la aplicación📋
 
