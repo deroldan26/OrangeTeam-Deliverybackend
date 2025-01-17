@@ -22,7 +22,7 @@ export class ProductRepositoryMock implements IProductRepository {
     }
 
     async findPaginatedProducts(page: number, take: number, name?: string, category?: string): Promise<Result<Product[]>> {
-        throw new Error('Method not implemented.');
+        return Result.success<Product[]>(this.products, 200);
     }
 
     async saveProductAggregate(product: Product): Promise<Result<Product>> {

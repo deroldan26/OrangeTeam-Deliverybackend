@@ -22,7 +22,7 @@ export class ProductMock {
             new ProductID( await idGenerator.generateId()), 
             new ProductName("Product Name"),
             new ProductDescription("Product Description"),
-            [new ProductImage(await idGenerator.generateId())],
+            [new ProductImage("www.imagenGenerica.com")],
             new ProductPrice(100),
             new ProductCurrency("USD"),
             new ProductWeight(100),
