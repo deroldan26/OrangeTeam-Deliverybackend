@@ -100,8 +100,10 @@
     "paths": {
       "src/*": ["src/*"],
       "core/*": ["src/core/*"]
-    }
+    },
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "sourceMap": true
   }
-  
   
 }

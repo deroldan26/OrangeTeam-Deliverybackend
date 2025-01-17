@@ -1,4 +1,4 @@
-import { Entity } from "../../../../src/core/domain/entity";
+import { Entity } from "../../../core/domain/entity";
 import { OrderPaymentMethodID } from "../value-objects/order.payment.method.id";
 import { OrderPaymentMethod } from "../value-objects/order.payment.method";
 import { OrderCurrency } from "../value-objects/order.currency";
