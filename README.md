@@ -62,7 +62,7 @@ $ npm run test:cov
 - **Capa de aplicación:** Creación de la todas las clases e interfaces base para los servicios de aplicación y DTOs, además de diseñar e implementar los servicios en producto y orden.
 - **Capa de infraestructura:** Creación de la todas las clases e interfaces base para los controladores de infraestructura, incluyendo entidades ORM, repositorios, controladores, DTOs y mappers, además del diseño e implementación de los servicios de infraestructura para producto y orden. Adicionalmente, se diseño e implementó microservicios para la gestión de eventos de dominio usando RabbitMQ y envio de correos.
 
-**Romel Gonzáles**
+**Romel González**
 - **Capa de dominio:** Implementacíon de los patrones tácticos de DDD para los modulos de cupón, categoría y parcialmente de combo.
 - **Capa de aplicación:** Implementación de los aspectos de Logueo, auditoria, desempeño y excepciones. Además se implementaron los servicios de aplicación para los modulos de cupón, usuario, categoría y parcialmente de combo.
 - **Capa de infraestructura:** Implementación del módulo de autenticación usando JWT, implementación de Cloudinary para el almacenamiento de contenido audiovisual y diseño e implementación de los test unitarios usando Jest. Adicionalmente, se implementaron los servicios de infraestructura para los modulos de cupón, usuario, categoría y parcialmente de combo.
@@ -87,7 +87,7 @@ $ npm run test:cov
       <a href="https://github.com/Cris27M"><strong>Cristhian Mendes</strong></a>
     </td>
     <td align="center">
-      <img src="images/RomelGonzales.jpg" width="100" alt="Developer 3" />
+      <img src="images/RomelGonzalez.jpg" width="100" alt="Developer 3" />
       <br>
       <a href="https://github.com/romelgonzalez1"><strong>Romel Gonzáles</strong></a>
     </td>
