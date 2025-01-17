@@ -16,8 +16,8 @@ Explicacion de esto
 
 ## 📋Documentación de la aplicación📋
 
-- [Modelo de dominio de la aplicación](documentation/Modelo de dominio - OrangeTeamBackend.pdf)
-- [Modelo Hexagonal de la aplicación](documentation/Diagrama Hexagonal - OrangeTeamBackend.pdf)
+- [Modelo de dominio de la aplicación](documentation/Modelo_Dominio-OrangeTeamBackend.pdf)
+- [Modelo Hexagonal de la aplicación](documentation/Diagrama_Hexagonal-OrangeTeamBackend.pdf)
 
 ## 🚧Instalación del proyecto🚧
 
