@@ -70,12 +70,12 @@ Fotico de nosotros
       <strong>David Roldán</strong>
     </td>
     <td align="center">
-      <img src="path/to/developer2.jpg" width="100" alt="Developer 2" />
+      <img src="images/CristhianMendes.jpg" width="100" alt="Developer 2" />
       <br>
       <strong>Cristhian Mendes</strong>
     </td>
     <td align="center">
-      <img src="path/to/developer3.jpg" width="100" alt="Developer 3" />
+      <img src="images/RomelGonzales.jpg" width="100" alt="Developer 3" />
       <br>
       <strong>Romel Gonzales</strong>
     </td>
