@@ -62,8 +62,13 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             return new Combo(new OrderComboID(comboData.id), new OrderComboQuantity(comboData.quantity), orderId);
         }))
         const user = await this.userRepository.findUserById(data.userId);
-        if(!data.cupon || data.cupon === "" || data.cupon === null || data.cupon === undefined){
-            data.cupon = "No Cupon";
+        console.log(data.cupon_code)
+        console.log(data.indications)
+        if(!data.cupon_code || data.cupon_code === "" || data.cupon_code === null || data.cupon_code === undefined){
+            data.cupon_code = "No Cupon";
+        }
+        if(!data.indications || data.indications === "" || data.indications === null || data.indications === undefined){
+            data.indications = "No Indications";
         }
         const order = new Order(
             orderId,
@@ -82,8 +87,8 @@ export class createOrderService implements IApplicationService<CreateOrderServic
             new OrderCancelledDate(new Date()),
             new OrderShippedDate(new Date()),
             new OrderBeingProcessedDate(new Date()),
-            new OrderIndications("No Indications"),
-            new OrderCuponID(data.cupon)
+            new OrderIndications(data.indications),
+            new OrderCuponID(data.cupon_code)
         )
         await this.paymentRepository.savePaymentEntity(order.PaymentMethod);
         await this.reportRepository.saveReportEntity(order.Report);

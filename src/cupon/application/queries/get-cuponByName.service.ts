@@ -23,11 +23,11 @@ export class getCuponByNameService implements IApplicationService<GetCuponByName
 
         const response: GetCuponByNameServiceResponseDto = {
             id: cupon.Value.Id.Id,
-            name: cupon.Value.Name.Name,
+            code: cupon.Value.Name.Name,
             description: cupon.Value.Description.Description,
-            expireDate: cupon.Value.ExpireDate.ExpireDate,
+            expiration_date: cupon.Value.ExpireDate.ExpireDate,
             startDate: cupon.Value.StartDate.StartDate,
-            value: cupon.Value.Value.Value
+            amount: cupon.Value.Value.Value
         };
 
         return Result.success(response, 200);

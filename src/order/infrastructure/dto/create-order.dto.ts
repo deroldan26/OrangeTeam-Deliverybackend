@@ -44,7 +44,7 @@ export class CreateOrderDto{
     userId: string;
 
     @IsString()
-    @MinLength(6)
+    @MinLength(4)
     paymentMethod: string;
 
     @IsString()
@@ -57,5 +57,9 @@ export class CreateOrderDto{
 
     @IsString()
     @IsOptional()
-    cupon?: string;
+    cupon_code?: string;
+
+    @IsString()
+    @IsOptional()
+    indications?: string;
 }
