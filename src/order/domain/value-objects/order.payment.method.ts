@@ -3,7 +3,7 @@ import { unvalidOrderPaymentMethodException } from "../exceptions/unvalid.order.
 
 export class OrderPaymentMethod implements ValueObject<OrderPaymentMethod> {
     constructor(private _paymentMethod: string) {
-        if (_paymentMethod.length < 10) throw new unvalidOrderPaymentMethodException(`Payment Method '${_paymentMethod}' not valid`)
+        if (_paymentMethod.length < 4) throw new unvalidOrderPaymentMethodException(`Payment Method '${_paymentMethod}' not valid`)
     }
     get PaymentMethod() {
         return this._paymentMethod

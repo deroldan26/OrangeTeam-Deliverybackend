@@ -51,8 +51,14 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Post('create')
-  async createProduct(@Body() createProductDto: CreateProductDto) {
-    const service = new createProductService(this.productRepository, this.uuidCreator, this.imageHandler, this.messagingService, this.categoryValidator, this.discountValidator);
+  async createProduct(@Body() createProductDto: CreateProductDto, @Request() req) {
+    const user = req.user; 
+    const userId = user.userId; 
+    const service = new ExceptionDecoratorService (
+      new AuditDecoratorService (
+        this.auditRepository, this.uuidCreator, userId, "createProductService", new LoggerDecoratorService(
+          "createProductService", new PerformanceDecoratorService(new createProductService(
+            this.productRepository, this.uuidCreator, this.imageHandler, this.messagingService, this.categoryValidator, this.discountValidator)))));
     return await service.execute(createProductDto);
   }
 
@@ -73,9 +79,15 @@ export class ProductController {
 
   @UseGuards(JwtAuthGuard)
   @Get('many')
-  async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto) {
+  async findPaginatedProduct(@Query(ValidationPipe) query: FindPaginatedProductDto, @Request() req) {
     const {page, perpage, name, category} = query;
-    const service = new GetPaginatedProductService(this.productRepository, this.imageHandler);
+    const user = req.user; 
+    const userId = user.userId; 
+    const service = new ExceptionDecoratorService (
+      new AuditDecoratorService (
+        this.auditRepository, this.uuidCreator, userId, "GetPaginatedProductService", new LoggerDecoratorService(
+          "GetPaginatedProductService", new PerformanceDecoratorService(new GetPaginatedProductService(
+            this.productRepository, this.imageHandler)))));
     return (await service.execute({page, perpage, name, category})).Value.products;
   }
 }

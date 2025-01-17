@@ -48,11 +48,12 @@ export class OrderController{
         this.reportRepository = new ReportPostgresRepository(this.dataSource);
         this.orderProductRepository= new OrderProductPostgresRepository(this.dataSource);
         this.orderComboProductRepository = new OrderComboPostgresRepository(this.dataSource);
+        this.userRepository = new UserPostgresRepository(this.dataSource);
         this.auditRepository = new AuditPostgresRepository(this.dataSource)
     }
 
     @UseGuards(JwtAuthGuard)
-    @Post()
+    @Post('create')
     async createOrder(@Body() createOrderDto: CreateOrderDto,  @Request() req) {
         const user = req.user;
         const userId = user.userId;
@@ -61,13 +62,13 @@ export class OrderController{
             new AuditDecoratorService (
             this.auditRepository, this.uuidCreator, userId, "createOrderService", new LoggerDecoratorService(
                 "createOrderService", new PerformanceDecoratorService( new createOrderService(
-                    this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService)))));
+                    this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService, this.userRepository)))));
         // const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
         return await service.execute(createOrderDto);
     }
 
     @UseGuards(JwtAuthGuard)
-    @Get(':id')
+    @Get('one/:id')
     async findOne(@Param('id') id: string, @Request() req) {
         const user = req.user; 
         const userId = user.userId; 
@@ -77,11 +78,11 @@ export class OrderController{
                 "getOrderByIdService", new PerformanceDecoratorService(new getOrderByIdService(
                     this.orderRepository, this.orderProductRepository, this.orderComboProductRepository)))));
         var response = await service.execute({id:id})
-        return response;
+        return response.Value;
     } 
 
     @UseGuards(JwtAuthGuard)
-    @Get()
+    @Get('many')
     async findPaginatedOrder(@Query(ValidationPipe) query: FindPaginatedOrderDto, @Request() req) {
         const user_token = req.user;
         const user = user_token.userId;
@@ -96,10 +97,10 @@ export class OrderController{
     }
 
     @UseGuards(JwtAuthGuard)
-    @Patch(':id')
+    @Patch('update/:id')
     async updateOrder(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
         const service = new updateOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.messagingService);
         var response = await service.execute({id: id, ...updateOrderDto});
-        return response;
+        return response.Value;
     }
 }

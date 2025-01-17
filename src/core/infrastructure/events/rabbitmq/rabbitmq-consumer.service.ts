@@ -117,10 +117,8 @@ export class RabbitMQConsumerService<T> implements OnModuleInit {
       orderCombos: data['combos']._combos,
       orderPaymentMethod: data['paymentMethod']._paymentMethod,
       orderUserId: data['userId']._userid,
-      //orderUserEmail: data['userEmail']._userEmail,
+      orderUserEmail: data['userEmail']._email,
     }
-
-    console.log(data)
     
     const htmlContent = `<!DOCTYPE html>
     <html lang="en">
@@ -172,7 +170,7 @@ export class RabbitMQConsumerService<T> implements OnModuleInit {
     </html>`;
 
     await this.emailService.sendMail(
-        'der2600@gmail.com', // Replace with the actual recipient's email
+        data['userEmail']._email,
         'Nueva Orden Creada Go Dely App',
         htmlContent,
       );
@@ -242,7 +240,7 @@ export class RabbitMQConsumerService<T> implements OnModuleInit {
     </html>`;
 
     await this.emailService.sendMail(
-        'der2600@gmail.com', // Replace with the actual recipient's email
+        data['userEmail']._email,
         'Orden Actualizada Go Dely App',
         htmlContent,
       );
