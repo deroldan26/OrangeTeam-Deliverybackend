@@ -62,13 +62,22 @@ Explicacion de esto
 
 Fotico de nosotros
 
-<p align="center">
-  <img src="images/DavidRoldan.jpg" width="100" alt="Developer 1" />
-  <img src="path/to/developer2.jpg" width="100" alt="Developer 2" />
-  <img src="path/to/developer3.jpg" width="100" alt="Developer 3" />
-</p>
-<p align="center">
-  <strong>Developer 1 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Developer 2 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-  <strong>Developer 3 Name</strong> &nbsp;&nbsp;&nbsp;&nbsp;
-</p>
+<table align="center">
+  <tr>
+    <td align="center">
+      <img src="images/DavidRoldan.jpg" width="100" alt="David Roldán" />
+      <br>
+      <strong>David Roldán</strong>
+    </td>
+    <td align="center">
+      <img src="path/to/developer2.jpg" width="100" alt="Developer 2" />
+      <br>
+      <strong>Cristhian Mendes</strong>
+    </td>
+    <td align="center">
+      <img src="path/to/developer3.jpg" width="100" alt="Developer 3" />
+      <br>
+      <strong>Romel Gonzales</strong>
+    </td>
+  </tr>
+</table>
