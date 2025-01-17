@@ -49,7 +49,7 @@ export class OrderController{
         this.orderProductRepository= new OrderProductPostgresRepository(this.dataSource);
         this.orderComboProductRepository = new OrderComboPostgresRepository(this.dataSource);
         this.userRepository = new UserPostgresRepository(this.dataSource);
-        this.auditRepository = new AuditPostgresRepository(this.dataSource)
+        this.auditRepository = new AuditPostgresRepository(this.dataSource);
     }
 
     @UseGuards(JwtAuthGuard)
@@ -58,12 +58,12 @@ export class OrderController{
         const user = req.user;
         const userId = user.userId;
         createOrderDto.userId = userId;
+      
         const service = new ExceptionDecoratorService (
             new AuditDecoratorService (
             this.auditRepository, this.uuidCreator, userId, "createOrderService", new LoggerDecoratorService(
                 "createOrderService", new PerformanceDecoratorService( new createOrderService(
                     this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService, this.userRepository)))));
-        // const service = new createOrderService(this.orderRepository, this.paymentRepository, this.reportRepository, this.orderProductRepository, this.orderComboProductRepository, this.uuidCreator, this.messagingService);
         return await service.execute(createOrderDto);
     }
 
@@ -92,7 +92,6 @@ export class OrderController{
             this.auditRepository, this.uuidCreator, user, "GetPaginatedOrderService", new LoggerDecoratorService(
                 "GetPaginatedOrderService", new PerformanceDecoratorService(new GetPaginatedOrderService(
                     this.orderRepository, this.orderProductRepository, this.orderComboProductRepository)))));
-        // const service = new GetPaginatedOrderService(this.orderRepository, this.orderProductRepository, this.orderComboProductRepository);
         return (await service.execute({page, take, status, user})).Value;
     }
 
